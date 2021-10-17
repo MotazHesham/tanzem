@@ -117,8 +117,50 @@
                 </a>
             </li>
         @endcan
+        @can('event_managment_access')
+            <li class="c-sidebar-nav-dropdown {{ request()->is("admin/events*") ? "c-show" : "" }} {{ request()->is("admin/brands*") ? "c-show" : "" }} {{ request()->is("admin/visitors*") ? "c-show" : "" }}">
+                <a class="c-sidebar-nav-dropdown-toggle" href="#">
+                    <i class="fa-fw fas fa-align-left c-sidebar-nav-icon">
+
+                    </i>
+                    {{ trans('cruds.eventManagment.title') }}
+                </a>
+                <ul class="c-sidebar-nav-dropdown-items">
+                    @can('event_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.events.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/events") || request()->is("admin/events/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-camera-retro c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.event.title') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('brand_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.brands.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/brands") || request()->is("admin/brands/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-braille c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.brand.title') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('visitor_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.visitors.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/visitors") || request()->is("admin/visitors/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-user-friends c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.visitor.title') }}
+                            </a>
+                        </li>
+                    @endcan
+                </ul>
+            </li>
+        @endcan
         @can('general_setting_access')
-            <li class="c-sidebar-nav-dropdown {{ request()->is("admin/specializations*") ? "c-show" : "" }} {{ request()->is("admin/cities*") ? "c-show" : "" }}">
+            <li class="c-sidebar-nav-dropdown {{ request()->is("admin/specializations*") ? "c-show" : "" }} {{ request()->is("admin/cities*") ? "c-show" : "" }} {{ request()->is("admin/gates*") ? "c-show" : "" }}">
                 <a class="c-sidebar-nav-dropdown-toggle" href="#">
                     <i class="fa-fw fas fa-cogs c-sidebar-nav-icon">
 
@@ -143,6 +185,16 @@
 
                                 </i>
                                 {{ trans('cruds.city.title') }}
+                            </a>
+                        </li>
+                    @endcan
+                    @can('gate_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.gates.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/gates") || request()->is("admin/gates/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-door-open c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.gate.title') }}
                             </a>
                         </li>
                     @endcan

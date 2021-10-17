@@ -64,18 +64,22 @@
                 <span class="help-block">{{ trans('cruds.companiesAndInstitution.fields.user_helper') }}</span>
             </div>
             <div class="form-group">
-                <label class="required" for="specialization_id">{{ trans('cruds.companiesAndInstitution.fields.specialization') }}</label>
-                <select class="form-control select2 {{ $errors->has('specialization') ? 'is-invalid' : '' }}" name="specialization_id" id="specialization_id" required>
-                    @foreach($specializations as $id => $entry)
-                        <option value="{{ $id }}" {{ old('specialization_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                <label class="required" for="specializations">{{ trans('cruds.companiesAndInstitution.fields.specializations') }}</label>
+                <div style="padding-bottom: 4px">
+                    <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                    <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                </div>
+                <select class="form-control select2 {{ $errors->has('specializations') ? 'is-invalid' : '' }}" name="specializations[]" id="specializations" multiple required>
+                    @foreach($specializations as $id => $specialization)
+                        <option value="{{ $id }}" {{ in_array($id, old('specializations', [])) ? 'selected' : '' }}>{{ $specialization }}</option>
                     @endforeach
                 </select>
-                @if($errors->has('specialization'))
+                @if($errors->has('specializations'))
                     <div class="invalid-feedback">
-                        {{ $errors->first('specialization') }}
+                        {{ $errors->first('specializations') }}
                     </div>
                 @endif
-                <span class="help-block">{{ trans('cruds.companiesAndInstitution.fields.specialization_helper') }}</span>
+                <span class="help-block">{{ trans('cruds.companiesAndInstitution.fields.specializations_helper') }}</span>
             </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">

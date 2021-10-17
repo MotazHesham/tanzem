@@ -40,6 +40,10 @@ class UpdateUserRequest extends FormRequest
                 'string',
                 'nullable',
             ],
+            'website' => [
+                'string',
+                'required',
+            ],
         ];
     }
 }

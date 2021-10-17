@@ -73,6 +73,22 @@
                             {{ $cawader->identity_number }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.cawader.fields.user') }}
+                        </th>
+                        <td>
+                            {{ $cawader->user->email ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.cawader.fields.companies_and_institution') }}
+                        </th>
+                        <td>
+                            {{ $cawader->companies_and_institution->commerical_num ?? '' }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

@@ -87,6 +87,34 @@
                 <span class="help-block">{{ trans('cruds.cawader.fields.identity_number_helper') }}</span>
             </div>
             <div class="form-group">
+                <label class="required" for="user_id">{{ trans('cruds.cawader.fields.user') }}</label>
+                <select class="form-control select2 {{ $errors->has('user') ? 'is-invalid' : '' }}" name="user_id" id="user_id" required>
+                    @foreach($users as $id => $entry)
+                        <option value="{{ $id }}" {{ old('user_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('user'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('user') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.cawader.fields.user_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="companies_and_institution_id">{{ trans('cruds.cawader.fields.companies_and_institution') }}</label>
+                <select class="form-control select2 {{ $errors->has('companies_and_institution') ? 'is-invalid' : '' }}" name="companies_and_institution_id" id="companies_and_institution_id">
+                    @foreach($companies_and_institutions as $id => $entry)
+                        <option value="{{ $id }}" {{ old('companies_and_institution_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('companies_and_institution'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('companies_and_institution') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.cawader.fields.companies_and_institution_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>

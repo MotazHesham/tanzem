@@ -37,9 +37,12 @@ class StoreCompaniesAndInstitutionRequest extends FormRequest
                 'required',
                 'integer',
             ],
-            'specialization_id' => [
-                'required',
+            'specializations.*' => [
                 'integer',
+            ],
+            'specializations' => [
+                'required',
+                'array',
             ],
         ];
     }

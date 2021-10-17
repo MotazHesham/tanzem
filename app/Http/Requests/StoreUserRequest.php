@@ -43,6 +43,10 @@ class StoreUserRequest extends FormRequest
                 'string',
                 'nullable',
             ],
+            'website' => [
+                'string',
+                'required',
+            ],
         ];
     }
 }

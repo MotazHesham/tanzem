@@ -56,6 +56,26 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Cities
     Route::delete('cities/destroy', 'CitiesController@massDestroy')->name('cities.massDestroy');
     Route::resource('cities', 'CitiesController');
+
+    // Events
+    Route::delete('events/destroy', 'EventsController@massDestroy')->name('events.massDestroy');
+    Route::post('events/media', 'EventsController@storeMedia')->name('events.storeMedia');
+    Route::post('events/ckmedia', 'EventsController@storeCKEditorImages')->name('events.storeCKEditorImages');
+    Route::resource('events', 'EventsController');
+
+    // Brands
+    Route::delete('brands/destroy', 'BrandsController@massDestroy')->name('brands.massDestroy');
+    Route::post('brands/media', 'BrandsController@storeMedia')->name('brands.storeMedia');
+    Route::post('brands/ckmedia', 'BrandsController@storeCKEditorImages')->name('brands.storeCKEditorImages');
+    Route::resource('brands', 'BrandsController');
+
+    // Gates
+    Route::delete('gates/destroy', 'GatesController@massDestroy')->name('gates.massDestroy');
+    Route::resource('gates', 'GatesController');
+
+    // Visitors
+    Route::delete('visitors/destroy', 'VisitorsController@massDestroy')->name('visitors.massDestroy');
+    Route::resource('visitors', 'VisitorsController');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

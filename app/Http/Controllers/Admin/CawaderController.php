@@ -8,7 +8,9 @@ use App\Http\Requests\StoreCawaderRequest;
 use App\Http\Requests\UpdateCawaderRequest;
 use App\Models\Cawader;
 use App\Models\City;
+use App\Models\CompaniesAndInstitution;
 use App\Models\Specialization;
+use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +23,7 @@ class CawaderController extends Controller
         abort_if(Gate::denies('cawader_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Cawader::with(['city', 'specializations'])->select(sprintf('%s.*', (new Cawader())->table));
+            $query = Cawader::with(['city', 'specializations', 'user', 'companies_and_institution'])->select(sprintf('%s.*', (new Cawader())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -53,8 +55,15 @@ class CawaderController extends Controller
 
                 return implode(' ', $labels);
             });
+            $table->addColumn('user_email', function ($row) {
+                return $row->user ? $row->user->email : '';
+            });
 
-            $table->rawColumns(['actions', 'placeholder', 'specialization']);
+            $table->addColumn('companies_and_institution_commerical_num', function ($row) {
+                return $row->companies_and_institution ? $row->companies_and_institution->commerical_num : '';
+            });
+
+            $table->rawColumns(['actions', 'placeholder', 'specialization', 'user', 'companies_and_institution']);
 
             return $table->make(true);
         }
@@ -70,7 +79,11 @@ class CawaderController extends Controller
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        return view('admin.cawaders.create', compact('cities', 'specializations'));
+        $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $companies_and_institutions = CompaniesAndInstitution::pluck('commerical_num', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.cawaders.create', compact('cities', 'specializations', 'users', 'companies_and_institutions'));
     }
 
     public function store(StoreCawaderRequest $request)
@@ -89,9 +102,13 @@ class CawaderController extends Controller
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        $cawader->load('city', 'specializations');
+        $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.cawaders.edit', compact('cities', 'specializations', 'cawader'));
+        $companies_and_institutions = CompaniesAndInstitution::pluck('commerical_num', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $cawader->load('city', 'specializations', 'user', 'companies_and_institution');
+
+        return view('admin.cawaders.edit', compact('cities', 'specializations', 'users', 'companies_and_institutions', 'cawader'));
     }
 
     public function update(UpdateCawaderRequest $request, Cawader $cawader)
@@ -106,7 +123,7 @@ class CawaderController extends Controller
     {
         abort_if(Gate::denies('cawader_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $cawader->load('city', 'specializations');
+        $cawader->load('city', 'specializations', 'user', 'companies_and_institution');
 
         return view('admin.cawaders.show', compact('cawader'));
     }
