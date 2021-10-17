@@ -65,10 +65,12 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.companiesAndInstitution.fields.specialization') }}
+                            {{ trans('cruds.companiesAndInstitution.fields.specializations') }}
                         </th>
                         <td>
-                            {{ $companiesAndInstitution->specialization->name_ar ?? '' }}
+                            @foreach($companiesAndInstitution->specializations as $key => $specializations)
+                                <span class="label label-info">{{ $specializations->name_ar }}</span>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>
@@ -82,6 +84,22 @@
     </div>
 </div>
 
-
+<div class="card">
+    <div class="card-header">
+        {{ trans('global.relatedData') }}
+    </div>
+    <ul class="nav nav-tabs" role="tablist" id="relationship-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="#company_events" role="tab" data-toggle="tab">
+                {{ trans('cruds.event.title') }}
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane" role="tabpanel" id="company_events">
+            @includeIf('admin.companiesAndInstitutions.relationships.companyEvents', ['events' => $companiesAndInstitution->companyEvents])
+        </div>
+    </div>
+</div>
 
 @endsection

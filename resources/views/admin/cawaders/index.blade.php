@@ -28,6 +28,12 @@
                         {{ trans('cruds.cawader.fields.specialization') }}
                     </th>
                     <th>
+                        {{ trans('cruds.cawader.fields.user') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.cawader.fields.companies_and_institution') }}
+                    </th>
+                    <th>
                         &nbsp;
                     </th>
                 </tr>
@@ -85,6 +91,8 @@
       { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
 { data: 'specialization', name: 'specializations.name_ar' },
+{ data: 'user_email', name: 'user.email' },
+{ data: 'companies_and_institution_commerical_num', name: 'companies_and_institution.commerical_num' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

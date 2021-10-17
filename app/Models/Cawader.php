@@ -38,6 +38,8 @@ class Cawader extends Model
         'degree',
         'working_hours',
         'identity_number',
+        'user_id',
+        'companies_and_institution_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -61,6 +63,16 @@ class Cawader extends Model
     public function specializations()
     {
         return $this->belongsToMany(Specialization::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function companies_and_institution()
+    {
+        return $this->belongsTo(CompaniesAndInstitution::class, 'companies_and_institution_id');
     }
 
     protected function serializeDate(DateTimeInterface $date)

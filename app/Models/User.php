@@ -38,6 +38,7 @@ class User extends Authenticatable
         'remember_token',
         'phone',
         'landline_phone',
+        'website',
         'created_at',
         'updated_at',
         'deleted_at',

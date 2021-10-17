@@ -41,7 +41,7 @@
                             {{ trans('cruds.companiesAndInstitution.fields.user') }}
                         </th>
                         <th>
-                            {{ trans('cruds.companiesAndInstitution.fields.specialization') }}
+                            {{ trans('cruds.companiesAndInstitution.fields.specializations') }}
                         </th>
                         <th>
                             &nbsp;
@@ -73,7 +73,9 @@
                                 {{ $companiesAndInstitution->user->email ?? '' }}
                             </td>
                             <td>
-                                {{ $companiesAndInstitution->specialization->name_ar ?? '' }}
+                                @foreach($companiesAndInstitution->specializations as $key => $item)
+                                    <span class="badge badge-info">{{ $item->name_ar }}</span>
+                                @endforeach
                             </td>
                             <td>
                                 @can('companies_and_institution_show')

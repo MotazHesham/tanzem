@@ -27,11 +27,15 @@ class CompaniesAndInstitution extends Model
         'licence_num',
         'licence_expiry',
         'user_id',
-        'specialization_id',
         'created_at',
         'updated_at',
         'deleted_at',
     ];
+
+    public function companyEvents()
+    {
+        return $this->hasMany(Event::class, 'company_id', 'id');
+    }
 
     public function getCommericalExpiryAttribute($value)
     {
@@ -58,9 +62,9 @@ class CompaniesAndInstitution extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function specialization()
+    public function specializations()
     {
-        return $this->belongsTo(Specialization::class, 'specialization_id');
+        return $this->belongsToMany(Specialization::class);
     }
 
     protected function serializeDate(DateTimeInterface $date)

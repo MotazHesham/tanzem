@@ -79,6 +79,16 @@
                 <span class="help-block">{{ trans('cruds.user.fields.landline_phone_helper') }}</span>
             </div>
             <div class="form-group">
+                <label class="required" for="website">{{ trans('cruds.user.fields.website') }}</label>
+                <input class="form-control {{ $errors->has('website') ? 'is-invalid' : '' }}" type="text" name="website" id="website" value="{{ old('website', $user->website) }}" required>
+                @if($errors->has('website'))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('website') }}
+                    </div>
+                @endif
+                <span class="help-block">{{ trans('cruds.user.fields.website_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>

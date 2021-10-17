@@ -222,6 +222,90 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 54,
+                'title' => 'event_create',
+            ],
+            [
+                'id'    => 55,
+                'title' => 'event_edit',
+            ],
+            [
+                'id'    => 56,
+                'title' => 'event_show',
+            ],
+            [
+                'id'    => 57,
+                'title' => 'event_delete',
+            ],
+            [
+                'id'    => 58,
+                'title' => 'event_access',
+            ],
+            [
+                'id'    => 59,
+                'title' => 'event_managment_access',
+            ],
+            [
+                'id'    => 60,
+                'title' => 'brand_create',
+            ],
+            [
+                'id'    => 61,
+                'title' => 'brand_edit',
+            ],
+            [
+                'id'    => 62,
+                'title' => 'brand_show',
+            ],
+            [
+                'id'    => 63,
+                'title' => 'brand_delete',
+            ],
+            [
+                'id'    => 64,
+                'title' => 'brand_access',
+            ],
+            [
+                'id'    => 65,
+                'title' => 'gate_create',
+            ],
+            [
+                'id'    => 66,
+                'title' => 'gate_edit',
+            ],
+            [
+                'id'    => 67,
+                'title' => 'gate_show',
+            ],
+            [
+                'id'    => 68,
+                'title' => 'gate_delete',
+            ],
+            [
+                'id'    => 69,
+                'title' => 'gate_access',
+            ],
+            [
+                'id'    => 70,
+                'title' => 'visitor_create',
+            ],
+            [
+                'id'    => 71,
+                'title' => 'visitor_edit',
+            ],
+            [
+                'id'    => 72,
+                'title' => 'visitor_show',
+            ],
+            [
+                'id'    => 73,
+                'title' => 'visitor_delete',
+            ],
+            [
+                'id'    => 74,
+                'title' => 'visitor_access',
+            ],
+            [
+                'id'    => 75,
                 'title' => 'profile_password_edit',
             ],
         ];

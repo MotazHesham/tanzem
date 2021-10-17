@@ -73,6 +73,14 @@
                             {{ $user->landline_phone }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.website') }}
+                        </th>
+                        <td>
+                            {{ $user->website }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

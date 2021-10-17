@@ -44,6 +44,9 @@
                             {{ trans('cruds.user.fields.landline_phone') }}
                         </th>
                         <th>
+                            {{ trans('cruds.user.fields.website') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -76,6 +79,9 @@
                             </td>
                             <td>
                                 {{ $user->landline_phone ?? '' }}
+                            </td>
+                            <td>
+                                {{ $user->website ?? '' }}
                             </td>
                             <td>
                                 @can('user_show')
@@ -149,7 +155,7 @@
   $.extend(true, $.fn.dataTable.defaults, {
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
-    pageLength: 100,
+    pageLength: 25,
   });
   let table = $('.datatable-User:not(.ajaxTable)').DataTable({ buttons: dtButtons })
   $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
