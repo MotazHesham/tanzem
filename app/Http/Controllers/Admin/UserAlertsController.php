@@ -11,6 +11,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
 
 class UserAlertsController extends Controller
 {
@@ -80,6 +81,7 @@ class UserAlertsController extends Controller
         $userAlert = UserAlert::create($request->all());
         $userAlert->users()->sync($request->input('users', []));
 
+        Alert::success('تم بنجاح', 'تم إضافة التنبيه بنجاح ');
         return redirect()->route('admin.user-alerts.index');
     }
 
@@ -98,7 +100,8 @@ class UserAlertsController extends Controller
 
         $userAlert->delete();
 
-        return back();
+        Alert::success('تم بنجاح', 'تم  حذف التنبيه بنجاح ');
+        return 1;
     }
 
     public function massDestroy(MassDestroyUserAlertRequest $request)

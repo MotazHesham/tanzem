@@ -306,6 +306,130 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 75,
+                'title' => 'visitors_family_create',
+            ],
+            [
+                'id'    => 76,
+                'title' => 'visitors_family_edit',
+            ],
+            [
+                'id'    => 77,
+                'title' => 'visitors_family_delete',
+            ],
+            [
+                'id'    => 78,
+                'title' => 'visitors_family_access',
+            ],
+            [
+                'id'    => 79,
+                'title' => 'setting_edit',
+            ],
+            [
+                'id'    => 80,
+                'title' => 'setting_access',
+            ],
+            [
+                'id'    => 81,
+                'title' => 'said_about_tanzem_create',
+            ],
+            [
+                'id'    => 82,
+                'title' => 'said_about_tanzem_edit',
+            ],
+            [
+                'id'    => 83,
+                'title' => 'said_about_tanzem_show',
+            ],
+            [
+                'id'    => 84,
+                'title' => 'said_about_tanzem_delete',
+            ],
+            [
+                'id'    => 85,
+                'title' => 'said_about_tanzem_access',
+            ],
+            [
+                'id'    => 86,
+                'title' => 'contactu_create',
+            ],
+            [
+                'id'    => 87,
+                'title' => 'contactu_edit',
+            ],
+            [
+                'id'    => 88,
+                'title' => 'contactu_show',
+            ],
+            [
+                'id'    => 89,
+                'title' => 'contactu_delete',
+            ],
+            [
+                'id'    => 90,
+                'title' => 'contactu_access',
+            ],
+            [
+                'id'    => 91,
+                'title' => 'news_create',
+            ],
+            [
+                'id'    => 92,
+                'title' => 'news_edit',
+            ],
+            [
+                'id'    => 93,
+                'title' => 'news_show',
+            ],
+            [
+                'id'    => 94,
+                'title' => 'news_delete',
+            ],
+            [
+                'id'    => 95,
+                'title' => 'news_access',
+            ],
+            [
+                'id'    => 96,
+                'title' => 'subscription_create',
+            ],
+            [
+                'id'    => 97,
+                'title' => 'subscription_edit',
+            ],
+            [
+                'id'    => 98,
+                'title' => 'subscription_show',
+            ],
+            [
+                'id'    => 99,
+                'title' => 'subscription_delete',
+            ],
+            [
+                'id'    => 100,
+                'title' => 'subscription_access',
+            ],
+            [
+                'id'    => 101,
+                'title' => 'important_link_create',
+            ],
+            [
+                'id'    => 102,
+                'title' => 'important_link_edit',
+            ],
+            [
+                'id'    => 103,
+                'title' => 'important_link_show',
+            ],
+            [
+                'id'    => 104,
+                'title' => 'important_link_delete',
+            ],
+            [
+                'id'    => 105,
+                'title' => 'important_link_access',
+            ],
+            [
+                'id'    => 106,
                 'title' => 'profile_password_edit',
             ],
         ];

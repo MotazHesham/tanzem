@@ -16,27 +16,27 @@ class UpdateVisitorRequest extends FormRequest
 
     public function rules()
     {
-        return [
-            'user_id' => [
-                'required',
-                'integer',
-            ],
-            'national' => [
+        return [ 
+            'name' => [
                 'string',
                 'required',
             ],
-            'events.*' => [
-                'integer',
-            ],
-            'events' => [
-                'array',
-            ],
-            'brands.*' => [
-                'integer',
-            ],
-            'brands' => [
-                'array',
-            ],
+            'email' => [
+                'required',
+                'unique:users,email,' . request()->user_id,
+            ], 
+            'phone' => [
+                'required',
+                'size:10',
+                'regex:/(05)[0-9]{8}/', 
+            ], 
+            'photo' => [
+                'required',
+            ], 
+            'national' => [
+                'string',
+                'required',
+            ], 
         ];
-    }
+    } 
 }

@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
 
 class BrandsController extends Controller
 {
@@ -88,6 +89,7 @@ class BrandsController extends Controller
             Media::whereIn('id', $media)->update(['model_id' => $brand->id]);
         }
 
+        Alert::success('تم بنجاح', 'تم إضافة القسم الداخلي بنجاح ');
         return redirect()->route('admin.brands.index');
     }
 
@@ -117,6 +119,7 @@ class BrandsController extends Controller
             $brand->photo->delete();
         }
 
+        Alert::success('تم بنجاح', 'تم تعديل بيانات القسم الداخلي بنجاح ');
         return redirect()->route('admin.brands.index');
     }
 
@@ -135,7 +138,8 @@ class BrandsController extends Controller
 
         $brand->delete();
 
-        return back();
+        Alert::success('تم بنجاح', 'تم  حذف القسم الداخلي بنجاح ');
+        return 1;
     }
 
     public function massDestroy(MassDestroyBrandRequest $request)

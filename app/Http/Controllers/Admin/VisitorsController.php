@@ -14,6 +14,8 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Spatie\MediaLibrary\Models\Media; 
+use Alert;
 
 class VisitorsController extends Controller
 {
@@ -49,6 +51,12 @@ class VisitorsController extends Controller
             $table->addColumn('user_email', function ($row) {
                 return $row->user ? $row->user->email : '';
             });
+            $table->addColumn('user_name', function ($row) {
+                return $row->user ? $row->user->name : '';
+            });
+            $table->addColumn('user_phone', function ($row) {
+                return $row->user ? $row->user->phone : '';
+            });
 
             $table->rawColumns(['actions', 'placeholder', 'user']);
 
@@ -72,11 +80,31 @@ class VisitorsController extends Controller
     }
 
     public function store(StoreVisitorRequest $request)
-    {
-        $visitor = Visitor::create($request->all());
-        $visitor->events()->sync($request->input('events', []));
-        $visitor->brands()->sync($request->input('brands', []));
+    { 
 
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'user_type' => 'visitor', 
+            'phone' => $request->phone,  
+        ]);
+
+
+        if ($request->input('photo', false)) {
+            $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+        }
+
+        if ($media = $request->input('ck-media', false)) {
+            Media::whereIn('id', $media)->update(['model_id' => $user->id]);
+        }
+
+        $visitor = Visitor::create([
+            'user_id' => $user->id,
+            'national' => $request->national
+        ]);
+
+        Alert::success('تم بنجاح', 'تم إضافة المشترك بنجاح ');
         return redirect()->route('admin.visitors.index');
     }
 
@@ -97,10 +125,31 @@ class VisitorsController extends Controller
 
     public function update(UpdateVisitorRequest $request, Visitor $visitor)
     {
-        $visitor->update($request->all());
-        $visitor->events()->sync($request->input('events', []));
-        $visitor->brands()->sync($request->input('brands', []));
+        $user = User::find($visitor->user_id);
 
+        $visitor->update([
+            'national' => $request->national
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password == null ? $user->password : bcrypt($request->password), 
+            'phone' => $request->phone,
+        ]);
+
+        if ($request->input('photo', false)) {
+            if (!$user->photo || $request->input('photo') !== $user->photo->file_name) {
+                if ($user->photo) {
+                    $user->photo->delete();
+                }
+                $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+            }
+        } elseif ($user->photo) {
+            $user->photo->delete();
+        }
+
+        Alert::success('تم بنجاح', 'تم تعديل بيانات المشترك بنجاح ');
         return redirect()->route('admin.visitors.index');
     }
 
@@ -108,7 +157,7 @@ class VisitorsController extends Controller
     {
         abort_if(Gate::denies('visitor_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $visitor->load('user', 'events', 'brands');
+        $visitor->load('user', 'events', 'brands', 'visitorVisitorsFamilies');
 
         return view('admin.visitors.show', compact('visitor'));
     }
@@ -119,7 +168,8 @@ class VisitorsController extends Controller
 
         $visitor->delete();
 
-        return back();
+        Alert::success('تم بنجاح', 'تم  حذف المشترك بنجاح ');
+        return 1;
     }
 
     public function massDestroy(MassDestroyVisitorRequest $request)

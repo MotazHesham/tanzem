@@ -13,6 +13,8 @@ class CreateBrandVisitorPivotTable extends Migration
             $table->foreign('visitor_id', 'visitor_id_fk_5137956')->references('id')->on('visitors')->onDelete('cascade');
             $table->unsignedBigInteger('brand_id');
             $table->foreign('brand_id', 'brand_id_fk_5137956')->references('id')->on('brands')->onDelete('cascade');
+            $table->tinyInteger('status')->default(0);
+            $table->timestamps();
         });
     }
 }

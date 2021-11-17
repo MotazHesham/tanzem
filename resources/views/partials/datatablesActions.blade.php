@@ -1,17 +1,37 @@
-@can($viewGate)
-    <a class="btn btn-xs btn-primary" href="{{ route('admin.' . $crudRoutePart . '.show', $row->id) }}">
-        {{ trans('global.view') }}
-    </a>
-@endcan
-@can($editGate)
-    <a class="btn btn-xs btn-info" href="{{ route('admin.' . $crudRoutePart . '.edit', $row->id) }}">
-        {{ trans('global.edit') }}
-    </a>
-@endcan
-@can($deleteGate)
-    <form action="{{ route('admin.' . $crudRoutePart . '.destroy', $row->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-        <input type="hidden" name="_method" value="DELETE">
-        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-    </form>
-@endcan
+
+<div>
+    @if($crudRoutePart == 'events')
+        
+        @if($row->status == 'active') 
+            <a href="{{ route('admin.events.status', [ 'id' => $row->id , 'status' => 'closed']) }}" class="btn btn-outline-warning btn-pill action-buttons-ban" title="ألغاء التفعيل">
+                <i  class="fas fa-ban actions-custom-i"></i>
+            </a> 
+        @endif
+
+        @if($row->status == 'pending' || $row->status == 'refused' || $row->status == 'closed')  
+            <a href="{{ route('admin.events.status', [ 'id' => $row->id , 'status' => 'active']) }}" class="btn btn-outline-success btn-pill action-buttons-edit" title="تفعيل">
+                <i  class="fas fa-check actions-custom-i"></i>
+            </a> 
+        @endif 
+
+        @if($row->status == 'pending') 
+            <a href="{{ route('admin.events.status', [ 'id' => $row->id , 'status' => 'refused']) }}" class="btn btn-outline-danger btn-pill action-buttons-delete" title="رفض">
+                <i  class="fas fa-times actions-custom-i"></i>
+            </a> 
+        @endif
+
+    @endif
+    @can($viewGate) 
+        <a href="{{ route('admin.' . $crudRoutePart . '.show', $row->id) }}" class="btn btn-outline-info btn-pill action-buttons-view"  title="{{ trans('global.view') }}"><i  class="fas fa-eye actions-custom-i"></i></a>
+    @endcan
+    
+    @can($editGate) 
+        <a href="{{ route('admin.' . $crudRoutePart . '.edit', $row->id) }}" class="btn btn-outline-success btn-pill action-buttons-edit"  title="{{ trans('global.edit') }}"><i  class="fa fa-edit actions-custom-i"></i></a>
+    @endcan
+    @can($deleteGate)
+        <?php $route = route('admin.' . $crudRoutePart . '.destroy', $row->id); ?>
+        <a  href="#" onclick="deleteConfirmation('{{$route}}')" class="btn btn-outline-danger btn-pill action-buttons-delete">
+            <i  class="fa fa-trash actions-custom-i"></i>
+        </a>  
+    @endcan
+</div>

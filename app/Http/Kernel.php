@@ -27,8 +27,10 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\SetLocale::class,
         ],
         'api' => [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:60,1',
             'bindings',
+            \App\Http\Middleware\AuthGates::class,
         ],
     ];
 
@@ -42,5 +44,6 @@ class Kernel extends HttpKernel
         'signed'           => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle'         => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'changelanguage' => \App\Http\Middleware\ChangeLanguage::class,
     ];
 }

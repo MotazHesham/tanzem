@@ -39,7 +39,8 @@ class Cawader extends Model
         'working_hours',
         'identity_number',
         'user_id',
-        'companies_and_institution_id',
+        'companies_and_institution_id', 
+        'desceiption',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -63,6 +64,11 @@ class Cawader extends Model
     public function specializations()
     {
         return $this->belongsToMany(Specialization::class);
+    }
+
+    public function events()
+    {
+        return $this->belongsToMany(Event::class);
     }
 
     public function user()

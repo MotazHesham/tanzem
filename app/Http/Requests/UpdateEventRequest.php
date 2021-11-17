@@ -58,11 +58,32 @@ class UpdateEventRequest extends FormRequest
                 'required',
                 'integer',
             ],
+            'client_id' => [
+                'required',
+                'integer',
+            ],
+            'government_id' => [
+                'required',
+                'integer',
+            ],
             'available_gates.*' => [
                 'integer',
             ],
             'available_gates' => [
                 'required',
+                'array',
+            ],
+            'specializations.*' => [
+                'integer',
+            ],
+            'specializations' => [
+                'required',
+                'array',
+            ],
+            'cawaders.*' => [
+                'integer',
+            ],
+            'cawaders' => [
                 'array',
             ],
         ];

@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'site_title' => 'tanzem',
+    'site_title' => 'تنظيم',
 ];

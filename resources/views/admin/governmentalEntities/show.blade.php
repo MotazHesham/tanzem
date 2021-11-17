@@ -25,10 +25,42 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.governmentalEntity.fields.user') }}
+                            {{ trans('cruds.user.fields.name') }}
                         </th>
                         <td>
-                            {{ $governmentalEntity->user->email ?? '' }}
+                            {{ $governmentalEntity->user->name }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.email') }}
+                        </th>
+                        <td>
+                            {{ $governmentalEntity->user->email }}
+                        </td>
+                    </tr> 
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.phone') }}
+                        </th>
+                        <td>
+                            {{ $governmentalEntity->user->phone }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.landline_phone') }}
+                        </th>
+                        <td>
+                            {{ $governmentalEntity->user->landline_phone }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.website') }}
+                        </th>
+                        <td>
+                            {{ $governmentalEntity->user->website }}
                         </td>
                     </tr>
                 </tbody>

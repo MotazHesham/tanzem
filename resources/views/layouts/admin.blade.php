@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html @if(app()->getLocale() == 'ar') dir="rtl" @endif> 
 
 <head>
     <meta charset="UTF-8">
@@ -22,11 +22,24 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/css/perfect-scrollbar.min.css" rel="stylesheet" />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
+    @if(app()->getLocale() == 'ar')
+      <style>
+        .c-sidebar-nav .c-sidebar-nav-dropdown-items{
+          padding-right: 8%; 
+        }
+      </style>
+    @else
+      <style>
+        .c-sidebar-nav .c-sidebar-nav-dropdown-items{
+          padding-left: 8%; 
+        }
+      </style>
+    @endif
     @yield('styles')
 </head>
 
 <body class="c-app">
-    @include('partials.menu')
+  @include('partials.menu_admin')
     <div class="c-wrapper">
         <header class="c-header c-header-fixed px-3">
             <button class="c-header-toggler c-class-toggler d-lg-none mfe-auto" type="button" data-target="#sidebar" data-class="c-sidebar-show">
@@ -39,7 +52,7 @@
                 <i class="fas fa-fw fa-bars"></i>
             </button>
 
-            <ul class="c-header-nav ml-auto">
+            <ul class="c-header-nav @if(app()->getLocale() == 'ar') mr-auto @else ml-auto @endif">
                 @if(count(config('panel.available_languages', [])) > 1)
                     <li class="c-header-nav-item dropdown d-md-down-none">
                         <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
@@ -82,6 +95,28 @@
                             @endif
                         </div>
                     </li>
+                    @if(file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php')))
+                        @can('profile_password_edit')
+                            <li class="c-header-nav-item dropdown d-md-down-none" style=" background: #EBEDEF; border-radius: 8px 39px 0px 0px; padding: 0px 13px;">
+                                <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                    @if(auth()->user()->photo)
+                                        <img src="{{asset(auth()->user()->photo->getUrl('thumb'))}}" alt="" width="40" height="40" style="border-radius: 50px;margin:10px">
+                                    @else 
+                                        <img src="{{asset('user.png')}}" alt="" width="40" height="40" style="border-radius: 50px;margin:10px">
+                                    @endif
+                                    <span class="text-center"> 
+                                        {{auth()->user()->name }}
+                                        <br> 
+                                        <small style="background: #216392;color:#fff; border-radius: 30px; padding: 1px 11px;">{{auth()->user()->roles->first()->title}}</small> 
+                                    </span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right"> 
+                                    <a class="dropdown-item" href="{{route('profile.password.edit')}}">{{trans('global.change_password')}}</a> 
+                                    <a class="dropdown-item" style="cursor: pointer" onclick="event.preventDefault(); document.getElementById('logoutform').submit();"> {{ trans('global.logout') }}</a> 
+                                </div>
+                            </li>
+                        @endcan
+                    @endif
                 </ul>
 
             </ul>
@@ -119,6 +154,9 @@
             </form>
         </div>
     </div>
+
+    @include('sweetalert::alert')
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -141,6 +179,58 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
     <script src="{{ asset('js/main.js') }}"></script>
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
+
+    <script>
+        function showFrontendAlert(type, title, message){
+            swal({ 
+                title: title,
+                text: message,
+                type: type, 
+                showConfirmButton: 'Okay',
+                timer: 3000
+            });
+        }
+
+        function deleteConfirmation(route, div = null, partials = false) { 
+            swal({
+                title: "{{trans('global.flash.delete_')}}",
+                text: "{{trans('global.flash.sure_')}}",
+                type: "warning",
+                showCancelButton: !0,
+                confirmButtonText: "{{trans('global.flash.yes_')}}",
+                cancelButtonText: "{{trans('global.flash.no_')}}",
+                reverseButtons: !0
+            }).then(function (e) {
+
+                if (e.value === true) { 
+
+                    $.ajax({
+                        type: 'DELETE',
+                        url: route, 
+                        data: { _token: '{{ csrf_token() }}', partials: partials}, 
+                        success: function (results) { 
+                            if(div != null){ 
+                            showFrontendAlert('success', '{{trans('global.flash.deleted')}}', '');
+                            $(div).html(null);
+                            $(div).html(results);
+                            }else{
+                            location.reload(); 
+                            }
+                        }
+                    });
+
+                } else {
+                    e.dismiss;
+                }
+
+            }, function (dismiss) {
+                return false;
+            })
+        }
+    </script>
     <script>
         $(function() {
   let copyButtonTrans = '{{ trans('global.datatables.copy') }}'

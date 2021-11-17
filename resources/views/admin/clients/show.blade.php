@@ -25,6 +25,46 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.user.fields.name') }}
+                        </th>
+                        <td>
+                            {{ $client->user->name ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.email') }}
+                        </th>
+                        <td>
+                            {{ $client->user->email ?? '' }}
+                        </td>
+                    </tr> 
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.phone') }}
+                        </th>
+                        <td>
+                            {{ $client->user->phone ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.landline_phone') }}
+                        </th>
+                        <td>
+                            {{ $client->user->landline_phone ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.website') }}
+                        </th>
+                        <td>
+                            {{ $client->user->website ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.client.fields.commerical_num') }}
                         </th>
                         <td>
@@ -61,18 +101,10 @@
                         </th>
                         <td>
                             @foreach($client->specializations as $key => $specialization)
-                                <span class="label label-info">{{ $specialization->name_ar }}</span>
+                                <span class="badge badge-info">{{ $specialization->name_ar }}</span>
                             @endforeach
                         </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.client.fields.user') }}
-                        </th>
-                        <td>
-                            {{ $client->user->email ?? '' }}
-                        </td>
-                    </tr>
+                    </tr> 
                 </tbody>
             </table>
             <div class="form-group">

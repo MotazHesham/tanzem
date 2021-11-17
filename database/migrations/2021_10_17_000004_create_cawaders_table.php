@@ -14,6 +14,7 @@ class CreateCawadersTable extends Migration
             $table->string('degree');
             $table->integer('working_hours');
             $table->string('identity_number');
+            $table->longText('desceiption')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

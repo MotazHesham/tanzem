@@ -35,15 +35,15 @@ class UpdateUserRequest extends FormRequest
             'phone' => [
                 'string',
                 'required',
-            ],
-            'landline_phone' => [
-                'string',
-                'nullable',
-            ],
-            'website' => [
-                'string',
+            ], 
+            'photo' => [
                 'required',
             ],
+            'phone' => [
+                'required',
+                'size:10',
+                'regex:/(05)[0-9]{8}/', 
+            ], 
         ];
-    }
+    } 
 }

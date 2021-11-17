@@ -13,6 +13,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
 
 class ClientsController extends Controller
 {
@@ -45,25 +46,24 @@ class ClientsController extends Controller
             $table->editColumn('id', function ($row) {
                 return $row->id ? $row->id : '';
             });
-            $table->editColumn('commerical_num', function ($row) {
-                return $row->commerical_num ? $row->commerical_num : '';
+            $table->addColumn('user_email', function ($row) {
+                return $row->user ? $row->user->email : '';
             });
-
-            $table->editColumn('licence_num', function ($row) {
-                return $row->licence_num ? $row->licence_num : '';
+            $table->addColumn('user_name', function ($row) {
+                return $row->user ? $row->user->name : '';
+            });
+            $table->addColumn('user_phone', function ($row) {
+                return $row->user ? $row->user->phone : '';
             });
 
             $table->editColumn('specialization', function ($row) {
                 $labels = [];
                 foreach ($row->specializations as $specialization) {
-                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $specialization->name_ar);
+                    $labels[] = sprintf('<span class="badge badge-info label-many">%s</span>', $specialization->name_ar);
                 }
 
                 return implode(' ', $labels);
-            });
-            $table->addColumn('user_email', function ($row) {
-                return $row->user ? $row->user->email : '';
-            });
+            }); 
 
             $table->rawColumns(['actions', 'placeholder', 'specialization', 'user']);
 
@@ -77,18 +77,34 @@ class ClientsController extends Controller
     {
         abort_if(Gate::denies('client_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $specializations = Specialization::pluck('name_ar', 'id');
+        $specializations = Specialization::pluck('name_ar', 'id'); 
 
-        $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        return view('admin.clients.create', compact('specializations', 'users'));
+        return view('admin.clients.create', compact('specializations'));
     }
 
     public function store(StoreClientRequest $request)
     {
-        $client = Client::create($request->all());
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'user_type' => 'client', 
+            'phone' => $request->phone, 
+            'landline_phone' => $request->landline_phone, 
+            'website' => $request->website, 
+        ]);
+
+        $client = Client::create([
+            'user_id' => $user->id,
+            'commerical_num' => $request->commerical_num,
+            'commerical_expiry' => $request->commerical_expiry,
+            'licence_num' => $request->licence_num,
+            'licence_expiry' => $request->licence_expiry,
+        ]);
+
         $client->specializations()->sync($request->input('specializations', []));
 
+        Alert::success('تم بنجاح', 'تم إضافة العميل بنجاح ');
         return redirect()->route('admin.clients.index');
     }
 
@@ -96,20 +112,36 @@ class ClientsController extends Controller
     {
         abort_if(Gate::denies('client_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $specializations = Specialization::pluck('name_ar', 'id');
-
-        $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $specializations = Specialization::pluck('name_ar', 'id'); 
 
         $client->load('specializations', 'user');
 
-        return view('admin.clients.edit', compact('specializations', 'users', 'client'));
+        return view('admin.clients.edit', compact('specializations', 'client'));
     }
 
     public function update(UpdateClientRequest $request, Client $client)
-    {
-        $client->update($request->all());
+    { 
+        $client->update([ 
+            'commerical_num' => $request->commerical_num,
+            'commerical_expiry' => $request->commerical_expiry,
+            'licence_num' => $request->licence_num,
+            'licence_expiry' => $request->licence_expiry,
+        ]);
+
+        $user = User::find($request->user_id);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password == null ? $user->password : bcrypt($request->password), 
+            'phone' => $request->phone, 
+            'landline_phone' => $request->landline_phone, 
+            'website' => $request->website, 
+        ]);
+
         $client->specializations()->sync($request->input('specializations', []));
 
+        Alert::success('تم بنجاح', 'تم تعديل بيانات العميل بنجاح ');
         return redirect()->route('admin.clients.index');
     }
 
@@ -128,7 +160,8 @@ class ClientsController extends Controller
 
         $client->delete();
 
-        return back();
+        Alert::success('تم بنجاح', 'تم  حذف العميل بنجاح ');
+        return 1;
     }
 
     public function massDestroy(MassDestroyClientRequest $request)

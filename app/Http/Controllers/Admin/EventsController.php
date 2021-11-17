@@ -7,26 +7,46 @@ use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\MassDestroyEventRequest;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
+use App\Models\Cawader;
 use App\Models\City;
+use App\Models\Client;
 use App\Models\CompaniesAndInstitution;
 use App\Models\Event;
-use App\Models\Gate;
+use App\Models\Gate as EventGate;
+use App\Models\GovernmentalEntity;
+use App\Models\Specialization;
+use App\Models\Visitor;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
 
 class EventsController extends Controller
 {
     use MediaUploadingTrait;
+
+    public function changeStatus($id,$status){
+        $event = Event::findOrFail($id);
+        $event->status = $status;
+        $event->save();
+
+        if($status == 'active'){
+            Alert::success('تم قبول الفعالية');
+        }else{
+            Alert::error('تم رفض الفعالية');
+        }
+
+        return redirect()->route('admin.events.index');
+    }
 
     public function index(Request $request)
     {
         abort_if(Gate::denies('event_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Event::with(['city', 'company', 'available_gates'])->select(sprintf('%s.*', (new Event())->table));
+            $query = Event::with(['city', 'company.user', 'available_gates'])->select(sprintf('%s.*', (new Event())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -52,28 +72,57 @@ class EventsController extends Controller
             });
             $table->editColumn('title', function ($row) {
                 return $row->title ? $row->title : '';
+            }); 
+            $table->editColumn('date', function ($row) {
+                $start = $row->start_date ? $row->start_date : '';
+                $end = $row->end_date ? $row->end_date : '';
+                return sprintf('<span class="badge bg-light text-dark">%s</span> <br> <span class="badge bg-secondary">%s</span>',$start,$end);
             });
-
-            $table->editColumn('start_time', function ($row) {
-                return $row->start_time ? $row->start_time : '';
+            $table->editColumn('time', function ($row) {
+                $start = $row->start_time ? $row->start_time : '';
+                $end = $row->end_time ? $row->end_time : '';
+                return sprintf('<span class="badge bg-light text-dark">%s</span> <br> <span class="badge bg-secondary">%s</span>',$start,$end);
             });
-            $table->editColumn('address', function ($row) {
-                return $row->address ? $row->address : '';
+            $table->editColumn('city', function ($row) {
+                $name = 'name_'.app()->getLocale();
+                return $row->city ? $row->city->$name : '';
             });
-            $table->addColumn('company_commerical_num', function ($row) {
-                return $row->company ? $row->company->commerical_num : '';
+            $table->addColumn('company_user_name', function ($row) {
+                return $row->company ? $row->company->user->name : '';
             });
 
             $table->editColumn('available_gates', function ($row) {
                 $labels = [];
                 foreach ($row->available_gates as $available_gate) {
-                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $available_gate->gate);
+                    $labels[] = sprintf('<span class="badge badge-info label-many">%s</span>', $available_gate->gate);
                 }
 
                 return implode(' ', $labels);
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'company', 'available_gates']);
+            $table->editColumn('specializations', function ($row) {
+                $labels = [];
+                foreach ($row->specializations as $specialization) {
+                    $labels[] = sprintf('<span class="badge badge-info label-many">%s</span>', $specialization->name_ar);
+                }
+
+                return implode(' ', $labels);
+            });
+            $table->editColumn('status', function ($row) {
+                if($row->status == 'active'){
+                    $event_status = 'success';
+                }elseif($row->status == 'pending'){
+                    $event_status = 'info';
+                }elseif($row->status == 'closed'){
+                    $event_status = 'warning';
+                }elseif($row->status == 'refused'){
+                    $event_status = 'danger';
+                }else{
+                    $event_status = 'dark';
+                }
+                return $row->status ? sprintf('<span class="badge badge-%s">%s</span>',$event_status,trans('global.events_status.'.$row->status)) : '';
+            });
+            $table->rawColumns(['actions', 'placeholder', 'company', 'date', 'time', 'status', 'available_gates','specializations']);
 
             return $table->make(true);
         }
@@ -87,17 +136,27 @@ class EventsController extends Controller
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $companies = CompaniesAndInstitution::pluck('commerical_num', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $companies = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $available_gates = Gate::pluck('gate', 'id');
+        $available_gates = EventGate::pluck('gate', 'id');
 
-        return view('admin.events.create', compact('cities', 'companies', 'available_gates'));
+        $specializations = Specialization::pluck('name_ar', 'id');
+
+        $cawaders = Cawader::with('user')->get()->pluck('user.name', 'id'); 
+
+        $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $governments = GovernmentalEntity::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.events.create', compact('cities', 'companies', 'available_gates','specializations','cawaders','clients','governments'));
     }
 
     public function store(StoreEventRequest $request)
     {
         $event = Event::create($request->all());
         $event->available_gates()->sync($request->input('available_gates', []));
+        $event->specializations()->sync($request->input('specializations', []));
+        $event->cawaders()->sync($request->input('cawaders', []));
         if ($request->input('photo', false)) {
             $event->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
         }
@@ -106,6 +165,7 @@ class EventsController extends Controller
             Media::whereIn('id', $media)->update(['model_id' => $event->id]);
         }
 
+        Alert::success('تم بنجاح', 'تم إضافة الفعالية بنجاح ');
         return redirect()->route('admin.events.index');
     }
 
@@ -115,19 +175,29 @@ class EventsController extends Controller
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $companies = CompaniesAndInstitution::pluck('commerical_num', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $companies = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $available_gates = Gate::pluck('gate', 'id');
+        $available_gates = EventGate::pluck('gate', 'id');
 
-        $event->load('city', 'company', 'available_gates');
+        $specializations = Specialization::pluck('name_ar', 'id');
 
-        return view('admin.events.edit', compact('cities', 'companies', 'available_gates', 'event'));
+        $cawaders = Cawader::with('user')->get()->pluck('user.name', 'id'); 
+
+        $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $governments = GovernmentalEntity::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $event->load('city', 'company', 'specializations', 'cawaders', 'reviews', 'client', 'government', 'available_gates');
+
+        return view('admin.events.edit', compact('cities', 'companies', 'available_gates', 'event','specializations','cawaders','clients','governments'));
     }
 
     public function update(UpdateEventRequest $request, Event $event)
     {
         $event->update($request->all());
         $event->available_gates()->sync($request->input('available_gates', []));
+        $event->specializations()->sync($request->input('specializations', []));
+        $event->cawaders()->sync($request->input('cawaders', []));
         if ($request->input('photo', false)) {
             if (!$event->photo || $request->input('photo') !== $event->photo->file_name) {
                 if ($event->photo) {
@@ -139,6 +209,7 @@ class EventsController extends Controller
             $event->photo->delete();
         }
 
+        Alert::success('تم بنجاح', 'تم تعديل بيانات الفعالية بنجاح ');
         return redirect()->route('admin.events.index');
     }
 
@@ -146,7 +217,7 @@ class EventsController extends Controller
     {
         abort_if(Gate::denies('event_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $event->load('city', 'company', 'available_gates', 'eventBrands', 'eventsVisitors');
+        $event->load('city', 'company', 'available_gates', 'specializations', 'cawaders', 'reviews', 'client', 'government', 'eventBrands', 'eventsVisitors');
 
         return view('admin.events.show', compact('event'));
     }
@@ -157,7 +228,8 @@ class EventsController extends Controller
 
         $event->delete();
 
-        return back();
+        Alert::success('تم بنجاح', 'تم  حذف الفعالية بنجاح ');
+        return 1;
     }
 
     public function massDestroy(MassDestroyEventRequest $request)

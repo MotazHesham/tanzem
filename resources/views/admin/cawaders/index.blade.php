@@ -25,14 +25,20 @@
                         {{ trans('cruds.cawader.fields.id') }}
                     </th>
                     <th>
-                        {{ trans('cruds.cawader.fields.specialization') }}
+                        {{ trans('cruds.user.fields.name') }}
                     </th>
                     <th>
-                        {{ trans('cruds.cawader.fields.user') }}
+                        {{ trans('cruds.user.fields.email') }}
+                    </th> 
+                    <th>
+                        {{ trans('cruds.user.fields.phone') }}
                     </th>
                     <th>
                         {{ trans('cruds.cawader.fields.companies_and_institution') }}
                     </th>
+                    <th>
+                        {{ trans('cruds.cawader.fields.specialization') }}
+                    </th> 
                     <th>
                         &nbsp;
                     </th>
@@ -90,9 +96,11 @@
     columns: [
       { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
-{ data: 'specialization', name: 'specializations.name_ar' },
+{ data: 'user_name', name: 'user.name' },
 { data: 'user_email', name: 'user.email' },
-{ data: 'companies_and_institution_commerical_num', name: 'companies_and_institution.commerical_num' },
+{ data: 'user_phone', name: 'user.phone' },
+{ data: 'companies_and_institution_user_name', name: 'companies_and_institution.user.name' },
+{ data: 'specialization', name: 'specializations.name_ar' }, 
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

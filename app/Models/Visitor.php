@@ -26,6 +26,11 @@ class Visitor extends Model
         'deleted_at',
     ];
 
+    public function visitorVisitorsFamilies()
+    {
+        return $this->hasMany(VisitorsFamily::class, 'visitor_id', 'id');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -33,7 +38,7 @@ class Visitor extends Model
 
     public function events()
     {
-        return $this->belongsToMany(Event::class);
+        return $this->belongsToMany(Event::class)->withPivot(['status','created_at','updated_at']);
     }
 
     public function brands()

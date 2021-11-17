@@ -30,22 +30,13 @@
                         </th>
                         <th>
                             {{ trans('cruds.user.fields.email') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.user.fields.email_verified_at') }}
-                        </th>
+                        </th> 
                         <th>
                             {{ trans('cruds.user.fields.roles') }}
                         </th>
                         <th>
                             {{ trans('cruds.user.fields.phone') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.user.fields.landline_phone') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.user.fields.website') }}
-                        </th>
+                        </th> 
                         <th>
                             &nbsp;
                         </th>
@@ -65,10 +56,7 @@
                             </td>
                             <td>
                                 {{ $user->email ?? '' }}
-                            </td>
-                            <td>
-                                {{ $user->email_verified_at ?? '' }}
-                            </td>
+                            </td> 
                             <td>
                                 @foreach($user->roles as $key => $item)
                                     <span class="badge badge-info">{{ $item->title }}</span>
@@ -76,33 +64,26 @@
                             </td>
                             <td>
                                 {{ $user->phone ?? '' }}
-                            </td>
-                            <td>
-                                {{ $user->landline_phone ?? '' }}
-                            </td>
-                            <td>
-                                {{ $user->website ?? '' }}
-                            </td>
-                            <td>
+                            </td> 
+                            <td> 
                                 @can('user_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.users.show', $user->id) }}">
-                                        {{ trans('global.view') }}
+                                    <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-outline-info btn-pill action-buttons-view" >
+                                        <i  class="fas fa-eye actions-custom-i"></i>
                                     </a>
                                 @endcan
 
                                 @can('user_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.users.edit', $user->id) }}">
-                                        {{ trans('global.edit') }}
+                                    <a  href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-outline-success btn-pill action-buttons-edit">
+                                        <i  class="fa fa-edit actions-custom-i"></i> 
                                     </a>
                                 @endcan
 
                                 @can('user_delete')
-                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                    </form>
-                                @endcan
+                                    <?php $route = route('admin.users.destroy', $user->id); ?>
+                                    <a  href="#" onclick="deleteConfirmation('{{$route}}')" class="btn btn-outline-danger btn-pill action-buttons-delete">
+                                        <i  class="fa fa-trash actions-custom-i"></i>
+                                    </a> 
+                                @endcan 
 
                             </td>
 

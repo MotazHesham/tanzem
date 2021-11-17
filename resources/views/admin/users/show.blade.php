@@ -38,15 +38,7 @@
                         <td>
                             {{ $user->email }}
                         </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.user.fields.email_verified_at') }}
-                        </th>
-                        <td>
-                            {{ $user->email_verified_at }}
-                        </td>
-                    </tr>
+                    </tr> 
                     <tr>
                         <th>
                             {{ trans('cruds.user.fields.roles') }}
@@ -65,7 +57,7 @@
                             {{ $user->phone }}
                         </td>
                     </tr>
-                    <tr>
+                    {{-- <tr>
                         <th>
                             {{ trans('cruds.user.fields.landline_phone') }}
                         </th>
@@ -79,6 +71,18 @@
                         </th>
                         <td>
                             {{ $user->website }}
+                        </td>
+                    </tr> --}}
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.photo') }}
+                        </th>
+                        <td>
+                            @if($user->photo)
+                                <a href="{{ $user->photo->getUrl() }}" target="_blank" style="display: inline-block">
+                                    <img src="{{ $user->photo->getUrl('thumb') }}">
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 </tbody>

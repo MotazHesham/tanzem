@@ -14,7 +14,9 @@ use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Spatie\MediaLibrary\Models\Media;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
 
 class CawaderController extends Controller
 {
@@ -50,7 +52,7 @@ class CawaderController extends Controller
             $table->editColumn('specialization', function ($row) {
                 $labels = [];
                 foreach ($row->specializations as $specialization) {
-                    $labels[] = sprintf('<span class="label label-info label-many">%s</span>', $specialization->name_ar);
+                    $labels[] = sprintf('<span class="badge badge-info label-many">%s</span>', $specialization->name_ar);
                 }
 
                 return implode(' ', $labels);
@@ -58,9 +60,15 @@ class CawaderController extends Controller
             $table->addColumn('user_email', function ($row) {
                 return $row->user ? $row->user->email : '';
             });
+            $table->addColumn('user_name', function ($row) {
+                return $row->user ? $row->user->name : '';
+            });
+            $table->addColumn('user_phone', function ($row) {
+                return $row->user ? $row->user->phone : '';
+            });
 
-            $table->addColumn('companies_and_institution_commerical_num', function ($row) {
-                return $row->companies_and_institution ? $row->companies_and_institution->commerical_num : '';
+            $table->addColumn('companies_and_institution_user_name', function ($row) {
+                return $row->companies_and_institution ? $row->companies_and_institution->user->name : '';
             });
 
             $table->rawColumns(['actions', 'placeholder', 'specialization', 'user', 'companies_and_institution']);
@@ -77,20 +85,45 @@ class CawaderController extends Controller
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $specializations = Specialization::pluck('name_ar', 'id');
+        $specializations = Specialization::pluck('name_ar', 'id'); 
 
-        $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $companies_and_institutions = CompaniesAndInstitution::with('user')->get()->pluck('user.email', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $companies_and_institutions = CompaniesAndInstitution::pluck('commerical_num', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        return view('admin.cawaders.create', compact('cities', 'specializations', 'users', 'companies_and_institutions'));
+        return view('admin.cawaders.create', compact('cities', 'specializations', 'companies_and_institutions'));
     }
 
     public function store(StoreCawaderRequest $request)
     {
-        $cawader = Cawader::create($request->all());
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'user_type' => 'cader', 
+            'phone' => $request->phone,  
+        ]);
+
+        if ($request->input('photo', false)) {
+            $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+        }
+
+        if ($media = $request->input('ck-media', false)) {
+            Media::whereIn('id', $media)->update(['model_id' => $user->id]);
+        }
+
+        $cawader = Cawader::create([
+            'user_id' => $user->id,
+            'dob' => $request->dob,
+            'city_id' => $request->city_id,
+            'degree' => $request->degree,
+            'desceiption' => $request->desceiption,
+            'working_hours' => $request->working_hours,
+            'identity_number' => $request->identity_number,
+            'companies_and_institution_id' => $request->companies_and_institution_id,
+        ]);
+
         $cawader->specializations()->sync($request->input('specializations', []));
 
+        Alert::success('تم بنجاح', 'تم إضافة الكادر بنجاح ');
         return redirect()->route('admin.cawaders.index');
     }
 
@@ -100,22 +133,50 @@ class CawaderController extends Controller
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $specializations = Specialization::pluck('name_ar', 'id');
+        $specializations = Specialization::pluck('name_ar', 'id'); 
 
-        $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $companies_and_institutions = CompaniesAndInstitution::pluck('commerical_num', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $companies_and_institutions = CompaniesAndInstitution::with('user')->get()->pluck('user.email', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $cawader->load('city', 'specializations', 'user', 'companies_and_institution');
 
-        return view('admin.cawaders.edit', compact('cities', 'specializations', 'users', 'companies_and_institutions', 'cawader'));
+        return view('admin.cawaders.edit', compact('cities', 'specializations', 'companies_and_institutions', 'cawader'));
     }
 
     public function update(UpdateCawaderRequest $request, Cawader $cawader)
-    {
-        $cawader->update($request->all());
+    { 
+        $cawader->update([ 
+            'dob' => $request->dob,
+            'desceiption' => $request->desceiption,
+            'city_id' => $request->city_id,
+            'degree' => $request->degree,
+            'working_hours' => $request->working_hours,
+            'identity_number' => $request->identity_number,
+            'companies_and_institution_id' => $request->companies_and_institution_id,
+        ]);
+
+        $user = User::find($request->user_id);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password == null ? $user->password : bcrypt($request->password), 
+            'phone' => $request->phone,  
+        ]);
+        
+        if ($request->input('photo', false)) {
+            if (!$user->photo || $request->input('photo') !== $user->photo->file_name) {
+                if ($user->photo) {
+                    $user->photo->delete();
+                }
+                $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+            }
+        } elseif ($user->photo) {
+            $user->photo->delete();
+        }
+
         $cawader->specializations()->sync($request->input('specializations', []));
 
+        Alert::success('تم بنجاح', 'تم تعديل بيانات الكادر بنجاح ');
         return redirect()->route('admin.cawaders.index');
     }
 
@@ -134,7 +195,8 @@ class CawaderController extends Controller
 
         $cawader->delete();
 
-        return back();
+        Alert::success('تم بنجاح', 'تم  حذف الكادر بنجاح ');
+        return 1;
     }
 
     public function massDestroy(MassDestroyCawaderRequest $request)

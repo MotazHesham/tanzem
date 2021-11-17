@@ -18,6 +18,8 @@ class CreateUsersTable extends Migration
             $table->string('phone')->nullable();
             $table->string('landline_phone')->nullable();
             $table->string('website')->nullable();
+            $table->string('user_type');
+            $table->string('fcm_token',2000)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

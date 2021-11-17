@@ -7,7 +7,7 @@ use App\Http\Requests\MassDestroyGateRequest;
 use App\Http\Requests\StoreGateRequest;
 use App\Http\Requests\UpdateGateRequest;
 use App\Models\Gate;
-use Gate;
+use Gate as PermissionGate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,7 +15,7 @@ class GatesController extends Controller
 {
     public function index()
     {
-        abort_if(Gate::denies('gate_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(PermissionGate::denies('gate_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $gates = Gate::all();
 
@@ -24,7 +24,7 @@ class GatesController extends Controller
 
     public function create()
     {
-        abort_if(Gate::denies('gate_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(PermissionGate::denies('gate_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return view('admin.gates.create');
     }
@@ -38,7 +38,7 @@ class GatesController extends Controller
 
     public function edit(Gate $gate)
     {
-        abort_if(Gate::denies('gate_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(PermissionGate::denies('gate_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return view('admin.gates.edit', compact('gate'));
     }
@@ -52,18 +52,18 @@ class GatesController extends Controller
 
     public function show(Gate $gate)
     {
-        abort_if(Gate::denies('gate_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(PermissionGate::denies('gate_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return view('admin.gates.show', compact('gate'));
     }
 
     public function destroy(Gate $gate)
     {
-        abort_if(Gate::denies('gate_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(PermissionGate::denies('gate_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $gate->delete();
 
-        return back();
+        return 1;
     }
 
     public function massDestroy(MassDestroyGateRequest $request)

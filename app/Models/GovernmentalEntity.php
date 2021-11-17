@@ -6,6 +6,7 @@ use \DateTimeInterface;
 use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 class GovernmentalEntity extends Model
 {
@@ -27,6 +28,16 @@ class GovernmentalEntity extends Model
         'deleted_at',
     ];
 
+    public function getCreatedAtAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+
+    public function governmentEvents()
+    {
+        return $this->hasMany(Event::class, 'government_id', 'id');
+    }
+    
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

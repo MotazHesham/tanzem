@@ -40,10 +40,30 @@ class StoreClientRequest extends FormRequest
                 'required',
                 'array',
             ],
-            'user_id' => [
+            'name' => [
+                'string',
                 'required',
-                'integer',
+            ],
+            'email' => [
+                'required',
+                'unique:users',
+            ],
+            'password' => [
+                'required',
+            ], 
+            'phone' => [
+                'required',
+                'size:10',
+                'regex:/(05)[0-9]{8}/', 
+            ], 
+            'landline_phone' => [
+                'string',
+                'nullable',
+            ],
+            'website' => [
+                'string',
+                'required',
             ],
         ];
-    }
+    } 
 }

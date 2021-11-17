@@ -14,6 +14,12 @@ class CreateCompaniesAndInstitutionsTable extends Migration
             $table->date('commerical_expiry');
             $table->string('licence_num');
             $table->date('licence_expiry');
+            $table->longText('about_company');
+            $table->string('facebook')->nullable();
+            $table->string('gmail')->nullable();
+            $table->string('linked')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('twitter')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

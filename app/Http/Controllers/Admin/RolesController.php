@@ -11,6 +11,7 @@ use App\Models\Role;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Alert;
 
 class RolesController extends Controller
 {
@@ -37,6 +38,7 @@ class RolesController extends Controller
         $role = Role::create($request->all());
         $role->permissions()->sync($request->input('permissions', []));
 
+        Alert::success('تم بنجاح', 'تم إضافة المجموعة بنجاح ');
         return redirect()->route('admin.roles.index');
     }
 
@@ -56,6 +58,7 @@ class RolesController extends Controller
         $role->update($request->all());
         $role->permissions()->sync($request->input('permissions', []));
 
+        Alert::success('تم بنجاح', 'تم تعديل بيانات المجموعة بنجاح ');
         return redirect()->route('admin.roles.index');
     }
 
@@ -74,7 +77,8 @@ class RolesController extends Controller
 
         $role->delete();
 
-        return back();
+        Alert::success('تم بنجاح', 'تم  حذف المجموعة بنجاح ');
+        return 1;
     }
 
     public function massDestroy(MassDestroyRoleRequest $request)

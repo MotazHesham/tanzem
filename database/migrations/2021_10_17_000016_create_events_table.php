@@ -19,6 +19,8 @@ class CreateEventsTable extends Migration
             $table->string('address');
             $table->decimal('latitude', 15, 2);
             $table->decimal('longitude', 15, 2);
+            $table->decimal('cost', 15, 2)->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

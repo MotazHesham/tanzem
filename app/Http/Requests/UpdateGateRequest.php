@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Gate;
+use App\Models\Gate as EventGate;
+use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
 

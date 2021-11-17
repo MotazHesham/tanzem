@@ -34,6 +34,16 @@ class Client extends Model
         'deleted_at',
     ];
 
+    public function clientEvents()
+    {
+        return $this->hasMany(Event::class, 'client_id', 'id');
+    }
+    
+    public function getCreatedAtAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    }
+    
     public function getCommericalExpiryAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;

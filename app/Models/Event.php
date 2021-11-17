@@ -17,6 +17,13 @@ class Event extends Model implements HasMedia
     use HasMediaTrait;
     use Auditable;
 
+    public const STATUS_SELECT = [
+        'pending'  => 'Pending',
+        'active' => 'Active',
+        'refused'  => 'Refused',
+        'closed'   => 'Closed',
+    ];
+
     public $table = 'events';
 
     protected $appends = [
@@ -43,6 +50,10 @@ class Event extends Model implements HasMedia
         'latitude',
         'longitude',
         'company_id',
+        'cost',
+        'status',
+        'client_id',
+        'government_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -52,6 +63,8 @@ class Event extends Model implements HasMedia
     {
         $this->addMediaConversion('thumb')->fit('crop', 50, 50);
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
+        $this->addMediaConversion('preview2')->fit('crop', 220, 220);
+        $this->addMediaConversion('preview3')->fit('crop', 320, 320);
     }
 
     public function eventBrands()
@@ -61,7 +74,7 @@ class Event extends Model implements HasMedia
 
     public function eventsVisitors()
     {
-        return $this->belongsToMany(Visitor::class);
+        return $this->belongsToMany(Visitor::class)->withPivot(['status','created_at','updated_at']);
     }
 
     public function getStartDateAttribute($value)
@@ -84,6 +97,26 @@ class Event extends Model implements HasMedia
         $this->attributes['end_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
     }
 
+    public function getStartTimeAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.time_format')) : null;
+    }
+
+    public function setStartTimeAttribute($value)
+    {
+        $this->attributes['start_time'] = $value ? Carbon::createFromFormat(config('panel.time_format'), $value)->format('H:i:s') : null;
+    }
+
+    public function getEndTimeAttribute($value)
+    {
+        return $value ? Carbon::parse($value)->format(config('panel.time_format')) : null;
+    }
+
+    public function setEndTimeAttribute($value)
+    {
+        $this->attributes['end_time'] = $value ? Carbon::createFromFormat(config('panel.time_format'), $value)->format('H:i:s') : null;
+    }
+
     public function city()
     {
         return $this->belongsTo(City::class, 'city_id');
@@ -96,6 +129,8 @@ class Event extends Model implements HasMedia
             $file->url       = $file->getUrl();
             $file->thumbnail = $file->getUrl('thumb');
             $file->preview   = $file->getUrl('preview');
+            $file->preview2   = $file->getUrl('preview2');
+            $file->preview3   = $file->getUrl('preview3');
         }
 
         return $file;
@@ -109,6 +144,31 @@ class Event extends Model implements HasMedia
     public function available_gates()
     {
         return $this->belongsToMany(Gate::class);
+    }
+
+    public function specializations()
+    {
+        return $this->belongsToMany(Specialization::class);
+    }
+
+    public function cawaders()
+    {
+        return $this->belongsToMany(Cawader::class);
+    }
+
+    public function reviews()
+    {
+        return $this->belongsToMany(Visitor::class,'event_review','event_id','visitor_id')->withPivot('review','rate','created_at','updated_at');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_id');
+    }
+
+    public function government()
+    {
+        return $this->belongsTo(GovernmentalEntity::class, 'government_id');
     }
 
     protected function serializeDate(DateTimeInterface $date)

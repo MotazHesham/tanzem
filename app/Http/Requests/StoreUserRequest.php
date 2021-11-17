@@ -28,6 +28,9 @@ class StoreUserRequest extends FormRequest
             'password' => [
                 'required',
             ],
+            'photo' => [
+                'required',
+            ],
             'roles.*' => [
                 'integer',
             ],
@@ -36,17 +39,10 @@ class StoreUserRequest extends FormRequest
                 'array',
             ],
             'phone' => [
-                'string',
                 'required',
-            ],
-            'landline_phone' => [
-                'string',
-                'nullable',
-            ],
-            'website' => [
-                'string',
-                'required',
-            ],
+                'size:10',
+                'regex:/(05)[0-9]{8}/', 
+            ], 
         ];
-    }
+    } 
 }

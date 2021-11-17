@@ -16,27 +16,30 @@ class StoreVisitorRequest extends FormRequest
 
     public function rules()
     {
-        return [
-            'user_id' => [
-                'required',
-                'integer',
-            ],
-            'national' => [
+        return [ 
+            'name' => [
                 'string',
                 'required',
             ],
-            'events.*' => [
-                'integer',
+            'email' => [
+                'required',
+                'unique:users',
             ],
-            'events' => [
-                'array',
-            ],
-            'brands.*' => [
-                'integer',
-            ],
-            'brands' => [
-                'array',
-            ],
+            'password' => [
+                'required',
+            ], 
+            'photo' => [
+                'required',
+            ], 
+            'phone' => [
+                'required',
+                'size:10',
+                'regex:/(05)[0-9]{8}/', 
+            ], 
+            'national' => [
+                'string',
+                'required',
+            ], 
         ];
-    }
+    } 
 }

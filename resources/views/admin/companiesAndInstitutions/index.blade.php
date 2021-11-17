@@ -26,19 +26,16 @@
                             {{ trans('cruds.companiesAndInstitution.fields.id') }}
                         </th>
                         <th>
-                            {{ trans('cruds.companiesAndInstitution.fields.commerical_num') }}
+                            {{ trans('cruds.user.fields.name') }}
                         </th>
                         <th>
-                            {{ trans('cruds.companiesAndInstitution.fields.commerical_expiry') }}
+                            {{ trans('cruds.user.fields.email') }}
+                        </th> 
+                        <th>
+                            {{ trans('cruds.user.fields.phone') }}
                         </th>
                         <th>
-                            {{ trans('cruds.companiesAndInstitution.fields.licence_num') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.companiesAndInstitution.fields.licence_expiry') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.companiesAndInstitution.fields.user') }}
+                            {{ trans('cruds.user.fields.photo') }}
                         </th>
                         <th>
                             {{ trans('cruds.companiesAndInstitution.fields.specializations') }}
@@ -56,47 +53,47 @@
                             </td>
                             <td>
                                 {{ $companiesAndInstitution->id ?? '' }}
-                            </td>
+                            </td> 
                             <td>
-                                {{ $companiesAndInstitution->commerical_num ?? '' }}
-                            </td>
-                            <td>
-                                {{ $companiesAndInstitution->commerical_expiry ?? '' }}
-                            </td>
-                            <td>
-                                {{ $companiesAndInstitution->licence_num ?? '' }}
-                            </td>
-                            <td>
-                                {{ $companiesAndInstitution->licence_expiry ?? '' }}
+                                {{ $companiesAndInstitution->user->name ?? '' }}
                             </td>
                             <td>
                                 {{ $companiesAndInstitution->user->email ?? '' }}
                             </td>
                             <td>
-                                @foreach($companiesAndInstitution->specializations as $key => $item)
-                                    <span class="badge badge-info">{{ $item->name_ar }}</span>
-                                @endforeach
+                                {{ $companiesAndInstitution->user->phone ?? '' }}
                             </td>
                             <td>
+                                @if($companiesAndInstitution->user && $companiesAndInstitution->user->photo)
+                                    <a href="{{ $companiesAndInstitution->user->photo->getUrl() }}" target="_blank" style="display: inline-block">
+                                        <img src="{{ $companiesAndInstitution->user->photo->getUrl('thumb') }}">
+                                    </a>
+                                @endif
+                            </td>
+                            <td>
+                                @foreach($companiesAndInstitution->specializations as $key => $specialization)
+                                    <span class="badge badge-info">{{ $specialization->name_ar }}</span>
+                                @endforeach
+                            </td>
+                            <td> 
                                 @can('companies_and_institution_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.companies-and-institutions.show', $companiesAndInstitution->id) }}">
-                                        {{ trans('global.view') }}
+                                    <a href="{{ route('admin.companies-and-institutions.show', $companiesAndInstitution->id) }}" class="btn btn-outline-info btn-pill action-buttons-view" >
+                                        <i  class="fas fa-eye actions-custom-i"></i>
                                     </a>
                                 @endcan
 
                                 @can('companies_and_institution_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.companies-and-institutions.edit', $companiesAndInstitution->id) }}">
-                                        {{ trans('global.edit') }}
+                                    <a  href="{{ route('admin.companies-and-institutions.edit', $companiesAndInstitution->id) }}" class="btn btn-outline-success btn-pill action-buttons-edit">
+                                        <i  class="fa fa-edit actions-custom-i"></i> 
                                     </a>
                                 @endcan
 
                                 @can('companies_and_institution_delete')
-                                    <form action="{{ route('admin.companies-and-institutions.destroy', $companiesAndInstitution->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                    </form>
-                                @endcan
+                                    <?php $route = route('admin.companies-and-institutions.destroy', $companiesAndInstitution->id); ?>
+                                    <a  href="#" onclick="deleteConfirmation('{{$route}}')" class="btn btn-outline-danger btn-pill action-buttons-delete">
+                                        <i  class="fa fa-trash actions-custom-i"></i>
+                                    </a> 
+                                @endcan 
 
                             </td>
 

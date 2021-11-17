@@ -45,10 +45,25 @@ class StoreCawaderRequest extends FormRequest
                 'string',
                 'required',
             ],
-            'user_id' => [
+            'name' => [
+                'string',
                 'required',
-                'integer',
             ],
+            'email' => [
+                'required',
+                'unique:users',
+            ],
+            'password' => [
+                'required',
+            ], 
+            'photo' => [
+                'required',
+            ], 
+            'phone' => [
+                'required',
+                'size:10',
+                'regex:/(05)[0-9]{8}/', 
+            ], 
         ];
-    }
+    } 
 }

@@ -10,6 +10,7 @@ use App\Models\City;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Alert;
 
 class CitiesController extends Controller
 {
@@ -33,6 +34,7 @@ class CitiesController extends Controller
     {
         $city = City::create($request->all());
 
+        Alert::success('تم بنجاح', 'تم إضافة المدينة بنجاح ');
         return redirect()->route('admin.cities.index');
     }
 
@@ -47,6 +49,7 @@ class CitiesController extends Controller
     {
         $city->update($request->all());
 
+        Alert::success('تم بنجاح', 'تم تعديل بيانات المدينة بنجاح ');
         return redirect()->route('admin.cities.index');
     }
 
@@ -63,7 +66,8 @@ class CitiesController extends Controller
 
         $city->delete();
 
-        return back();
+        Alert::success('تم بنجاح', 'تم  حذف المدينة بنجاح ');
+        return 1;
     }
 
     public function massDestroy(MassDestroyCityRequest $request)

@@ -25,22 +25,16 @@
                         {{ trans('cruds.client.fields.id') }}
                     </th>
                     <th>
-                        {{ trans('cruds.client.fields.commerical_num') }}
+                        {{ trans('cruds.user.fields.name') }}
                     </th>
                     <th>
-                        {{ trans('cruds.client.fields.commerical_expiry') }}
-                    </th>
+                        {{ trans('cruds.user.fields.email') }}
+                    </th> 
                     <th>
-                        {{ trans('cruds.client.fields.licence_num') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.client.fields.licence_expiry') }}
+                        {{ trans('cruds.user.fields.phone') }}
                     </th>
                     <th>
                         {{ trans('cruds.client.fields.specialization') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.client.fields.user') }}
                     </th>
                     <th>
                         &nbsp;
@@ -99,12 +93,10 @@
     columns: [
       { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
-{ data: 'commerical_num', name: 'commerical_num' },
-{ data: 'commerical_expiry', name: 'commerical_expiry' },
-{ data: 'licence_num', name: 'licence_num' },
-{ data: 'licence_expiry', name: 'licence_expiry' },
-{ data: 'specialization', name: 'specializations.name_ar' },
+{ data: 'user_name', name: 'user.name' },
 { data: 'user_email', name: 'user.email' },
+{ data: 'user_phone', name: 'user.phone' },
+{ data: 'specialization', name: 'specialization' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

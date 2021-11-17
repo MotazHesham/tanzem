@@ -23,9 +23,15 @@
                     </th>
                     <th>
                         {{ trans('cruds.governmentalEntity.fields.id') }}
+                    </th> 
+                    <th>
+                        {{ trans('cruds.user.fields.name') }}
                     </th>
                     <th>
-                        {{ trans('cruds.governmentalEntity.fields.user') }}
+                        {{ trans('cruds.user.fields.email') }}
+                    </th> 
+                    <th>
+                        {{ trans('cruds.user.fields.phone') }}
                     </th>
                     <th>
                         &nbsp;
@@ -84,7 +90,9 @@
     columns: [
       { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
+{ data: 'user_name', name: 'user.name' },
 { data: 'user_email', name: 'user.email' },
+{ data: 'user_phone', name: 'user.phone' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

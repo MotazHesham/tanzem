@@ -53,26 +53,25 @@
                                     <span class="badge badge-info">{{ $item->title }}</span>
                                 @endforeach
                             </td>
-                            <td>
+                            <td> 
                                 @can('role_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.roles.show', $role->id) }}">
-                                        {{ trans('global.view') }}
+                                    <a href="{{ route('admin.roles.show', $role->id) }}" class="btn btn-outline-info btn-pill action-buttons-view" >
+                                        <i  class="fas fa-eye actions-custom-i"></i>
                                     </a>
                                 @endcan
 
                                 @can('role_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.roles.edit', $role->id) }}">
-                                        {{ trans('global.edit') }}
+                                    <a  href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-outline-success btn-pill action-buttons-edit">
+                                        <i  class="fa fa-edit actions-custom-i"></i> 
                                     </a>
                                 @endcan
 
                                 @can('role_delete')
-                                    <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                    </form>
-                                @endcan
+                                    <?php $route = route('admin.roles.destroy', $role->id); ?>
+                                    <a  href="#" onclick="deleteConfirmation('{{$route}}')" class="btn btn-outline-danger btn-pill action-buttons-delete">
+                                        <i  class="fa fa-trash actions-custom-i"></i>
+                                    </a> 
+                                @endcan 
 
                             </td>
 

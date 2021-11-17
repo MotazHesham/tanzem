@@ -12,6 +12,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use Alert;
 
 class GovernmentalEntitiesController extends Controller
 {
@@ -47,6 +48,12 @@ class GovernmentalEntitiesController extends Controller
             $table->addColumn('user_email', function ($row) {
                 return $row->user ? $row->user->email : '';
             });
+            $table->addColumn('user_name', function ($row) {
+                return $row->user ? $row->user->name : '';
+            });
+            $table->addColumn('user_phone', function ($row) {
+                return $row->user ? $row->user->phone : '';
+            });
 
             $table->rawColumns(['actions', 'placeholder', 'user']);
 
@@ -58,35 +65,54 @@ class GovernmentalEntitiesController extends Controller
 
     public function create()
     {
-        abort_if(Gate::denies('governmental_entity_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('governmental_entity_create'), Response::HTTP_FORBIDDEN, '403 Forbidden'); 
 
-        $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        return view('admin.governmentalEntities.create', compact('users'));
+        return view('admin.governmentalEntities.create');
     }
 
     public function store(StoreGovernmentalEntityRequest $request)
     {
-        $governmentalEntity = GovernmentalEntity::create($request->all());
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'user_type' => 'governmental_entity', 
+            'phone' => $request->phone, 
+            'landline_phone' => $request->landline_phone, 
+            'website' => $request->website, 
+        ]);
 
+        $governmentalEntity = GovernmentalEntity::create([
+            'user_id' => $user->id
+        ]);
+
+        Alert::success('تم بنجاح', 'تم إضافة الجهة الحكومية بنجاح ');
         return redirect()->route('admin.governmental-entities.index');
     }
 
     public function edit(GovernmentalEntity $governmentalEntity)
     {
-        abort_if(Gate::denies('governmental_entity_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
+        abort_if(Gate::denies('governmental_entity_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden'); 
 
         $governmentalEntity->load('user');
 
-        return view('admin.governmentalEntities.edit', compact('users', 'governmentalEntity'));
+        return view('admin.governmentalEntities.edit', compact('governmentalEntity'));
     }
 
     public function update(UpdateGovernmentalEntityRequest $request, GovernmentalEntity $governmentalEntity)
-    {
-        $governmentalEntity->update($request->all());
+    { 
+        $user = User::find($governmentalEntity->user_id);
 
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password == null ? $user->password : bcrypt($request->password), 
+            'phone' => $request->phone, 
+            'landline_phone' => $request->landline_phone, 
+            'website' => $request->website, 
+        ]);
+
+        Alert::success('تم بنجاح', 'تم تعديل بيانات الجهة الحكومية بنجاح ');
         return redirect()->route('admin.governmental-entities.index');
     }
 
@@ -105,7 +131,8 @@ class GovernmentalEntitiesController extends Controller
 
         $governmentalEntity->delete();
 
-        return back();
+        Alert::success('تم بنجاح', 'تم  حذف الجهة الحكومية بنجاح ');
+        return 1;
     }
 
     public function massDestroy(MassDestroyGovernmentalEntityRequest $request)

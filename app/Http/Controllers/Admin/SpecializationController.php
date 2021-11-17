@@ -10,6 +10,7 @@ use App\Models\Specialization;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Alert;
 
 class SpecializationController extends Controller
 {
@@ -33,6 +34,7 @@ class SpecializationController extends Controller
     {
         $specialization = Specialization::create($request->all());
 
+        Alert::success('تم بنجاح', 'تم إضافة التخصص بنجاح ');
         return redirect()->route('admin.specializations.index');
     }
 
@@ -47,6 +49,7 @@ class SpecializationController extends Controller
     {
         $specialization->update($request->all());
 
+        Alert::success('تم بنجاح', 'تم تعديل بيانات التخصص بنجاح ');
         return redirect()->route('admin.specializations.index');
     }
 
@@ -63,7 +66,8 @@ class SpecializationController extends Controller
 
         $specialization->delete();
 
-        return back();
+        Alert::success('تم بنجاح', 'تم  حذف التخصص بنجاح ');
+        return 1;
     }
 
     public function massDestroy(MassDestroySpecializationRequest $request)

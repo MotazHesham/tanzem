@@ -25,6 +25,30 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.user.fields.name') }}
+                        </th>
+                        <td>
+                            {{ $cawader->user->name ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.email') }}
+                        </th>
+                        <td>
+                            {{ $cawader->user->email ?? '' }}
+                        </td>
+                    </tr> 
+                    <tr>
+                        <th>
+                            {{ trans('cruds.user.fields.phone') }}
+                        </th>
+                        <td>
+                            {{ $cawader->user->phone ?? '' }}
+                        </td>
+                    </tr> 
+                    <tr>
+                        <th>
                             {{ trans('cruds.cawader.fields.dob') }}
                         </th>
                         <td>
@@ -44,7 +68,7 @@
                             {{ trans('cruds.cawader.fields.degree') }}
                         </th>
                         <td>
-                            {{ App\Models\Cawader::DEGREE_SELECT[$cawader->degree] ?? '' }}
+                            {{ trans('global.degree.'.$cawader->degree) ?? '' }}
                         </td>
                     </tr>
                     <tr>
@@ -53,7 +77,7 @@
                         </th>
                         <td>
                             @foreach($cawader->specializations as $key => $specialization)
-                                <span class="label label-info">{{ $specialization->name_ar }}</span>
+                                <span class="badge badge-info">{{ $specialization->name_ar }}</span>
                             @endforeach
                         </td>
                     </tr>
@@ -75,18 +99,30 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.cawader.fields.user') }}
+                            {{ trans('cruds.cawader.fields.companies_and_institution') }}
                         </th>
                         <td>
-                            {{ $cawader->user->email ?? '' }}
+                            {{ $cawader->companies_and_institution->user->email ?? '' }}
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.cawader.fields.companies_and_institution') }}
+                            {{ trans('cruds.user.fields.photo') }}
                         </th>
                         <td>
-                            {{ $cawader->companies_and_institution->commerical_num ?? '' }}
+                            @if($cawader->user && $cawader->user->photo)
+                                <a href="{{ $cawader->user->photo->getUrl() }}" target="_blank" style="display: inline-block">
+                                    <img src="{{ $cawader->user->photo->getUrl('thumb') }}">
+                                </a>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.cawader.fields.desceiption') }}
+                        </th>
+                        <td>
+                            {{ $cawader->desceiption }}
                         </td>
                     </tr>
                 </tbody>

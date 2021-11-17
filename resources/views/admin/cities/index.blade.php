@@ -51,26 +51,25 @@
                             <td>
                                 {{ $city->name_en ?? '' }}
                             </td>
-                            <td>
+                            <td> 
                                 @can('city_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.cities.show', $city->id) }}">
-                                        {{ trans('global.view') }}
+                                    <a href="{{ route('admin.cities.show', $city->id) }}" class="btn btn-outline-info btn-pill action-buttons-view" >
+                                        <i  class="fas fa-eye actions-custom-i"></i>
                                     </a>
                                 @endcan
 
                                 @can('city_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.cities.edit', $city->id) }}">
-                                        {{ trans('global.edit') }}
+                                    <a  href="{{ route('admin.cities.edit', $city->id) }}" class="btn btn-outline-success btn-pill action-buttons-edit">
+                                        <i  class="fa fa-edit actions-custom-i"></i> 
                                     </a>
                                 @endcan
 
                                 @can('city_delete')
-                                    <form action="{{ route('admin.cities.destroy', $city->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                    </form>
-                                @endcan
+                                    <?php $route = route('admin.cities.destroy', $city->id); ?>
+                                    <a  href="#" onclick="deleteConfirmation('{{$route}}')" class="btn btn-outline-danger btn-pill action-buttons-delete">
+                                        <i  class="fa fa-trash actions-custom-i"></i>
+                                    </a> 
+                                @endcan 
 
                             </td>
 
