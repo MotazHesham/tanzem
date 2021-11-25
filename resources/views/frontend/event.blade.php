@@ -22,10 +22,8 @@
                         @endphp
                         <div class="wonder-theme">
                             <img src="{{ $company_image }}" class="rounded-circle" />
-                        </div>
-                        <div class="wonder-title">
                             <p>{{ $event->company->user->name ?? '' }}</p>
-                        </div>
+                        </div> 
                         <div class="wonder-price">
                             <p>السعر</p>
                             <h3 class="m-b0">{{ $event->cost ?? ''}} ريال سعودي - للفرد</h3>

@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateCompaniesAndInstitutionRequest;
 use App\Models\CompaniesAndInstitution;
 use App\Models\Specialization;
 use App\Models\User;
-use App\Models\city;
+use App\Models\City;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
