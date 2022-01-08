@@ -1,232 +1,106 @@
 @extends('layouts.admin')
+
+@section('styles')
+    <style>
+        .nav-tabs .nav-item .nav-link {
+            padding: 12px;
+            color: #5D6D7E
+        }
+    </style>
+@endsection
+
 @section('content')
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                {{ trans('global.show') }} {{ trans('cruds.event.title') }}
-            </div>
 
-            <div class="card-body">
-                <div class="form-group">
-                    <div class="form-group">
-                        <a class="btn btn-default" href="{{ route('admin.events.index') }}">
-                            {{ trans('global.back_to_list') }}
-                        </a>
-                    </div>
-                    <table class="table table-bordered table-striped">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.id') }}
-                                </th>
-                                <td>
-                                    {{ $event->id }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.title') }}
-                                </th>
-                                <td>
-                                    {{ $event->title }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.description') }}
-                                </th>
-                                <td>
-                                    {{ $event->description }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.date') }}
-                                </th>
-                                <td>
-                                    <span class="badge badge-dark">{{ $event->start_date }}</span>
-                                    <span class="badge badge-dark">{{ $event->end_date }}</span>
-                                </td>
-                            </tr> 
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.time') }}
-                                </th>
-                                <td>
-                                    <span class="badge bg-light">{{ $event->start_time }}</span>
-                                    <span class="badge bg-light">{{ $event->end_time }}</span>
-                                </td>
-                            </tr> 
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.city') }}
-                                </th>
-                                <td>
-                                    {{ $event->city->name_ar ?? '' }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.address') }}
-                                </th>
-                                <td>
-                                    {{ $event->address }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.latitude') }}
-                                </th>
-                                <td>
-                                    {{ $event->latitude }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.longitude') }}
-                                </th>
-                                <td>
-                                    {{ $event->longitude }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.photo') }}
-                                </th>
-                                <td>
-                                    @if($event->photo)
-                                        <a href="{{ $event->photo->getUrl() }}" target="_blank" style="display: inline-block">
-                                            <img src="{{ $event->photo->getUrl('thumb') }}">
-                                        </a>
-                                    @endif
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.company') }}
-                                </th>
-                                <td>
-                                    {{ $event->company->user->name ?? '' }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.client') }}
-                                </th>
-                                <td>
-                                    {{ $event->client->user->name ?? '' }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.government') }}
-                                </th>
-                                <td>
-                                    {{ $event->government->user->name ?? '' }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.available_gates') }}
-                                </th>
-                                <td>
-                                    @foreach($event->available_gates as $key => $available_gates)
-                                        <span class="badge badge-warning text-white">{{ $available_gates->gate }}</span>
-                                    @endforeach
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.specializations') }}
-                                </th>
-                                <td>
-                                    @foreach($event->specializations as $key => $specializations)
-                                        <span class="badge badge-primary">{{ $specializations->name_ar }}</span>
-                                    @endforeach
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.cawaders') }}
-                                </th>
-                                <td>
-                                    @foreach($event->cawaders as $key => $cader)
-                                        <span class="badge badge-info">{{ $cader->user->name ?? '' }}</span>
-                                    @endforeach
-                                </td>
-                            </tr> 
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.cost') }}
-                                </th>
-                                <td>
-                                    {{ $event->cost }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    {{ trans('cruds.event.fields.status') }}
-                                </th>
-                                <td>
-                                    @php
-                                        if($event->status == 'active'){
-                                            $event_status = 'success';
-                                        }elseif($event->status == 'pending'){
-                                            $event_status = 'info';
-                                        }elseif($event->status == 'closed'){
-                                            $event_status = 'warning';
-                                        }elseif($event->status == 'refused'){
-                                            $event_status = 'danger';
-                                        }else{
-                                            $event_status = 'dark';
-                                        }
-                                    @endphp
-                                    
-                                    <span class="badge badge-{{$event_status}}">{{ trans('global.events_status.'.$event->status) ?? '' }}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="form-group">
-                        <a class="btn btn-default" href="{{ route('admin.events.index') }}">
-                            {{ trans('global.back_to_list') }}
-                        </a>
-                    </div>
+    <!-- Modal attendance cader -->
+    <div class="modal fade bd-example-modal-lg" id="attendance_modal" tabindex="1" role="dialog" aria-labelledby="attendance_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="attendance_modalLabel">{{trans('cruds.event.others.attendance_in_event')}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-        </div> 
-    </div>
-
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                {{ trans('global.relatedData') }}
-            </div>
-            <ul class="nav nav-tabs" role="tablist" id="relationship-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#event_brands" role="tab" data-toggle="tab">
-                        {{ trans('cruds.brand.title') }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#events_visitors" role="tab" data-toggle="tab">
-                        {{ trans('cruds.visitor.title') }}
-                    </a>
-                </li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" role="tabpanel" id="event_brands">
-                    @includeIf('admin.events.relationships.eventBrands', ['brands' => $event->eventBrands])
-                </div>
-                <div class="tab-pane" role="tabpanel" id="events_visitors">
-                    @includeIf('admin.events.relationships.eventsVisitors', ['visitors' => $event->eventsVisitors])
-                </div>
+                <div class="modal-body">  
+                </div> 
             </div>
         </div>
     </div>
 
+    <!-- Modal cader_break cader -->
+    <div class="modal fade bd-example-modal-lg" id="cader_break_modal" tabindex="1" role="dialog" aria-labelledby="cader_break_modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cader_break_modalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">  
+                </div> 
+            </div>
+        </div>
+    </div>
     
-</div>
+    <div class="card">
+        <div class="card-header">
+            {{ trans('global.show') }} {{ trans('cruds.event.title') }}
+        </div>
+
+        <div class="card-body">
+            
+            <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="pills-map-tab" data-toggle="pill" href="#pills-map" role="tab" aria-controls="pills-map" aria-selected="false">
+                        <i class="fas fa-map-marked-alt"></i>
+                        {{ trans('cruds.event.others.map') }}
+                    </a>
+                </li> 
+                <li class="nav-item">
+                    <a class="nav-link " id="pills-info-tab" data-toggle="pill" href="#pills-info" role="tab" aria-controls="pills-info" aria-selected="true">
+                        <i class="fas fa-info-circle"></i>
+                        {{ trans('cruds.event.others.info') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="pills-services-tab" data-toggle="pill" href="#pills-services" role="tab" aria-controls="pills-services" aria-selected="false">
+                        <i class="fas fa-tasks"></i>
+                        {{ trans('global.relatedData') }}
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-map" role="tabpanel" aria-labelledby="pills-map-tab"> 
+                    <div class="row">
+                        <div class="col-md-3">   
+                            <div id="caders_in_map" class="partials-scrollable" style="max-height: 605px">
+                                @includeIf('admin.events.partials.caders_map', ['event' => $event])
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-group">  
+                                <div id="map3"  style="width: 100%; height: 600px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+                <div class="tab-pane fade" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab">
+                    @includeIf('admin.events.partials.info', ['event' => $event])
+                </div>
+                <div class="tab-pane fade" id="pills-services" role="tabpanel" aria-labelledby="pills-services-tab">
+                    @includeIf('admin.events.partials.related_data', ['event' => $event])
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts')
+@parent  
+
+    @include('map_scripts.events.show')
+
 @endsection

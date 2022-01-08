@@ -6,12 +6,13 @@ use App\Models\Cawader;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
+use Auth;
 
 class UpdateCawaderRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('cawader_edit');
+        return Gate::allows('cawader_edit') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client'; 
     }
 
     public function rules()

@@ -18,7 +18,7 @@ Route::group(['prefix'=> 'forgetpassword'],function(){
 	Route::post('/update','ForgetPasswordController@reset')->name('forgetpassword.update');
 }); 
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth','staff']], function () {
     Route::get('/', 'HomeController@index')->name('home');
     // Permissions
     Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
@@ -69,10 +69,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('cities', 'CitiesController');
 
     // Events
+    Route::post('events/partials/zoominmap', 'EventsController@partials_zoominmap')->name('events.partials.zoominmap'); 
+    Route::post('events/partials/attendance_cader', 'EventsController@partials_attendance_cader')->name('events.partials.attendance_cader'); 
+    Route::post('events/partials/cader_break', 'EventsController@partials_cader_break')->name('events.partials.cader_break'); 
+    Route::get('events/partials/cader_break_status/{id}/{status}', 'EventsController@partials_cader_break_status')->name('events.partials.cader_break_status'); 
     Route::get('events/status/{id}/{status}', 'EventsController@changeStatus')->name('events.status');
     Route::delete('events/destroy', 'EventsController@massDestroy')->name('events.massDestroy');
     Route::post('events/media', 'EventsController@storeMedia')->name('events.storeMedia');
-    Route::post('events/ckmedia', 'EventsController@storeCKEditorImages')->name('events.storeCKEditorImages');
+    Route::post('events/ckmedia', 'EventsController@storeCKEditorImages')->name('events.storeCKEditorImages'); 
     Route::resource('events', 'EventsController');
 
     // Brands
@@ -121,6 +125,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('important-links/destroy', 'ImportantLinksController@massDestroy')->name('important-links.massDestroy');
     Route::resource('important-links', 'ImportantLinksController');
     
+    // Break Types
+    Route::delete('break-types/destroy', 'BreakTypesController@massDestroy')->name('break-types.massDestroy');
+    Route::resource('break-types', 'BreakTypesController');
+
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

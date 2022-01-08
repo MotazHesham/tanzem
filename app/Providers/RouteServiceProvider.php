@@ -42,11 +42,19 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $this->mapApiRoutes();
+        $this->mapUserApiRoutes();
+        
+        $this->mapCaderApiRoutes();
 
         $this->mapWebRoutes();
 
         $this->mapFrontendRoutes();
+
+        $this->mapClientRoutes();
+
+        $this->mapCompaniesAndIntitutionsRoutes();
+
+        $this->mapGovernmentalEntityRoutes();
 
         //
     }
@@ -72,6 +80,48 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
+    protected function mapClientRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/client.php'));
+    }
+
+    /**
+     * Define the "web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapCompaniesAndIntitutionsRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/companies_and_intitutions.php'));
+    }
+
+    /**
+     * Define the "web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
+    protected function mapGovernmentalEntityRoutes()
+    {
+        Route::middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/governmental_entity.php'));
+    }
+
+    /**
+     * Define the "web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @return void
+     */
     protected function mapFrontendRoutes()
     {
         Route::middleware('web')
@@ -86,11 +136,26 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function mapApiRoutes()
+    protected function mapUserApiRoutes()
     {
         Route::prefix('api')
              ->middleware('api')
              ->namespace($this->namespace)
              ->group(base_path('routes/api/user_api_v1.php'));
+    }
+
+    /**
+     * Define the "api" routes for the application.
+     *
+     * These routes are typically stateless.
+     *
+     * @return void
+     */
+    protected function mapCaderApiRoutes()
+    {
+        Route::prefix('api')
+             ->middleware('api')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/api/cader_api_v1.php'));
     }
 }

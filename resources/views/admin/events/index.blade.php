@@ -34,7 +34,7 @@
                             {{ trans('cruds.event.time') }}
                         </th>
                         <th>
-                            {{ trans('cruds.event.fields.address') }}
+                            {{ trans('cruds.event.fields.city') }}
                         </th>
                         <th>
                             {{ trans('cruds.event.fields.company') }}

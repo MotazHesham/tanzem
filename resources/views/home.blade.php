@@ -16,39 +16,51 @@
                     @endif
 
                     <div class="row">
-                        <div class="{{ $settings1['column_class'] }}">
-                            <div class="card text-white bg-info">
+                        <div class="{{ $settings1['column_class'] }}"> 
+                            <div class="card text-white bg-info" style="position: relative">
+                                <div style="position: absolute; left:0 ">
+                                    <i style="font-size: 91px;color:#082a482e" class="fa-fw fas fa-camera-retro c-sidebar-nav-icons"></i>
+                                </div>
                                 <div class="card-body pb-0">
-                                    <div class="text-value">{{ number_format($settings1['total_number']) }}</div>
-                                    <div>{{ $settings1['chart_title'] }}</div>
-                                    <br />
+                                    <div class="text-value-lg">{{ $settings1['chart_title'] }}</div>
+                                    <div style="font-size: 20px">{{ number_format($settings1['total_number']) }} </div>
+                                    <br>
                                 </div>
                             </div>
                         </div>
-                        <div class="{{ $settings2['column_class'] }}">
-                            <div class="card text-white bg-success">
+                        <div class="{{ $settings2['column_class'] }}"> 
+                            <div class="card text-white bg-success" style="position: relative">
+                                <div style="position: absolute; left:0 ">
+                                    <i style="font-size: 91px;color:#082a482e" class="fa-fw fas fa-user c-sidebar-nav-icons"></i>
+                                </div>
                                 <div class="card-body pb-0">
-                                    <div class="text-value">{{ number_format($settings2['total_number']) }}</div>
-                                    <div>{{ $settings2['chart_title'] }}</div>
-                                    <br />
+                                    <div class="text-value-lg">{{ $settings2['chart_title'] }}</div>
+                                    <div style="font-size: 20px">{{ number_format($settings2['total_number']) }} </div>
+                                    <br>
                                 </div>
                             </div>
                         </div>
                         <div class="{{ $settings3['column_class'] }}">
-                            <div class="card text-white bg-warning">
+                            <div class="card text-white bg-warning" style="position: relative">
+                                <div style="position: absolute; left:0 ">
+                                    <i style="font-size: 91px;color:#082a482e" class="fa-fw fas fa-user-friends c-sidebar-nav-icons"></i>
+                                </div>
                                 <div class="card-body pb-0">
-                                    <div class="text-value">{{ number_format($settings3['total_number']) }}</div>
-                                    <div>{{ $settings3['chart_title'] }}</div>
-                                    <br />
+                                    <div class="text-value-lg">{{ $settings3['chart_title'] }}</div>
+                                    <div style="font-size: 20px">{{ number_format($settings3['total_number']) }} </div>
+                                    <br>
                                 </div>
                             </div>
                         </div>
                         <div class="{{ $settings4['column_class'] }}">
-                            <div class="card text-white bg-danger">
+                            <div class="card text-white bg-danger" style="position: relative">
+                                <div style="position: absolute; left:0 ">
+                                    <i style="font-size: 91px;color:#082a482e" class="fa-fw fas fa-newspaper c-sidebar-nav-icons"></i>
+                                </div>
                                 <div class="card-body pb-0">
-                                    <div class="text-value">{{ number_format($settings4['total_number']) }}</div>
-                                    <div>{{ $settings4['chart_title'] }}</div>
-                                    <br />
+                                    <div class="text-value-lg">{{ $settings4['chart_title'] }}</div>
+                                    <div style="font-size: 20px">{{ number_format($settings4['total_number']) }} </div>
+                                    <br>
                                 </div>
                             </div>
                         </div>
@@ -56,9 +68,11 @@
                             <h3 class="text-center">{!! $chart5->options['chart_title'] !!}</h3>
                             {!! $chart5->renderHtml() !!}
                         </div>
-                        <div class="{{ $chart6->options['column_class'] }}">
-                            <h3 class="text-center">{!! $chart6->options['chart_title'] !!}</h3>
-                            {!! $chart6->renderHtml() !!}
+                        <div class="col-md-7">
+                            <h3 class="text-center">{{ trans('global.dashboard_widgets.Events Start') }}</h3>
+                            <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
+
+                            <div id='calendar'></div>
                         </div>
                         {{-- Widget - latest entries --}}
                         <div class="{{ $settings7['column_class'] }}" style="overflow-x: auto;">
@@ -186,5 +200,19 @@
 @endsection
 @section('scripts')
 @parent
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>{!! $chart5->renderJs() !!}{!! $chart6->renderJs() !!}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>{!! $chart5->renderJs() !!}
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js'></script>
+<script>
+    $(document).ready(function () {
+            // page is now ready, initialize the calendar...
+            events={!! json_encode($events) !!};
+            $('#calendar').fullCalendar({
+                // put your options and callbacks here
+                events: events,
+
+
+            })
+        });
+</script>
 @endsection

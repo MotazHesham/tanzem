@@ -49,6 +49,7 @@ class Event extends Model implements HasMedia
         'address',
         'latitude',
         'longitude',
+        'area',
         'company_id',
         'cost',
         'status',
@@ -153,9 +154,15 @@ class Event extends Model implements HasMedia
 
     public function cawaders()
     {
-        return $this->belongsToMany(Cawader::class);
+        return $this->belongsToMany(Cawader::class)->withPivot(['hours','amount','extra_hours']);
     }
 
+    public function attendance()
+    {
+        return $this->belongsToMany(Cawader::class,'event_attendance_pivot','event_id','cawader_id')
+                    ->withPivot(['type','out_of_zone','attendance1','attendance2','out_of_zone_minutes','longitude','latitude','distance'])
+                    ->withTimestamps();
+    }
     public function reviews()
     {
         return $this->belongsToMany(Visitor::class,'event_review','event_id','visitor_id')->withPivot('review','rate','created_at','updated_at');

@@ -13,6 +13,9 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
     Route::group(['middleware' => ['auth:sanctum']],function () {
 
         Route::post('fcm-token','UsersApiController@update_fcm_token');
+        
+        // myEvents
+        Route::get('myevents','EventsApiController@myevents');
 
         //user profile
         Route::group(['prefix' =>'profile'],function(){
@@ -34,18 +37,6 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
             // Route::get('search/{search}','EventsApiController@search') ;
             Route::post('join','EventsApiController@join') ; 
             Route::post('leave','EventsApiController@leave') ; 
-        }); 
-
-        // events
-        Route::group(['prefix' =>'cader/events'],function(){
-            Route::get('/','CaderEventsApiController@index') ; 
-            Route::post('response','CaderEventsApiController@response') ;  
-            Route::get('accepted','CaderEventsApiController@accepted') ; 
-            Route::get('refused','CaderEventsApiController@refused') ; 
-            Route::get('incoming','CaderEventsApiController@incoming') ; 
-            Route::get('canceled','CaderEventsApiController@canceled') ; 
-            Route::get('pending','CaderEventsApiController@pending') ; 
-            Route::post('attend','CaderEventsApiController@attend') ; 
         });  
 
         // notifications

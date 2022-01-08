@@ -10,6 +10,8 @@
             <form method="POST" action="{{ route('admin.events.update', [$event->id]) }}" enctype="multipart/form-data">
                 @method('PUT')
                 @csrf
+                <input type="hidden" name="latitude" id="latitude" value="{{ $event->latitude }}">
+                <input type="hidden" name="longitude" id="longitude" value="{{ $event->longitude }}">
                 <div class="row">
                     <div class="form-group col-md-2">
                         <label class="required" for="client_id">{{ trans('cruds.event.fields.client') }}</label>
@@ -126,7 +128,7 @@
                         @endif
                         <span class="help-block">{{ trans('cruds.event.fields.end_time_helper') }}</span>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label class="required" for="city_id">{{ trans('cruds.event.fields.city') }}</label>
                         <select class="form-control select2 {{ $errors->has('city') ? 'is-invalid' : '' }}"
                             name="city_id" id="city_id" required>
@@ -143,7 +145,7 @@
                         @endif
                         <span class="help-block">{{ trans('cruds.event.fields.city_helper') }}</span>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label class="required" for="address">{{ trans('cruds.event.fields.address') }}</label>
                         <input class="form-control {{ $errors->has('address') ? 'is-invalid' : '' }}" type="text"
                             name="address" id="address" value="{{ old('address', $event->address) }}" required>
@@ -153,30 +155,18 @@
                             </div>
                         @endif
                         <span class="help-block">{{ trans('cruds.event.fields.address_helper') }}</span>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label class="required" for="latitude">{{ trans('cruds.event.fields.latitude') }}</label>
-                        <input class="form-control {{ $errors->has('latitude') ? 'is-invalid' : '' }}" type="number"
-                            name="latitude" id="latitude" value="{{ old('latitude', $event->latitude) }}" step="0.01"
-                            required>
-                        @if ($errors->has('latitude'))
+                    </div> 
+                    <div class="form-group col-md-4">
+                        <label class="required" for="area">{{ trans('cruds.event.fields.area') }}</label>
+                        <input class="form-control {{ $errors->has('area') ? 'is-invalid' : '' }}" type="number" step="1"
+                            name="area" id="area" value="{{ old('area', $event->area) }}" required>
+                        @if ($errors->has('area'))
                             <div class="invalid-feedback">
-                                {{ $errors->first('latitude') }}
+                                {{ $errors->first('area') }}
                             </div>
                         @endif
-                        <span class="help-block">{{ trans('cruds.event.fields.latitude_helper') }}</span>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label class="required" for="longitude">{{ trans('cruds.event.fields.longitude') }}</label>
-                        <input class="form-control {{ $errors->has('longitude') ? 'is-invalid' : '' }}" type="number"
-                            name="longitude" id="longitude" value="{{ old('longitude', $event->longitude) }}" step="0.01"
-                            required>
-                        @if ($errors->has('longitude'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('longitude') }}
-                            </div>
-                        @endif
-                        <span class="help-block">{{ trans('cruds.event.fields.longitude_helper') }}</span>
+                        <span class="help-block"
+                            style="font-size: 10px">{{ trans('cruds.event.fields.area_helper') }}</span>
                     </div>
                     <div class="form-group col-md-6">
                         <label class="required" for="specializations">{{ trans('cruds.event.fields.specializations') }}</label>
@@ -195,25 +185,7 @@
                             </div>
                         @endif
                         <span class="help-block">{{ trans('cruds.event.fields.specializations_helper') }}</span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="cawaders">{{ trans('cruds.event.fields.cawaders') }}</label>
-                        <div style="padding-bottom: 4px">
-                            <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
-                            <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
-                        </div>
-                        <select class="form-control select2 {{ $errors->has('cawaders') ? 'is-invalid' : '' }}" name="cawaders[]" id="cawaders" multiple>
-                            @foreach($cawaders as $id => $cawader)
-                                <option value="{{ $id }}" {{ (in_array($id, old('cawaders', [])) || $event->cawaders->contains($id)) ? 'selected' : '' }}>{{ $cawader }}</option>
-                            @endforeach
-                        </select>
-                        @if($errors->has('cawaders'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('cawaders') }}
-                            </div>
-                        @endif
-                        <span class="help-block">{{ trans('cruds.event.fields.cawaders_helper') }}</span>
-                    </div>
+                    </div> 
                     <div class="form-group col-md-6">
                         <label class="required"
                             for="available_gates">{{ trans('cruds.event.fields.available_gates') }}</label>
@@ -239,27 +211,46 @@
                         <span class="help-block">{{ trans('cruds.event.fields.available_gates_helper') }}</span>
                     </div>
                     <div class="form-group col-md-6">
-                        <label class="required" for="photo">{{ trans('cruds.event.fields.photo') }}</label>
-                        <div class="needsclick dropzone {{ $errors->has('photo') ? 'is-invalid' : '' }}"
-                            id="photo-dropzone">
-                        </div>
-                        @if ($errors->has('photo'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('photo') }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="required" for="photo">{{ trans('cruds.event.fields.photo') }}</label>
+                                <div class="needsclick dropzone {{ $errors->has('photo') ? 'is-invalid' : '' }}"
+                                    id="photo-dropzone">
+                                </div>
+                                @if ($errors->has('photo'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('photo') }}
+                                    </div>
+                                @endif
+                                <span class="help-block">{{ trans('cruds.event.fields.photo_helper') }}</span>
                             </div>
-                        @endif
-                        <span class="help-block">{{ trans('cruds.event.fields.photo_helper') }}</span>
-                    </div>
+                            <div class="col-md-6">
+                                <label for="description">{{ trans('cruds.event.fields.description') }}</label>
+                                <textarea class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}"
+                                    name="description" id="description">{{ old('description', $event->description) }}</textarea>
+                                @if ($errors->has('description'))
+                                    <div class="invalid-feedback">
+                                        {{ $errors->first('description') }}
+                                    </div>
+                                @endif
+                                <span class="help-block">{{ trans('cruds.event.fields.description_helper') }}</span>
+                            </div>
+                            <div class="form-group col-md-12"> 
+                                <div class="partials-scrollable mt-3" >
+                                    @include('admin.events.partials.caders')
+                                </div> 
+                            </div>
+                        </div> 
+                    </div> 
                     <div class="form-group col-md-6">
-                        <label for="description">{{ trans('cruds.event.fields.description') }}</label>
-                        <textarea class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}"
-                            name="description" id="description">{{ old('description', $event->description) }}</textarea>
-                        @if ($errors->has('description'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('description') }}
-                            </div>
-                        @endif
-                        <span class="help-block">{{ trans('cruds.event.fields.description_helper') }}</span>
+                        <input
+                            style="width: 300px"
+                            id="pac-input"
+                            class="form-control"
+                            type="text"
+                            placeholder="Search Box"
+                        />
+                        <div id="map3" class="m-b30 align-self-stretch" style="width: 100%; height: 400px"></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -275,7 +266,8 @@
 
 @endsection
 
-@section('scripts')
+@section('scripts') 
+    @include('map_scripts.events.edit')
     <script>
         Dropzone.options.photoDropzone = {
             url: '{{ route('admin.events.storeMedia') }}',

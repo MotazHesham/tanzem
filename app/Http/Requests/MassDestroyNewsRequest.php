@@ -6,14 +6,13 @@ use App\Models\News;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Auth;
 
 class MassDestroyNewsRequest extends FormRequest
 {
     public function authorize()
     {
-        abort_if(Gate::denies('news_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        return true;
+        return Gate::allows('news_delete') || Auth::user()->user_type == 'governmental_entity' || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client'; 
     }
 
     public function rules()

@@ -16,7 +16,7 @@ class SpecializationSeeder extends Seeder
         $ar = ['ممثل','حارس','مصمم','سائق'];
         $en = ['Actor','Security','Designer','Driver'];
 
-        for ($i = 1 ; $i <= 3 ; $i++) {
+        for ($i = 0 ; $i <= 3 ; $i++) {
             $specialization = new Specialization;
             $specialization->name_en = $en[$i];
             $specialization->name_ar = $ar[$i];

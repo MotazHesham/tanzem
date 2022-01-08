@@ -6,8 +6,45 @@ use LaravelDaily\LaravelCharts\Classes\LaravelChart;
 
 class HomeController
 { 
+        
+    public $sources = [
+        [
+            'model'      => '\App\Models\Event',
+            'start_date_field' => 'start_date',
+            'end_date_field' => 'end_date',
+            'field'      => 'title',
+            'prefix'     => '',
+            'suffix'     => '',
+            'route'      => 'admin.events.edit',
+        ],
+    ];
+
     public function index()
     {
+
+        $events = [];
+        foreach ($this->sources as $source) {
+            foreach ($source['model']::all() as $model) {
+                $crudFieldValue = $model->getAttributes()[$source['start_date_field']];
+                $crudFieldValue2 = $model->getAttributes()[$source['end_date_field']];
+
+                if (!$crudFieldValue) {
+                    continue;
+                }
+
+                if (!$crudFieldValue2) {
+                    continue;
+                }
+
+                $events[] = [
+                    'title' => trim($source['prefix'] . ' ' . $model->{$source['field']} . ' ' . $source['suffix']),
+                    'start' => $crudFieldValue,
+                    'end' => $crudFieldValue2,
+                    'url'   => route($source['route'], $model->id),
+                ];
+            }
+        }
+
         $settings1 = [
             'chart_title'           => trans('global.dashboard_widgets.Events'),
             'chart_type'            => 'number_block',
@@ -162,29 +199,12 @@ class HomeController
             'where_raw'             => 'user_type IN ( "client" , "companiesAndInstitution" , "governmental_entity") ',
             'filter_field'          => 'created_at',
             'group_by_field_format' => 'd/m/Y H:i:s',
-            'column_class'          => 'col-md-4 mt-5',
+            'column_class'          => 'col-md-5 mt-5',
             'entries_number'        => '5',
             'translation_key'       => 'client',
         ];
 
         $chart5 = new LaravelChart($settings5);
-
-        $settings6 = [
-            'chart_title'           => trans('global.dashboard_widgets.Events Start'),
-            'chart_type'            => 'bar',
-            'report_type'           => 'group_by_date',
-            'model'                 => 'App\Models\Event',
-            'group_by_field'        => 'start_date',
-            'group_by_period'       => 'day',
-            'aggregate_function'    => 'count',
-            'filter_field'          => 'created_at',
-            'group_by_field_format' => 'd/m/Y',
-            'column_class'          => 'col-md-8 mt-5',
-            'entries_number'        => '5',
-            'translation_key'       => 'event',
-        ];
-
-        $chart6 = new LaravelChart($settings6);
 
         $settings7 = [
             'chart_title'           => trans('global.dashboard_widgets.Governmental'),
@@ -280,6 +300,6 @@ class HomeController
             $settings9['fields'] = [];
         }
 
-        return view('home', compact('settings1', 'settings2', 'settings3', 'settings4', 'chart5', 'chart6', 'settings7', 'settings8', 'settings9'));
+        return view('home', compact('settings1', 'settings2', 'settings3', 'settings4', 'chart5', 'settings7', 'settings8', 'settings9','events'));
     }
 }

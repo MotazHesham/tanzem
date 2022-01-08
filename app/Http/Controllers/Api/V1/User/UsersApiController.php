@@ -12,16 +12,56 @@ use App\Http\Resources\V1\User\UserResource;
 use App\Traits\api_return;
 use Validator;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Traits\MediaUploadingTrait; 
 
 class UsersApiController extends Controller
 {
     use api_return;
+    use MediaUploadingTrait;
 
     public function profile()
     {  
         return $this->returnData(new UserResource(Auth::user()), "success"); 
     }
 
+    public function update(Request $request){
+
+        $rules = [
+            'email' => 'required|unique:users,email,'.Auth::id(),
+            'phone' => 'required|size:10|regex:/(05)[0-9]{8}/', 
+            'name' => 'required|string',
+            'national' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return $this->returnError('401', $validator->errors());
+        }
+
+        $user = Auth::user();
+
+        if (request()->hasFile('photo') && request('photo') != '' && request('photo') != $user->photo){
+            $validator = Validator::make($request->all(), [
+                'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+            if ($validator->fails()) {
+                return $this->returnError('401', $validator->errors());
+            }
+            $user->addMedia(request('photo'))->toMediaCollection('photo'); 
+        }
+
+        if(!$user)
+            return $this->returnError('404',('Not Found !!!'));
+
+        $user->update($request->all());
+        
+        $visitor = Visitor::where('user_id',$user->id)->first();
+        $visitor->national = $request->national;
+        $visitor->save();
+
+        return $this->returnData(new UserResource($user),__('Profile Updated Successfully'));
+    } 
 
     public function update_password(Request $request){
         $rules = [

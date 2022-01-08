@@ -6,12 +6,13 @@ use App\Models\Cawader;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
+use Auth;
 
 class StoreCawaderRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('cawader_create');
+        return Gate::allows('cawader_create') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client'; 
     }
 
     public function rules()
@@ -54,9 +55,6 @@ class StoreCawaderRequest extends FormRequest
                 'unique:users',
             ],
             'password' => [
-                'required',
-            ], 
-            'photo' => [
                 'required',
             ], 
             'phone' => [

@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
             GateSeeder::class,
             SpecializationSeeder::class,
             SettingSeeder::class,
+            GovernmentalEntitiesSeeder::class,
+            ClientsSeeder::class,
+            CompaniesAndInstitutionSeeder::class,
+            CawadersSeeder::class,
         ]);
     }
 }

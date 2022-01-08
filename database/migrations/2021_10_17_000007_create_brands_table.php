@@ -13,8 +13,8 @@ class CreateBrandsTable extends Migration
             $table->string('title');
             $table->longText('description')->nullable();
             $table->string('zone_name');
-            $table->decimal('latitude', 15, 2);
-            $table->decimal('longitude', 15, 2);
+            $table->double('latitude');
+            $table->double('longitude');
             $table->timestamps();
             $table->softDeletes();
         });

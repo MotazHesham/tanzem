@@ -6,12 +6,13 @@ use App\Models\Visitor;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
+use Auth;
 
 class StoreVisitorRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('visitor_create');
+        return Gate::allows('visitor_create') || Auth::user()->user_type == 'governmental_entity'|| Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client';
     }
 
     public function rules()

@@ -15,6 +15,9 @@ class CreateCawadersTable extends Migration
             $table->integer('working_hours');
             $table->string('identity_number');
             $table->longText('desceiption')->nullable();
+            $table->double('longitude')->nullable();
+            $table->double('latitude')->nullable();
+            $table->tinyInteger('out_of_zone')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

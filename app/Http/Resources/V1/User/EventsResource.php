@@ -14,6 +14,8 @@ class EventsResource extends JsonResource
      */
     public function toArray($request)
     {
+        $image = $this->photo ? asset($this->photo->getUrl()) : null;
+        $image = str_replace('public/public','public',$image);
         $name = 'name_' . app()->getLocale();
         return [
             'id' => $this->id,
@@ -27,8 +29,9 @@ class EventsResource extends JsonResource
             'end_date' => $this->end_date,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,  
-            'photo' => $this->photo ? asset($this->photo->getUrl()) : null, 
+            'photo' => $image, 
             'gates' => EventGatesResource::collection($this->available_gates),
+            'brands' => BrandsResource::collection($this->eventBrands)
         ];
     }
 }

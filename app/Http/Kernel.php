@@ -45,5 +45,9 @@ class Kernel extends HttpKernel
         'throttle'         => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'changelanguage' => \App\Http\Middleware\ChangeLanguage::class,
+        'staff' => \App\Http\Middleware\Staff::class,
+        'government' => \App\Http\Middleware\Government::class,
+        'client' => \App\Http\Middleware\Client::class,
+        'company' => \App\Http\Middleware\Company::class,
     ];
 }

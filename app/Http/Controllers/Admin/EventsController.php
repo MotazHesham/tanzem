@@ -12,6 +12,7 @@ use App\Models\City;
 use App\Models\Client;
 use App\Models\CompaniesAndInstitution;
 use App\Models\Event;
+use App\Models\EventBreak;
 use App\Models\Gate as EventGate;
 use App\Models\GovernmentalEntity;
 use App\Models\Specialization;
@@ -26,6 +27,40 @@ use Alert;
 class EventsController extends Controller
 {
     use MediaUploadingTrait;
+
+    public function partials_zoominmap(Request $request){
+        $cader = Cawader::find($request->cader_id);
+
+        $data = [
+            'lat' => $cader->latitude,
+            'lng' => $cader->longitude
+        ];
+        
+        return response()->json($data);
+    }
+    public function partials_cader_break_status($id,$status){
+        $event_break = EventBreak::findOrFail($id);
+        $event_break->status = $status;
+        $event_break->save();
+        
+        if($status == 'accepted'){
+            Alert::success('تم قبول الأذن');
+        }else{
+            Alert::success('تم رفض الأذن');
+        }
+
+        return redirect()->route('admin.events.show',$event_break->event_id);
+    }
+    public function partials_attendance_cader(Request $request){
+        $event = Event::findOrFail($request->event_id); 
+        $attendance = $event->attendance()->wherePivot('cawader_id',$request->cader_id)->orderBy('pivot_created_at','asc')->get();   
+        return view('admin.events.partials.attendance',compact('attendance','event'));
+    }
+
+    public function partials_cader_break(Request $request){
+        $event_breaks = EventBreak::where('cawader_id',$request->cader_id)->where('event_id',$request->event_id)->get(); 
+        return view('admin.events.partials.break',compact('event_breaks'));
+    }
 
     public function changeStatus($id,$status){
         $event = Event::findOrFail($id);
@@ -46,7 +81,7 @@ class EventsController extends Controller
         abort_if(Gate::denies('event_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Event::with(['city', 'company.user', 'available_gates'])->select(sprintf('%s.*', (new Event())->table));
+            $query = Event::with(['city', 'company.user', 'available_gates','specializations'])->select(sprintf('%s.*', (new Event())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -142,7 +177,7 @@ class EventsController extends Controller
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        $cawaders = Cawader::with('user')->get()->pluck('user.name', 'id'); 
+        $cawaders = Cawader::with('user')->get(); 
 
         $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -152,11 +187,12 @@ class EventsController extends Controller
     }
 
     public function store(StoreEventRequest $request)
-    {
+    { 
+        $data = $request->validated();
         $event = Event::create($request->all());
         $event->available_gates()->sync($request->input('available_gates', []));
-        $event->specializations()->sync($request->input('specializations', []));
-        $event->cawaders()->sync($request->input('cawaders', []));
+        $event->specializations()->sync($request->input('specializations', [])); 
+        $event->cawaders()->sync($data['cawaders']);
         if ($request->input('photo', false)) {
             $event->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
         }
@@ -179,9 +215,7 @@ class EventsController extends Controller
 
         $available_gates = EventGate::pluck('gate', 'id');
 
-        $specializations = Specialization::pluck('name_ar', 'id');
-
-        $cawaders = Cawader::with('user')->get()->pluck('user.name', 'id'); 
+        $specializations = Specialization::pluck('name_ar', 'id'); 
 
         $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -189,15 +223,24 @@ class EventsController extends Controller
 
         $event->load('city', 'company', 'specializations', 'cawaders', 'reviews', 'client', 'government', 'available_gates');
 
+        $cawaders = Cawader::with('user')->get()->map(function($cawader) use ($event) {
+            $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
+            $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
+            $cawader->extra_hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.extra_hours') ?? null;
+            return $cawader;
+        });
+        
+
         return view('admin.events.edit', compact('cities', 'companies', 'available_gates', 'event','specializations','cawaders','clients','governments'));
     }
 
     public function update(UpdateEventRequest $request, Event $event)
     {
+        $data = $request->validated();
         $event->update($request->all());
         $event->available_gates()->sync($request->input('available_gates', []));
         $event->specializations()->sync($request->input('specializations', []));
-        $event->cawaders()->sync($request->input('cawaders', []));
+        $event->cawaders()->sync($data['cawaders']);
         if ($request->input('photo', false)) {
             if (!$event->photo || $request->input('photo') !== $event->photo->file_name) {
                 if ($event->photo) {
@@ -211,7 +254,7 @@ class EventsController extends Controller
 
         Alert::success('تم بنجاح', 'تم تعديل بيانات الفعالية بنجاح ');
         return redirect()->route('admin.events.index');
-    }
+    } 
 
     public function show(Event $event)
     {

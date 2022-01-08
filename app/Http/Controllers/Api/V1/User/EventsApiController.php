@@ -16,7 +16,14 @@ class EventsApiController extends Controller
     use api_return;
 
     public function index(){
-        $events = Event::with('available_gates')->orderBy('created_at','desc')->paginate(10);
+        $events = Event::with('available_gates','eventBrands')->orderBy('created_at','desc')->paginate(10);
+        $new = EventsResource::collection($events);
+        return $this->returnPaginationData($new,$events,"success");
+    }
+
+    public function myevents(){ 
+        $visitor = Visitor::where('user_id',Auth::id())->first();
+        $events = $visitor->events()->paginate(10);
         $new = EventsResource::collection($events);
         return $this->returnPaginationData($new,$events,"success");
     }

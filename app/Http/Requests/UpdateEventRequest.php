@@ -6,12 +6,13 @@ use App\Models\Event;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
+use Auth;
 
 class UpdateEventRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('event_edit');
+        return Gate::allows('event_edit') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client'; 
     }
 
     public function rules()
@@ -80,11 +81,18 @@ class UpdateEventRequest extends FormRequest
                 'required',
                 'array',
             ],
-            'cawaders.*' => [
-                'integer',
+            'cawaders.*.hours' => [ 
+                'required',
+            ],
+            'cawaders.*.amount' => [ 
+                'required',
             ],
             'cawaders' => [
                 'array',
+                'required',
+            ],
+            'cawaders.*.extra_hours' => [ 
+                'required',
             ],
         ];
     }

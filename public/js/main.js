@@ -37,7 +37,7 @@ $(document).ready(function () {
       previous: 'fas fa-chevron-left',
       next: 'fas fa-chevron-right'
     }
-  })
+  }) 
 
   $('.select-all').click(function () {
     let $select2 = $(this).parent().siblings('.select2')

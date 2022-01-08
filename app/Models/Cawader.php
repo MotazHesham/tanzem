@@ -39,6 +39,8 @@ class Cawader extends Model
         'working_hours',
         'identity_number',
         'user_id',
+        'longitude', 
+        'latitude', 
         'companies_and_institution_id', 
         'desceiption',
         'created_at',

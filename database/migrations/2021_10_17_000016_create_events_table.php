@@ -17,8 +17,9 @@ class CreateEventsTable extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->string('address');
-            $table->decimal('latitude', 15, 2);
-            $table->decimal('longitude', 15, 2);
+            $table->double('longitude')->nullable();
+            $table->double('latitude')->nullable();
+            $table->double('area')->nullable();
             $table->decimal('cost', 15, 2)->nullable();
             $table->string('status')->nullable();
             $table->timestamps();

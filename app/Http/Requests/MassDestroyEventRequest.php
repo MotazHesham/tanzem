@@ -6,14 +6,13 @@ use App\Models\Event;
 use Gate;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Auth;
 
 class MassDestroyEventRequest extends FormRequest
 {
     public function authorize()
     {
-        abort_if(Gate::denies('event_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        return true;
+        return Gate::allows('event_delete') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client'; 
     }
 
     public function rules()
