@@ -24,13 +24,7 @@ class UserAuthApiController extends Controller
             'name' => 'required|string',
             'email' => 'required|unique:users',
             'password' => 'required|min:6|max:20',
-            'national' => 'required',
-            'visitor_family' => 'required|array',
-            'visitor_family.*.name' => 'required|string',
-            'visitor_family.*.relation' => 'required|string',
-            'visitor_family.*.phone' => 'required|string',
-            'visitor_family.*.identity' => 'required|string',
-            'visitor_family.*.gender' => 'in:male,female',
+            'national' => 'required', 
         ];
 
         $validator = Validator::make($request->all(), $rules);
