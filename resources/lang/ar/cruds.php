@@ -402,7 +402,7 @@ return [
             'id_helper'         => ' ',
             'user'              => 'User',
             'user_helper'       => ' ',
-            'national'          => 'رقم الهوية الوظنية',
+            'national'          => 'رقم الهوية الوطنية',
             'national_helper'   => ' ',
             'events'            => 'الفعاليات',
             'events_helper'     => ' ',
@@ -615,7 +615,7 @@ return [
         ],
     ], 
     'breakType' => [
-        'title'          => 'أنواع الذونات',
+        'title'          => 'أنواع الأذونات',
         'title_singular' => 'أذن أنصراف',
         'fields'         => [
             'id'                => 'ID',

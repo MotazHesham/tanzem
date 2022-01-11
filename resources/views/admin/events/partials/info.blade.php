@@ -1,9 +1,4 @@
-<div class="form-group">
-    <div class="form-group">
-        <a class="btn btn-default" href="{{ route('admin.events.index') }}">
-            {{ trans('global.back_to_list') }}
-        </a>
-    </div>
+<div class="form-group"> 
     <div class="row">
         <div class="col-md-6"> 
             <table class="table table-bordered table-striped">
@@ -172,10 +167,5 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <div class="form-group">
-        <a class="btn btn-default" href="{{ route('admin.events.index') }}">
-            {{ trans('global.back_to_list') }}
-        </a>
-    </div>
+    </div> 
 </div>

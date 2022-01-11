@@ -1,28 +1,36 @@
 @extends('layouts.app')
 @section('content')
+    <h1>{{ trans('panel.site_title') }}</h1>
 
-    <form method="POST" action="{{ route('forgetpassword.create.token') }}">
+    <p class="text-muted">{{ trans('global.reset_password') }}</p>
+
+    @if (session('status'))
+        <div class="alert alert-success" role="alert">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('password.email') }}">
         @csrf
-        <h3 class="form-title m-t0">Find Your Account</h3>
 
         <div class="form-group">
-            <input name="email" required="" class="form-control" placeholder="Your Email" type="email" />
+            <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}"
+                name="email" required autocomplete="email" autofocus placeholder="{{ trans('global.login_email') }}"
+                value="{{ old('email') }}">
+
             @if ($errors->has('email'))
                 <div class="invalid-feedback">
                     {{ $errors->first('email') }}
                 </div>
             @endif
         </div>
-        <div class="form-group">
-            <button class="site-button btn-block button-md">Get New Password</button>
-        </div>
-        <div class="form-group">
-            <p class="info-bottom">
-                <a href=" {{ route('login') }}" class="btn-link">Login </a> |
-                {{-- <a data-toggle="tab" href="#register"
-                        class="btn-link">Register</a> --}}
-            </p>
+
+        <div class="row">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-flat btn-block">
+                    {{ trans('global.send_password') }}
+                </button>
+            </div>
         </div>
     </form>
-
 @endsection

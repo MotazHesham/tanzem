@@ -32,9 +32,9 @@
         <div class="form-group">
             <button class="site-button btn-block button-md">دخول</button>
         </div>
-        {{-- <div class="form-group">
-            <p class="info-bottom">مستخدم جديد <a data-toggle="tab" href="#register"
+        <div class="form-group">
+            <p class="info-bottom">مستخدم جديد <a href="{{ route('register') }}"
                     class="btn-link">سجل الان</a> </p>
-        </div> --}}
+        </div>
     </form>
 @endsection

@@ -10,10 +10,10 @@ trait send_mail_trait
     public function sendEmail($mailText, $email, $subject, $fileNameToStore = null)
     { 
         $fromName = "Tanzem";
-        $fromAddress = "tanzem@ahelone.org";
-        $fromPass = "+I+gcWU=Dqc~";
+        $fromAddress = "mails@tanthim.com";
+        $fromPass = "E(U=DKYVu3%L";
         $fromDriver = "smtp";
-        $fromHost = "ahelone.org";
+        $fromHost = "tanthim.com";
         $fromPort = "587";
         $fromType = "tls";
 

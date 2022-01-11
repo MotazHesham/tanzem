@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => 'company', 'as' => 'company.', 'namespace' => 'CompanyAndIntitutuions', 'middleware' => ['auth','company']], function () {
+Route::group(['prefix' => 'company', 'as' => 'company.', 'namespace' => 'CompanyAndIntitutuions', 'middleware' => ['auth','company','verified']], function () {
 
     Route::get('/', 'HomeController@index')->name('home');
     

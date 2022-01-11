@@ -124,7 +124,7 @@ class EventsController extends Controller
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        $cawaders = Cawader::with('user')->get()->pluck('user.name', 'id'); 
+        $cawaders = Cawader::with('user')->get(); 
 
         $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -170,7 +170,13 @@ class EventsController extends Controller
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        $cawaders = Cawader::with('user')->get()->pluck('user.name', 'id'); 
+        $cawaders = Cawader::with('user')->get()->map(function($cawader) use ($event) {
+            $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
+            $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
+            $cawader->extra_hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.extra_hours') ?? null;
+            return $cawader;
+        });
+        
 
         $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 

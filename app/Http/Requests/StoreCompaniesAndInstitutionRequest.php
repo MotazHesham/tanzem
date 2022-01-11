@@ -11,7 +11,7 @@ class StoreCompaniesAndInstitutionRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('companies_and_institution_create');
+        return true;
     }
 
     public function rules()

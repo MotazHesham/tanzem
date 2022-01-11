@@ -45,6 +45,7 @@
                                                 }
                                             @endphp
                                             <img src="{{ $company_image }}" class="img-fluid" />
+                                            <p>{{ $company->user->name ?? '' }}</p>
                                         </div>
                                     </a>
                                 </div>

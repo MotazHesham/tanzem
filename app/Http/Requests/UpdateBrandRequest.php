@@ -12,7 +12,7 @@ class UpdateBrandRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('brand_edit') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client'; 
+        return Gate::allows('brand_edit') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client' || Auth::user()->user_type == 'governmental_entity'; 
     }
 
     public function rules()

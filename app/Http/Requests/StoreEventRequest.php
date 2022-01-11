@@ -12,7 +12,7 @@ class StoreEventRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('event_create') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client'; 
+        return Gate::allows('event_create') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client' || Auth::user()->user_type == 'governmental_entity'; 
     }
 
     public function rules()

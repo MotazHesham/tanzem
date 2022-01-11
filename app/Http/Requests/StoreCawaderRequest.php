@@ -12,7 +12,7 @@ class StoreCawaderRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('cawader_create') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client'; 
+        return Gate::allows('cawader_create') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client' || Auth::user()->user_type == 'governmental_entity'; 
     }
 
     public function rules()

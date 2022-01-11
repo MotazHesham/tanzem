@@ -39,7 +39,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($brands as $key => $brand)
+                    @foreach ($brands as $key => $brand)
                         <tr data-entry-id="{{ $brand->id }}">
                             <td>
 
@@ -56,25 +56,28 @@
                             <td>
                                 {{ $brand->zone_name ?? '' }}
                             </td>
-                            <td> 
+                            <td>
                                 @can('brand_show')
-                                    <a href="{{ route('admin.brands.show', $brand->id) }}" class="btn btn-outline-info btn-pill action-buttons-view" >
-                                        <i  class="fas fa-eye actions-custom-i"></i>
+                                    <a href="{{ route('admin.brands.show', $brand->id) }}"
+                                        class="btn btn-outline-info btn-pill action-buttons-view">
+                                        <i class="fas fa-eye actions-custom-i"></i>
                                     </a>
                                 @endcan
 
                                 @can('brand_edit')
-                                    <a  href="{{ route('admin.brands.edit', $brand->id) }}" class="btn btn-outline-success btn-pill action-buttons-edit">
-                                        <i  class="fa fa-edit actions-custom-i"></i> 
+                                    <a href="{{ route('admin.brands.edit', $brand->id) }}"
+                                        class="btn btn-outline-success btn-pill action-buttons-edit">
+                                        <i class="fa fa-edit actions-custom-i"></i>
                                     </a>
                                 @endcan
 
                                 @can('brand_delete')
                                     <?php $route = route('admin.brands.destroy', $brand->id); ?>
-                                    <a  href="#" onclick="deleteConfirmation('{{$route}}')" class="btn btn-outline-danger btn-pill action-buttons-delete">
-                                        <i  class="fa fa-trash actions-custom-i"></i>
-                                    </a> 
-                                @endcan 
+                                    <a href="#" onclick="deleteConfirmation('{{ $route }}')"
+                                        class="btn btn-outline-danger btn-pill action-buttons-delete">
+                                        <i class="fa fa-trash actions-custom-i"></i>
+                                    </a>
+                                @endcan
 
                             </td>
 
@@ -87,52 +90,55 @@
 </div>
 
 @section('scripts')
-@parent
-<script>
-    $(function () {
-  let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('brand_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
-  let deleteButton = {
-    text: deleteButtonTrans,
-    url: "{{ route('admin.brands.massDestroy') }}",
-    className: 'btn-danger',
-    action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
-          return $(entry).data('entry-id')
-      });
+    @parent
+    <script>
+        $(function() {
+            let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
+            @can('brand_delete')
+                let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
+                let deleteButton = {
+                text: deleteButtonTrans,
+                url: "{{ route('admin.brands.massDestroy') }}",
+                className: 'btn-danger',
+                action: function (e, dt, node, config) {
+                var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
+                return $(entry).data('entry-id')
+                });
+            
+                if (ids.length === 0) {
+                alert('{{ trans('global.datatables.zero_selected') }}')
+            
+                return
+                }
+            
+                if (confirm('{{ trans('global.areYouSure') }}')) {
+                $.ajax({
+                headers: {'x-csrf-token': _token},
+                method: 'POST',
+                url: config.url,
+                data: { ids: ids, _method: 'DELETE' }})
+                .done(function () { location.reload() })
+                }
+                }
+                }
+                dtButtons.push(deleteButton)
+            @endcan
 
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
+            $.extend(true, $.fn.dataTable.defaults, {
+                orderCellsTop: true,
+                order: [
+                    [1, 'desc']
+                ],
+                pageLength: 100,
+            });
+            let table = $('.datatable-eventBrands:not(.ajaxTable)').DataTable({
+                buttons: dtButtons
+            })
+            $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {
+                $($.fn.dataTable.tables(true)).DataTable()
+                    .columns.adjust();
+            });
 
-        return
-      }
-
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
-    }
-  }
-  dtButtons.push(deleteButton)
-@endcan
-
-  $.extend(true, $.fn.dataTable.defaults, {
-    orderCellsTop: true,
-    order: [[ 1, 'desc' ]],
-    pageLength: 100,
-  });
-  let table = $('.datatable-eventBrands:not(.ajaxTable)').DataTable({ buttons: dtButtons })
-  $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
-      $($.fn.dataTable.tables(true)).DataTable()
-          .columns.adjust();
-  });
-  
-})
-
-</script>
+        })
+    </script>
 @endsection

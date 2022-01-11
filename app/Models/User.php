@@ -10,12 +10,14 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\VerifyUserNotification;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia\HasMedia;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\Models\Media;
+use Illuminate\Support\Str;
 
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable implements HasMedia, MustVerifyEmail
 {
     use SoftDeletes;
     use Notifiable;
@@ -35,6 +37,7 @@ class User extends Authenticatable implements HasMedia
 
     protected $dates = [
         'email_verified_at',
+        'verified_at',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -44,6 +47,10 @@ class User extends Authenticatable implements HasMedia
         'name',
         'email',
         'email_verified_at',
+        'approved',
+        'verified',
+        'verified_at',
+        'verification_token',
         'password',
         'remember_token',
         'phone',
@@ -54,7 +61,7 @@ class User extends Authenticatable implements HasMedia
         'created_at',
         'updated_at',
         'deleted_at',
-    ];
+    ]; 
 
     public function registerMediaConversions(Media $media = null)
     {
@@ -89,12 +96,7 @@ class User extends Authenticatable implements HasMedia
     public function getEmailVerifiedAtAttribute($value)
     {
         return $value ? Carbon::createFromFormat('Y-m-d H:i:s', $value)->format(config('panel.date_format') . ' ' . config('panel.time_format')) : null;
-    }
-
-    public function setEmailVerifiedAtAttribute($value)
-    {
-        $this->attributes['email_verified_at'] = $value ? Carbon::createFromFormat(config('panel.date_format') . ' ' . config('panel.time_format'), $value)->format('Y-m-d H:i:s') : null;
-    }
+    } 
 
     public function setPasswordAttribute($input)
     {

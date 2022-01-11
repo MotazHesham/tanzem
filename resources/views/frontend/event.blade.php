@@ -75,7 +75,7 @@
                         <div class="content-box">
                             <div class="content-header">
                                 <h3 class="title">
-                                    <i class="la la-list-ul"></i> listing Brands
+                                    <i class="la la-list-ul"></i> الأقسام الداخلية
                                 </h3>
                             </div>
                             <div class="content-body">

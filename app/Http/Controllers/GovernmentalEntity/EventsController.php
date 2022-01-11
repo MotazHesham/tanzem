@@ -121,11 +121,11 @@ class EventsController extends Controller
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        $cawaders = Cawader::with('user')->get()->pluck('user.name', 'id');  
+        $cawaders = Cawader::with('user')->get(); 
 
-        $governments = GovernmentalEntity::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), ''); 
 
-        return view('government.events.create', compact('cities', 'companies', 'available_gates','specializations','cawaders','government','governments'));
+        return view('government.events.create', compact('cities', 'companies', 'available_gates','specializations','cawaders','government','clients'));
     }
 
     public function store(StoreEventRequest $request)
@@ -151,7 +151,7 @@ class EventsController extends Controller
         $government = GovernmentalEntity::where('user_id',Auth::id())->first();
 
         // check record auth
-        $check = not_auth_recored($brand->event->government_id, $government->id);
+        $check = not_auth_recored($event->government_id, $government->id);
         if($check){
             return redirect()->route($check);
         }
@@ -164,11 +164,16 @@ class EventsController extends Controller
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        $cawaders = Cawader::with('user')->get()->pluck('user.name', 'id'); 
+        $cawaders = Cawader::with('user')->get()->map(function($cawader) use ($event) {
+            $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
+            $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
+            $cawader->extra_hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.extra_hours') ?? null;
+            return $cawader;
+        }); 
 
         $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), ''); 
 
-        $event->load('city', 'company', 'specializations', 'cawaders', 'reviews', 'clients', 'government', 'available_gates');
+        $event->load('city', 'company', 'specializations', 'cawaders', 'reviews', 'client', 'government', 'available_gates');
 
         return view('government.events.edit', compact('cities', 'companies', 'available_gates', 'event','specializations','cawaders','clients','government'));
     }
@@ -199,7 +204,7 @@ class EventsController extends Controller
         $government = GovernmentalEntity::where('user_id',Auth::id())->first();
 
         // check record auth
-        $check = not_auth_recored($brand->event->government_id, $government->id);
+        $check = not_auth_recored($event->government_id, $government->id);
         if($check){
             return redirect()->route($check);
         }

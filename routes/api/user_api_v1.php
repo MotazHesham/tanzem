@@ -10,6 +10,12 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
     Route::post('register','UserAuthApiController@register');
     Route::post('login','UserAuthApiController@login');
 
+    //forgetpassword
+    Route::post('forgetpassword','ForgetPasswordController@create_token');
+    Route::post('forgetpassword/reset','ForgetPasswordController@reset');
+
+    Route::post('login','UserAuthApiController@login');
+
     Route::group(['middleware' => ['auth:sanctum']],function () {
 
         Route::post('fcm-token','UsersApiController@update_fcm_token');

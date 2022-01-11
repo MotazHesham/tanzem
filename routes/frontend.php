@@ -3,7 +3,10 @@
 
 Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function(){
     
-    Route::get('/','HomeController@home')->name('home');
+    Route::get('/','HomeController@home')->name('home'); 
+    Route::post('users/media', 'HomeController@storeMedia')->name('users.storeMedia');
+    Route::post('users/ckmedia', 'HomeController@storeCKEditorImages')->name('users.storeCKEditorImages');
+    Route::post('register/company', 'HomeController@register_company')->name('register.company');
 
     Route::get('news/{id}','HomeController@news')->name('news');
 
