@@ -21,6 +21,7 @@ class CreateEventBreakTable extends Migration
             $table->foreign('cawader_id', 'cawader_id_fk_5226083')->references('id')->on('cawaders')->onDelete('cascade'); 
             $table->string('break');
             $table->text('reason')->nullable();
+            $table->Integer('time')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();
         });
