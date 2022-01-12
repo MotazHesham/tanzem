@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateCawaderRequest;
 use App\Models\Cawader;
 use App\Models\City;
 use App\Models\CompaniesAndInstitution;
-use App\Models\Specialization;
+use App\Models\CawaderSpecialization;
 use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
@@ -91,7 +91,7 @@ class CawaderController extends Controller
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $specializations = Specialization::pluck('name_ar', 'id');  
+        $specializations = CawaderSpecialization::pluck('name_ar', 'id');  
 
         return view('company.cawaders.create', compact('cities', 'specializations', 'company'));
     }
@@ -144,7 +144,7 @@ class CawaderController extends Controller
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $specializations = Specialization::pluck('name_ar', 'id');  
+        $specializations = CawaderSpecialization::pluck('name_ar', 'id');  
 
         $cawader->load('city', 'specializations', 'user', 'companies_and_institution');
 

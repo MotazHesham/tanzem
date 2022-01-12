@@ -19,4 +19,13 @@
         </form>
     </div>
 </div>
+<a href="#" class="c-sidebar-nav-link" onclick="event.preventDefault(); document.getElementById('logoutform').submit();">
+    <i class="c-sidebar-nav-icon fas fa-fw fa-sign-out-alt">
+
+    </i>
+    {{ trans('global.logout') }}
+</a>
+<form id="logoutform" action="{{ route('logout') }}" method="POST" style="display: none;">
+    {{ csrf_field() }}
+</form>
 @endsection

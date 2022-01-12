@@ -129,6 +129,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('break-types/destroy', 'BreakTypesController@massDestroy')->name('break-types.massDestroy');
     Route::resource('break-types', 'BreakTypesController');
 
+    // Cawader Specialization
+    Route::delete('cawader-specializations/destroy', 'CawaderSpecializationController@massDestroy')->name('cawader-specializations.massDestroy');
+    Route::resource('cawader-specializations', 'CawaderSpecializationController');
+
+
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

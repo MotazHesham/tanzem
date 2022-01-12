@@ -450,6 +450,26 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 111,
+                'title' => 'cawader_specialization_create',
+            ],
+            [
+                'id'    => 112,
+                'title' => 'cawader_specialization_edit',
+            ],
+            [
+                'id'    => 113,
+                'title' => 'cawader_specialization_show',
+            ],
+            [
+                'id'    => 114,
+                'title' => 'cawader_specialization_delete',
+            ],
+            [
+                'id'    => 115,
+                'title' => 'cawader_specialization_access',
+            ],
+            [
+                'id'    => 116,
                 'title' => 'profile_password_edit',
             ],
         ];

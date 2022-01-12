@@ -18,6 +18,7 @@ return [
     'filterDate'                     => 'Filter by date',
     'forgot_password'                => 'Forgot your password?',
     'home'                           => 'Home',
+    'homepage'                             => 'Home Page',
     'list'                           => 'List',
     'login'                          => 'Login',
     'login_email'                    => 'Email',

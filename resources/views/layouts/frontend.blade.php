@@ -64,8 +64,13 @@
                         <!-- extra nav -->
                         <div class="extra-nav">
                             <div class="extra-cell">
-                                <a href="{{ route('login') }}" class="site-button radius-xl m-l10"><i
-                                        class="ti-import m-r5 rotate90"></i> تسجيل الدخول</a>
+                                @auth 
+                                    <a href="{{ route('login') }}" class="site-button radius-xl m-l10"><i
+                                        class="ti-import m-r5 rotate90"></i>لوحة التحكم</a>
+                                @else 
+                                    <a href="{{ route('login') }}" class="site-button radius-xl m-l10"><i
+                                            class="ti-import m-r5 rotate90"></i> تسجيل الدخول</a>
+                                @endauth
                             </div>
                         </div>
                         <!-- main nav -->
@@ -174,7 +179,8 @@
                         <div class="col-lg-12 text-center">
                             <span class="fbottom-like">© 2022 جميع الحقوق محفوظة
                                 <a class="like-btn" href="javascript:void(0)"><i class="fa fa-heart"></i></a>
-                                تصميم وبرمجة تحالف الرؤى
+                                تصميم وبرمجة
+                                <a href="https://alliance-sa.com/">تحالف الرؤى</a> 
                             </span>
                         </div>
                     </div>

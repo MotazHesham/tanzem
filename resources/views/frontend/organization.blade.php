@@ -337,7 +337,7 @@
                                 <div class="content-box">
                                     <div class="content-header">
                                         <h3 class="title">
-                                            <i class="la la-video-camera m-r5"></i>فيدوهات
+                                            <i class="la la-video-camera m-r5"></i>الفيديوهات
                                         </h3>
                                     </div>
                                     <div class="content-body">

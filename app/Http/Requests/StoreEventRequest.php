@@ -25,6 +25,7 @@ class StoreEventRequest extends FormRequest
             'start_date' => [
                 'required',
                 'date_format:' . config('panel.date_format'),
+                'start_date_check'
             ],
             'end_date' => [
                 'required',
@@ -32,7 +33,7 @@ class StoreEventRequest extends FormRequest
             ],
             'start_time' => [
                 'required',
-                'date_format:' . config('panel.time_format'),
+                'date_format:' . config('panel.time_format'), 
             ],
             'end_time' => [
                 'required',

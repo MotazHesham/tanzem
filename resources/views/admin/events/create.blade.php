@@ -12,7 +12,7 @@
         </div>
 
         <div class="card-body">
-            <form method="POST" action="{{ route('admin.events.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.events.store') }}" enctype="multipart/form-data" id="store_event">
                 @csrf
                 <input type="hidden" name="status" value="active">
 
@@ -79,7 +79,7 @@
 @endsection
 
 @section('scripts') 
-    @include('map_scripts.events.create')
+    @include('map_scripts.events.create') 
     <script>
         Dropzone.options.photoDropzone = {
             url: '{{ route('admin.events.storeMedia') }}',

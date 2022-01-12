@@ -188,6 +188,16 @@
                             </a>
                         </li>
                     @endcan
+                    @can('cawader_specialization_access')
+                        <li class="c-sidebar-nav-item">
+                            <a href="{{ route("admin.cawader-specializations.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/cawader-specializations") || request()->is("admin/cawader-specializations/*") ? "c-active" : "" }}">
+                                <i class="fa-fw fas fa-align-justify c-sidebar-nav-icon">
+
+                                </i>
+                                {{ trans('cruds.cawaderSpecialization.title') }}
+                            </a>
+                        </li>
+                    @endcan
                     @can('break_type_access')
                         <li class="c-sidebar-nav-item">
                             <a href="{{ route("admin.break-types.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/break-types") || request()->is("admin/break-types/*") ? "c-active" : "" }}">

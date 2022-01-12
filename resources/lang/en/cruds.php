@@ -630,4 +630,22 @@ return [
             'deleted_at_helper' => ' ',
         ],
     ],
+    'cawaderSpecialization' => [
+        'title'          => 'Cawader Specialization',
+        'title_singular' => 'Cawader Specialization',
+        'fields'         => [
+            'id'                => 'ID',
+            'id_helper'         => ' ',
+            'name_ar'           => 'Name In Arabic',
+            'name_ar_helper'    => ' ',
+            'name_en'           => 'Name In English',
+            'name_en_helper'    => ' ',
+            'created_at'        => 'Created at',
+            'created_at_helper' => ' ',
+            'updated_at'        => 'Updated at',
+            'updated_at_helper' => ' ',
+            'deleted_at'        => 'Deleted at',
+            'deleted_at_helper' => ' ',
+        ],
+    ],
 ];

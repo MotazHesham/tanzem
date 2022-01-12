@@ -65,7 +65,7 @@ class Cawader extends Model
 
     public function specializations()
     {
-        return $this->belongsToMany(Specialization::class);
+        return $this->belongsToMany(CawaderSpecialization::class,'cawader_specialization','cawader_id','specialization_id');
     }
 
     public function events()
