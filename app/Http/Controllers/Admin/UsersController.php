@@ -19,6 +19,13 @@ class UsersController extends Controller
 {
     use MediaUploadingTrait;
 
+    public function update_approved(Request $request){
+        $user = User::find($request->id);
+        $user->approved = $request->status;
+        $user->save();
+        return 1; 
+    }
+    
     public function index()
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');

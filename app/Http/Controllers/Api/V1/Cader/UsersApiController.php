@@ -6,10 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\User; 
 use App\Models\Cawader; 
 use App\Models\Event; 
+use App\Models\City; 
+use App\Models\CawaderSpecialization; 
 use App\Models\BreakType; 
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Resources\V1\Cader\CaderResource;
+use App\Http\Resources\V1\Cader\CityResource;
+use App\Http\Resources\V1\Cader\SpecializationResource;
+use App\Http\Resources\V1\Cader\DegreeResource;
 use App\Traits\api_return;
 use Validator;
 use Illuminate\Support\Facades\Storage;
@@ -20,6 +25,25 @@ class UsersApiController extends Controller
 {
     use api_return;
     use MediaUploadingTrait; 
+
+    public function specializations(){
+        $specializations = CawaderSpecialization::all(); 
+        return $this->returnData(SpecializationResource::collection($specializations));
+    }
+
+    public function cities(){
+        $cities = City::all(); 
+        return $this->returnData(CityResource::collection($cities));
+    }
+
+    public function degrees(){
+        $degrees = Cawader::DEGREE_SELECT;
+        $degrees2 = [];
+        foreach($degrees as $key => $label){
+            $degrees2[$key] = trans('global.degree.' . $label); 
+        }
+        return $this->returnData(new DegreeResource($degrees2));
+    }
 
     public function breaks_type(){ 
         $breaks = BreakType::get();

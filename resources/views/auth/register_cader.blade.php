@@ -13,19 +13,14 @@
                 @endforeach
             </div>
         @endif
-        @if(session('message'))
-            <div class="alert alert-info" role="alert">
-                {{ session('message') }}
-            </div>
-        @endif
         <div class="mb-4 mt-3">
-            <button class="active-button" > تسجيل شركة</button>
-            <form action="{{ route('frontend.cader_register')}}" style="display: inline">
-                <button class="btn btn-light disabled-button" type="submit"> تسجيل كادر</button>
-            </form> 
+            <form action="{{ route('register')}}" style="display: inline">
+                <button class="btn btn-light disabled-button" type="submit"> تسجيل شركة</button>
+            </form>
+            <button class="active-button" > تسجيل كادر</button>
         </div> 
         
-        @include('auth.partials.company') 
+        @include('auth.partials.cader')
 
     </div>
 @endsection

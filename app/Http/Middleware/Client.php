@@ -22,7 +22,10 @@ class Client
             return redirect()->route('admin.home');
         }elseif(Auth::user()->user_type == 'governmental_entity'){ 
             return redirect()->route('government.home');
+        }elseif(Auth::user()->user_type == 'client'){
+            return $next($request);
+        }else{
+            return abort(403);
         }
-        return $next($request);
     }
 }

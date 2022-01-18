@@ -70,6 +70,8 @@ return [
             'deleted_at_helper'        => ' ',
             'phone'                    => 'Phone',
             'phone_helper'             => ' ',
+            'approved'                    => 'Approved',
+            'approved_helper'             => ' ',
             'landline_phone'           => 'Landline Phone',
             'landline_phone_helper'    => ' ',
             'website'                  => 'Website',

@@ -41,6 +41,24 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" /> 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
 
+    <style>
+        .active-button{ 
+            border-radius:15px;
+            width: 200px; 
+            height: 48px; 
+            background-color: #512D6D;
+            color: #fff; 
+            display:inline; 
+            border: 2px solid #68DAE5;
+        }
+        .disabled-button{
+            border-radius:15px; 
+            width: 200px; 
+            height: 48px; 
+            background-color: #e3e3e3;
+            display:inline
+        }
+    </style>
 </head>
 
 <body id="bg">
@@ -53,20 +71,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-5 login-form-box">
-                        <div class="login-form">
-                            <div class="logo">
-                                <a href="{{ route('frontend.home' )}}"><img src="{{ asset('frontend/images/logo-black-1.png') }}"
-                                        alt="" /></a>
-                            </div>
-                            @if ($errors->count() > 0)
-                                <div class="alert alert-danger"> 
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach 
-                                </div>
-                            @endif
-                            @yield('content')
-                        </div>
+                        @yield('content') 
                     </div>
                     <div class="col-lg-7">
                         <div class="content-info">

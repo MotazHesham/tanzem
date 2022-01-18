@@ -22,7 +22,10 @@ class Staff
             return redirect()->route('client.home');
         }elseif(Auth::user()->user_type == 'governmental_entity'){ 
             return redirect()->route('government.home');
+        }elseif(Auth::user()->user_type == 'staff'){
+            return $next($request);
+        }else{
+            return abort(403);
         }
-        return $next($request);
     }
 }

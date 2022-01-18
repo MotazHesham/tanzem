@@ -8,7 +8,12 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1/cader', 'as' => 'api.', 'namespace' => 'Api\V1\Cader', 'middleware' => 'changelanguage'], function () {
 
     Route::post('login','UserAuthApiController@login');
+    Route::post('register','UserAuthApiController@register');
     
+    // settings 
+    Route::get('specializations','UsersApiController@specializations');
+    Route::get('cities','UsersApiController@cities');
+    Route::get('degrees','UsersApiController@degrees'); 
     Route::get('breaks_type','UsersApiController@breaks_type');
 
     Route::group(['middleware' => ['auth:sanctum']],function () {

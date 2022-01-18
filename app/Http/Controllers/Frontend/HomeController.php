@@ -10,17 +10,23 @@ use App\Models\SaidAboutTanzem;
 use App\Models\CompaniesAndInstitution;
 use App\Models\News;
 use App\Models\User;
+use App\Models\Cawader;
 use App\Http\Requests\StoreSubscriptionRequest;  
 use App\Models\Subscription;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use Spatie\MediaLibrary\Models\Media;
 use App\Http\Requests\StoreCompaniesAndInstitutionRequest;
+use App\Http\Requests\StoreCawaderRequest; 
 use Alert;
 use Auth;
 
 class HomeController extends Controller
 {
     use MediaUploadingTrait;
+
+    public function cader_register(){
+        return view('auth.register_cader');
+    }
 
     public function register_company(StoreCompaniesAndInstitutionRequest $request)
     {  
@@ -62,6 +68,41 @@ class HomeController extends Controller
 
         Alert::success('تم التسجيل بنجاح');
         return redirect()->route('company.home');
+    }
+
+    public function register_cader(StoreCawaderRequest $request)
+    {
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'user_type' => 'cader', 
+            'phone' => $request->phone,  
+            'approved' => 0,  
+        ]);
+
+        if ($request->input('photo', false)) {
+            $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+        }
+
+        if ($media = $request->input('ck-media', false)) {
+            Media::whereIn('id', $media)->update(['model_id' => $user->id]);
+        }
+
+        $cawader = Cawader::create([
+            'user_id' => $user->id,
+            'dob' => $request->dob,
+            'city_id' => $request->city_id,
+            'degree' => $request->degree,
+            'desceiption' => $request->desceiption,
+            'working_hours' => $request->working_hours,
+            'identity_number' => $request->identity_number, 
+        ]);
+
+        $cawader->specializations()->sync($request->input('specializations', []));
+
+        Alert::success('تم أرسال طلبك للأنضمام بنجاح');
+        return redirect()->route('frontend.home');
     }
 
     public function home(){ 

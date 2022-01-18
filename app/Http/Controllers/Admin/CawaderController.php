@@ -66,12 +66,19 @@ class CawaderController extends Controller
             $table->addColumn('user_phone', function ($row) {
                 return $row->user ? $row->user->phone : '';
             });
+            $table->editColumn('approved', function ($row) {
+                return '
+                <label class="c-switch c-switch-pill c-switch-success">
+                    <input onchange="update_approved(this)" value="' . $row->user_id . '" type="checkbox" class="c-switch-input" '. ($row->user->approved ? "checked" : null) .' }}>
+                    <span class="c-switch-slider"></span>
+                </label>';
+            });
 
             $table->addColumn('companies_and_institution_user_name', function ($row) {
                 return $row->companies_and_institution ? $row->companies_and_institution->user->name : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'specialization', 'user', 'companies_and_institution']);
+            $table->rawColumns(['actions', 'placeholder', 'specialization', 'user', 'companies_and_institution','approved']);
 
             return $table->make(true);
         }

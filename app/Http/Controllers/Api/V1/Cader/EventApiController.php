@@ -35,6 +35,9 @@ class EventApiController extends Controller
                         ->whereHas('cawaders',function ($query){
                             $query->where('id',$GLOBALS['cawader_id']);
                         })->first(); 
+        if(!$event){
+            return $this->returnError('404',('لا يوجد فعاليات في الوقت الحالي'));
+        }
         $event_cawaders = $event->cawaders()->wherePivot('cawader_id',$cawader_id)->first();
 
         //count dates from start to end
@@ -52,10 +55,10 @@ class EventApiController extends Controller
             $raws = $event->attendance()->wherePivot('cawader_id',$cawader_id)->wherePivot('attendance1',$i->format('Y-m-d'))->get();  
             $history = [
                 'date' => $i->format('j F Y'), 
-                'attend' => '--',
-                'leave' => '--',
-                'total_minutes_out_of_zone' => '--',
-                'total_hours' => '--', 
+                'attend' => null,
+                'leave' => null,
+                'total_minutes_out_of_zone' => null,
+                'total_hours' => null, 
             ];
             if($raws->count() > 0){
                 $temp = 0; // to calculate extra hours
@@ -92,8 +95,11 @@ class EventApiController extends Controller
         $data = [
             'event_id' => $event->id,
             'event_name' => $event->title,
-            'start' => Carbon::createFromFormat($fromFormat, $event->start_date . ' ' . $event->start_time)->format('a g:i - j F Y'),
-            'end' => Carbon::createFromFormat($fromFormat, $event->end_date . ' ' . $event->end_time)->format('a g:i - j F Y'),
+            'event_company' => $event->company->user->name ?? '',
+            'start_date' => $event->start_date,
+            'end_date' => $event->end_date,
+            'start_time' => Carbon::createFromFormat(config('panel.time_format'),$event->start_time)->format('H:i:s'),
+            'end_time' => Carbon::createFromFormat(config('panel.time_format'),$event->end_time)->format('H:i:s'),
             'hours_requried' => $event_count_days * $event_cawaders->pivot->hours,
             'out_of_zone_minutes' => $out_of_zone_minutes,
             'actual_attendance' => str_pad(floor(($actual_attendance - $out_of_zone_minutes) / 60), 2, '0', STR_PAD_LEFT) .':'. str_pad( ($actual_attendance - $out_of_zone_minutes) % 60, 2, '0', STR_PAD_LEFT),
@@ -101,7 +107,7 @@ class EventApiController extends Controller
             'history' => $all_history,
         ]; 
 
-        return response()->json($data);
+        return $this->returnData($data);
     }
 
     public function break_request(Request $request){ 

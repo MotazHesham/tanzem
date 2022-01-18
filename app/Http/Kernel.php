@@ -49,6 +49,7 @@ class Kernel extends HttpKernel
         'government' => \App\Http\Middleware\Government::class,
         'client' => \App\Http\Middleware\Client::class,
         'company' => \App\Http\Middleware\Company::class,
+        'approved_by_admin' => \App\Http\Middleware\ApprovalMiddleware::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 }

@@ -7,6 +7,8 @@ Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function(){
     Route::post('users/media', 'HomeController@storeMedia')->name('users.storeMedia');
     Route::post('users/ckmedia', 'HomeController@storeCKEditorImages')->name('users.storeCKEditorImages');
     Route::post('register/company', 'HomeController@register_company')->name('register.company');
+    Route::get('register/cader', 'HomeController@cader_register')->name('cader_register');
+    Route::post('register/cader', 'HomeController@register_cader')->name('register.cader');
 
     Route::get('news/{id}','HomeController@news')->name('news');
 
