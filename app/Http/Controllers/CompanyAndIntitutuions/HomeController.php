@@ -24,7 +24,12 @@ class HomeController
     ];
     public function index()
     {
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
 
         $settings1 = [
             'chart_title'           => trans('global.dashboard_widgets.Events'), 

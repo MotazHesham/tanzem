@@ -154,8 +154,9 @@ class Event extends Model implements HasMedia
 
     public function cawaders()
     {
-        return $this->belongsToMany(Cawader::class)->withPivot(['hours','amount','extra_hours']);
+        return $this->belongsToMany(Cawader::class)->withPivot(['supervisor_id','hours','amount','extra_hours']);
     }
+
 
     public function attendance()
     {

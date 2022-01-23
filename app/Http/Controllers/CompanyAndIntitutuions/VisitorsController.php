@@ -10,6 +10,7 @@ use App\Models\Brand;
 use App\Models\Event;
 use App\Models\User;
 use App\Models\Visitor;
+use App\Models\Cawader;
 use App\Models\CompaniesAndInstitution;
 use Gate;
 use Illuminate\Http\Request;
@@ -28,7 +29,13 @@ class VisitorsController extends Controller
     { 
 
         if ($request->ajax()) {
-            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+            if(Auth::user()->user_type == 'cader'){
+                $cawader = Cawader::where('user_id',Auth::id())->first(); 
+                $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+            }else{
+                $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+            }
+    
             $company_id = $company->id;
 
             $query = Visitor::with(['user', 'brands'])

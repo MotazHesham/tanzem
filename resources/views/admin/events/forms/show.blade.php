@@ -67,12 +67,12 @@
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-map" role="tabpanel" aria-labelledby="pills-map-tab">
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div id="caders_in_map" class="partials-scrollable" style="max-height: 605px">
                             @includeIf('admin.events.partials.caders_map', ['event' => $event])
                         </div>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-8">
                         <div class="form-group">
                             <div id="map3" style="width: 100%; height: 600px"></div>
                         </div>

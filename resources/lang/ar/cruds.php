@@ -322,6 +322,8 @@ return [
             'photo_helper'           => ' ',
             'company'                => 'الشركة',
             'company_helper'         => ' ',
+            'supervisor'                => 'المشرف',
+            'supervisor_helper'         => ' ',
             'created_at'             => 'Created at',
             'created_at_helper'      => ' ',
             'updated_at'             => 'Updated at',

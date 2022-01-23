@@ -14,6 +14,7 @@ Route::get('userVerification/{token}', 'UserVerificationController@approve')->na
 Auth::routes(['verify' => true]); 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () { 
+    Route::post('events/partials/supervisor', 'EventsController@partials_supervisor')->name('events.partials.supervisor'); 
     Route::post('events/partials/zoominmap', 'EventsController@partials_zoominmap')->name('events.partials.zoominmap'); 
     Route::post('events/partials/attendance_cader', 'EventsController@partials_attendance_cader')->name('events.partials.attendance_cader'); 
     Route::post('events/partials/cader_break', 'EventsController@partials_cader_break')->name('events.partials.cader_break'); 

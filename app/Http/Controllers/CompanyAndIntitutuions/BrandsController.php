@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateBrandRequest;
 use App\Models\Brand;
 use App\Models\Event;
 use App\Models\CompaniesAndInstitution;
+use App\Models\Cawader;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\Models\Media;
@@ -27,7 +28,13 @@ class BrandsController extends Controller
 
         if ($request->ajax()) {
 
-            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+            if(Auth::user()->user_type == 'cader'){
+                $cawader = Cawader::where('user_id',Auth::id())->first(); 
+                $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+            }else{
+                $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+            }
+    
             $events = Event::where('company_id',$company->id)->get()->pluck('id')->prepend(trans('global.pleaseSelect'), '');
 
             $query = Brand::whereIn('event_id',$events)->with(['event'])->select(sprintf('%s.*', (new Brand())->table));
@@ -70,7 +77,13 @@ class BrandsController extends Controller
     public function create()
     { 
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
         $events = Event::where('company_id',$company->id)->get()->pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         return view('company.brands.create', compact('events'));
@@ -95,7 +108,13 @@ class BrandsController extends Controller
     public function edit(Brand $brand)
     { 
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
 
         // check record auth
         $check = not_auth_recored($brand->event->company_id, $company->id);
@@ -132,7 +151,13 @@ class BrandsController extends Controller
     public function show(Brand $brand)
     { 
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
 
         // check record auth
         $check = not_auth_recored($brand->event->company_id, $company->id);
@@ -148,7 +173,13 @@ class BrandsController extends Controller
     public function destroy(Brand $brand)
     { 
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
 
         // check record auth
         $check = not_auth_recored($brand->event->company_id, $company->id);

@@ -28,6 +28,18 @@ class EventsController extends Controller
 {
     use MediaUploadingTrait;
 
+    public function partials_supervisor(Request $request){  
+        $event = Event::findOrFail($request->event_id); 
+        foreach($request->cawaders as $cawader_id){
+            $event->cawaders()->updateExistingPivot(
+                $cawader_id , [ 
+                    'supervisor_id' => $request->supervisor_id,  
+                ]
+            ); 
+        }  
+        Alert::success('تم التعديل بنجاح');
+        return back();
+    }
     public function partials_zoominmap(Request $request){
         $cader = Cawader::find($request->cader_id);
 
@@ -177,7 +189,7 @@ class EventsController extends Controller
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        $cawaders = Cawader::with('user')->get(); 
+        $cawaders = Cawader::with('user')->where('companies_and_institution_id',null)->get(); 
 
         $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -223,7 +235,7 @@ class EventsController extends Controller
 
         $event->load('city', 'company', 'specializations', 'cawaders', 'reviews', 'client', 'government', 'available_gates');
 
-        $cawaders = Cawader::with('user')->get()->map(function($cawader) use ($event) {
+        $cawaders = Cawader::with('user')->where('companies_and_institution_id',null)->get()->map(function($cawader) use ($event) {
             $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
             $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
             $cawader->extra_hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.extra_hours') ?? null;

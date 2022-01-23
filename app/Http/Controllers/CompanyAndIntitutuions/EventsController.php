@@ -33,7 +33,13 @@ class EventsController extends Controller
 
         if ($request->ajax()) {
 
-            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+            if(Auth::user()->user_type == 'cader'){
+                $cawader = Cawader::where('user_id',Auth::id())->first(); 
+                $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+            }else{
+                $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+            }
+    
 
             $query = Event::where('company_id',$company->id)->with(['city', 'company.user', 'available_gates', 'specializations'])->select(sprintf('%s.*', (new Event())->table));
             $table = Datatables::of($query);
@@ -118,13 +124,20 @@ class EventsController extends Controller
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
 
         $available_gates = EventGate::pluck('gate', 'id');
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        $cawaders = Cawader::with('user')->get(); 
+        $cawaders = Cawader::with('user')->where('companies_and_institution_id',null)->get(); 
 
         $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -154,7 +167,14 @@ class EventsController extends Controller
     public function edit(Event $event)
     { 
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
         
         // check record auth
         $check = not_auth_recored($event->company_id, $company->id);
@@ -170,7 +190,7 @@ class EventsController extends Controller
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        $cawaders = Cawader::with('user')->get()->map(function($cawader) use ($event) {
+        $cawaders = Cawader::with('user')->where('companies_and_institution_id',null)->get()->map(function($cawader) use ($event) {
             $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
             $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
             $cawader->extra_hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.extra_hours') ?? null;
@@ -211,7 +231,14 @@ class EventsController extends Controller
     public function show(Event $event)
     { 
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
 
         // check record auth
         $check = not_auth_recored($event->company_id, $company->id);
@@ -226,7 +253,14 @@ class EventsController extends Controller
     public function destroy(Event $event)
     { 
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
         
         // check record auth
         $check = not_auth_recored($event->company_id, $company->id);

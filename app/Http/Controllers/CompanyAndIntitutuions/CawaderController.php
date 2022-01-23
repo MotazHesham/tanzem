@@ -28,7 +28,14 @@ class CawaderController extends Controller
     { 
 
         if ($request->ajax()) {
-            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+            
+            if(Auth::user()->user_type == 'cader'){
+                $cawader = Cawader::where('user_id',Auth::id())->first(); 
+                $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+            }else{
+                $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+            }
+
 
             $query = Cawader::where('companies_and_institution_id',$company->id)->with(['city', 'specializations', 'user', 'companies_and_institution'])->select(sprintf('%s.*', (new Cawader())->table));
             $table = Datatables::of($query);
@@ -87,7 +94,13 @@ class CawaderController extends Controller
     public function create()
     { 
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -134,7 +147,13 @@ class CawaderController extends Controller
     public function edit(Cawader $cawader)
     { 
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
         
         // check record auth
         $check = not_auth_recored($cawader->companies_and_institution_id, $company->id);
@@ -192,7 +211,13 @@ class CawaderController extends Controller
     public function show(Cawader $cawader)
     { 
 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
         
         // check record auth
         $check = not_auth_recored($cawader->companies_and_institution_id, $company->id);
@@ -207,7 +232,13 @@ class CawaderController extends Controller
 
     public function destroy(Cawader $cawader)
     { 
-        $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
+        if(Auth::user()->user_type == 'cader'){
+            $cawader = Cawader::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+        }else{
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+        }
+
         
         // check record auth
         $check = not_auth_recored($cawader->companies_and_institution_id, $company->id);

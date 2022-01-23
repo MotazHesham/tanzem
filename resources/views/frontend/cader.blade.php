@@ -19,7 +19,8 @@
                             }else{
                                 $cader_image = '';
                             }  
-                            $event = $cader->events()->where('status','accept')->get()->first(); 
+                            $now_date = date('Y-m-d',strtotime('now'));
+                            $event = $cader->events()->where('status','active')->where('start_date','<=',$now_date)->where('end_date','>=',$now_date)->get()->first(); 
                         @endphp
                         <div class="wonder-theme">
                             <img src="{{ $cader_image }}" class="rounded-circle" />
@@ -30,8 +31,12 @@
                         <div class="wonder-price"></div>
                         <div class="wonder-btn">
                             <a href="javascript:void(0);" class="site-button button-lg radius-no text-uppercase">
-                                مشارك الان في فعاليات
+                                @if($event)
+                                مشارك الان في فعاليات   
                                 {{ $event->title ?? '' }}
+                                @else 
+                                متاح الأن
+                                @endif
                             </a>
                         </div>
                     </div>
@@ -78,7 +83,7 @@
                         <h4 class="m-b10">الفعاليات الحالية</h4>
 
                         <div class="row">
-                            @foreach($cader->events()->where('status','accept')->orderBy('created_at','desc')->get() as $event)
+                            @forelse($cader->events()->where('status','active')->where('start_date','<=',$now_date)->where('end_date','>=',$now_date)->orderBy('created_at','desc')->get() as $event)
                                 <div class="col-lg-4">
                                     <div class="listing-bx event-listing m-b30">
                                         <div class="listing-media">
@@ -102,14 +107,18 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach  
+                                @empty 
+                                <div class="container text-center mt-4 mb-4 alert alert-dark">
+                                    متاح الأن
+                                </div>
+                            @endforelse 
                         </div>
 
                         <div class="dlab-divider bg-gray-dark"></div>
 
                         <h4 class="m-b10">الفعاليات السابقة</h4>
                         <div class="row">
-                            @foreach($cader->events()->where('status','accept')->orderBy('created_at','desc')->get() as $event)
+                            @foreach($cader->events()->where('status','active')->where('end_date','<',$now_date)->orderBy('created_at','desc')->get() as $event)
                                 <div class="col-lg-4">
                                     <div class="listing-bx event-listing m-b30">
                                         <div class="listing-media">

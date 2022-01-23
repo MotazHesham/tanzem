@@ -46,10 +46,10 @@ class EventsApiController extends Controller
 
         $visitor = Visitor::where('user_id',$request->user_id)->first();
 
-        $eventsVisitor = $event->eventsVisitors()->wherePivot('visitor_id',$visitor->id)->wherePivot('status',1)->first();
-
-        if($eventsVisitor){
-            return $this->returnError('401',('Cant Join, ALready In'));
+        $eventsVisitor = $event->eventsVisitors()->wherePivot('visitor_id',$visitor->id)->orderBy('pivot_created_at','desc')->first();
+        
+        if($eventsVisitor && $eventsVisitor->pivot->status == 1){
+            return $this->returnError('401',('لا يكمن تسجل الدخول , بالفعل بالداخل'));
         }else{ 
             $event->eventsVisitors()->attach([
                 $visitor->id => [  
@@ -57,7 +57,7 @@ class EventsApiController extends Controller
                 ],
             ]);
 
-            return $this->returnSuccessMessage(__('Success Scan Event'));
+            return $this->returnSuccessMessage(__('تم سجيل الدخول'));
         } 
     }
 
@@ -66,8 +66,8 @@ class EventsApiController extends Controller
 
         $visitor = Visitor::where('user_id',$request->user_id)->first();
 
-        $eventsVisitor = $event->eventsVisitors()->wherePivot('visitor_id',$visitor->id)->wherePivot('status',1)->first();
-
+        $eventsVisitor = $event->eventsVisitors()->wherePivot('visitor_id',$visitor->id)->orderBy('pivot_created_at','desc')->first();
+        
         if($eventsVisitor){
             if($eventsVisitor->pivot->status == 1){ 
                 $event->eventsVisitors()->wherePivot('status',1)->syncWithoutDetaching([
@@ -75,34 +75,13 @@ class EventsApiController extends Controller
                         'status' => 0, 
                     ],
                 ]);
-                return $this->returnSuccessMessage(__('Success Leave Event'));
+                return $this->returnSuccessMessage(__('تم بنجاح'));
             }else{
-                return $this->returnError('401',('Already Left ??'));
+                return $this->returnError('401',__('تم المغادرة من قبل'));
             }
         }else{  
-            return $this->returnSuccessMessage(__('Not Found'));
+            return $this->returnError('401',__('لم يتم تسجيل دخوله مسبفا'));
         } 
-    }
-    public function response(Request $request){
-        $rules = [
-            'event_id' => 'required|integer',
-            'type' => 'in:accepted,refused', 
-        ];
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            return $this->returnError('401', $validator->errors());
-        }
-
-        $event = Event::find($request->event_id); 
-        $cader = Cader::where('user_id',Auth::id())->first();
-        $event->caders()->syncWithoutDetaching([
-            $cader->id => [ 
-                'status' => $request->response, 
-            ],
-        ]);
-        return $this->returnSuccessMessage(__('Response Sent Succeessfully'));
-    }
+    } 
     
 }

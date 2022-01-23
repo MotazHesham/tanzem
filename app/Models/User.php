@@ -116,6 +116,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this->hasOne(Visitor::class);
     }
 
+    public function cawader()
+    {
+        return $this->hasOne(Cawader::class, 'user_id');
+    }
+
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');

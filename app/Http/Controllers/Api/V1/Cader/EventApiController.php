@@ -95,6 +95,9 @@ class EventApiController extends Controller
         $data = [
             'event_id' => $event->id,
             'event_name' => $event->title,
+            'event_latitude' => $event->latitude,
+            'event_longitude' => $event->longitude,
+            'event_area' => $event->area,
             'event_company' => $event->company->user->name ?? '',
             'start_date' => $event->start_date,
             'end_date' => $event->end_date,

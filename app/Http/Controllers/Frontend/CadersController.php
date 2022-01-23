@@ -11,7 +11,7 @@ class CadersController extends Controller
 {
     public function caders(){
         $setting = Setting::first();
-        $cawaders = Cawader::orderBy('created_at','desc')->paginate(12);
+        $cawaders = Cawader::where('companies_and_institution_id',null)->orderBy('created_at','desc')->paginate(12);
         return view('frontend.caders',compact('cawaders','setting'));
     }
 
