@@ -50,7 +50,7 @@ class VisitorsFamiliesApiController extends Controller
         ]);
         
 
-        return $this->returnSuccessMessage(__('Inserted Succeessfully'));
+        return $this->returnSuccessMessage(trans('global.flash.success'));
     } 
 
     public function delete($id){
@@ -58,6 +58,6 @@ class VisitorsFamiliesApiController extends Controller
         
         VisitorsFamily::find($id)->delete();
 
-        return $this->returnSuccessMessage(__('Deleted Succeessfully')); 
+        return $this->returnSuccessMessage(trans('global.flash.deleted')); 
     }
 }

@@ -35,6 +35,10 @@ Route::group(['prefix' => 'v1/cader', 'as' => 'api.', 'namespace' => 'Api\V1\Cad
         Route::post('break/cancel','EventApiController@break_cancel') ;  
 
         Route::get('current_event','EventApiController@current_event') ;  
+        Route::get('prev_events','EventApiController@prev_events') ;  
+        Route::get('now_events','EventApiController@now_events') ;  
+
+        Route::get('event/{event_id}','EventApiController@event') ;  
     });
 });
 

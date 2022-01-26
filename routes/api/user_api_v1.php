@@ -16,6 +16,8 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
 
     Route::post('login','UserAuthApiController@login');
 
+    Route::post('contactus','UsersApiController@contactus');
+
     Route::group(['middleware' => ['auth:sanctum']],function () {
 
         Route::post('fcm-token','UsersApiController@update_fcm_token');

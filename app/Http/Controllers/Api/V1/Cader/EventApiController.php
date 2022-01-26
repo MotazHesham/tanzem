@@ -16,13 +16,49 @@ use Carbon\Carbon;
 use Auth;
 use Validator;
 use DateTime;
+use App\Http\Resources\V1\Cader\EventsResource;
 
 class EventApiController extends Controller
 { 
     use api_return; 
     use push_notification; 
 
+    public function prev_events(){
+
+        global $cawader_id,$now_date; 
+        $now_date = date('Y-m-d',strtotime('now')); 
+
+        $cawader = Cawader::where('user_id',Auth::id())->first();
+        $cawader_id = $cawader->id;
+
+        $events = Event::with('cawaders')->where('end_date','<',$now_date) 
+                                        ->whereHas('cawaders',function ($query){
+                                            $query->where('id',$GLOBALS['cawader_id']);
+                                        })->orderBy('start_date','desc')->paginate(10); 
+        
+        $new = EventsResource::collection($events);
+        return $this->returnPaginationData($new,$events,"success");
+    }
+
+    public function now_events(){
+
+        $now_date = date('Y-m-d',strtotime('now')); 
+
+        global $cawader_id; 
+        $cawader = Cawader::where('user_id',Auth::id())->first();
+        $cawader_id = $cawader->id;
+
+        $events = Event::with('cawaders')->where('start_date','<=',$now_date)->where('end_date','>=',$now_date)
+                        ->whereHas('cawaders',function ($query){
+                            $query->where('id',$GLOBALS['cawader_id']);
+                        })->orderBy('end_date','asc')->paginate(10); 
+        
+        $new = EventsResource::collection($events);
+        return $this->returnPaginationData($new,$events,"success");
+    }
+
     public function current_event(){
+
         $now_date = date('Y-m-d',strtotime('now'));
         $now_time = date('H:i:s',strtotime('now'));
 
@@ -36,10 +72,23 @@ class EventApiController extends Controller
                             $query->where('id',$GLOBALS['cawader_id']);
                         })->first(); 
         if(!$event){
-            return $this->returnError('404',('لا يوجد فعاليات في الوقت الحالي'));
+            return $this->returnError('404',trans('global.flash.api.no_event_for_now'));
         }
+
+        return $this->event($event->id);
+    }
+    
+    public function event($event_id){
+
+        $cawader = Cawader::where('user_id',Auth::id())->first();
+        $cawader_id = $cawader->id;
+
+        $event = Event::find($event_id);
         $event_cawaders = $event->cawaders()->wherePivot('cawader_id',$cawader_id)->first();
 
+        if(!$event_cawaders){
+            return $this->returnError('404',('global.flash.api.not_subscribed'));
+        }
         //count dates from start to end
         $date = Carbon::parse(Carbon::createFromFormat(config('panel.date_format'), $event->start_date)->format('Y-m-d'));
         $date2 = Carbon::parse(Carbon::createFromFormat(config('panel.date_format'), $event->end_date)->format('Y-m-d')); 
@@ -54,7 +103,7 @@ class EventApiController extends Controller
         for($i = $begin; $i <= $end; $i->modify('+1 day'))  { 
             $raws = $event->attendance()->wherePivot('cawader_id',$cawader_id)->wherePivot('attendance1',$i->format('Y-m-d'))->get();  
             $history = [
-                'date' => $i->format('j F Y'), 
+                'date' => $i->format('j M Y'), 
                 'attend' => null,
                 'leave' => null,
                 'total_minutes_out_of_zone' => null,
@@ -88,9 +137,9 @@ class EventApiController extends Controller
                 } 
             } 
             $all_history[] = $history;
-        }  
+        }   
 
-        $fromFormat = config('panel.date_format') .' ' . config('panel.time_format');
+        $name = 'name_' . app()->getLocale();
 
         $data = [
             'event_id' => $event->id,
@@ -98,6 +147,9 @@ class EventApiController extends Controller
             'event_latitude' => $event->latitude,
             'event_longitude' => $event->longitude,
             'event_area' => $event->area,
+            'event_city' => $event->city->$name,
+            'event_address' => $event->address,
+            'event_supervisor' => Cawader::find($event_cawaders->pivot->supervisor_id)->user->name ?? '',
             'event_company' => $event->company->user->name ?? '',
             'start_date' => $event->start_date,
             'end_date' => $event->end_date,
@@ -142,7 +194,7 @@ class EventApiController extends Controller
             'status' => 'pending', 
         ]);
         
-        return $this->returnSuccessMessage(__('Request Sent Succeessfully'));
+        return $this->returnSuccessMessage(trans('global.flash.api.success'));
     }
 
     public function break_cancel(Request $request){
@@ -162,7 +214,7 @@ class EventApiController extends Controller
         $event_break->status = 'cancel';
         $event_break->save();
 
-        return $this->returnSuccessMessage('Canceled Succeessfully');
+        return $this->returnSuccessMessage(trans('global.flash.api.canceled'));
     }
 
     public function attend(Request $request){
@@ -198,7 +250,7 @@ class EventApiController extends Controller
         // after cader leave the event stop get stream from apis
         $leave_before = $event->attendance()->wherePivot('cawader_id',$cawader->id)->where('type','leave')->wherePivot('attendance1',$now_date)->first();
         if($leave_before){
-            return $this->returnError('401','تم تسجل الأنصراف من قبل لهذة الفعالية هذا اليوم');
+            return $this->returnError('401','global.flash.api.attend_before');
         } 
         
         if($request->type != 'stream'){  
@@ -206,14 +258,14 @@ class EventApiController extends Controller
             if($request->type == 'attend'){
                 $attend_before = $event->attendance()->wherePivot('cawader_id',$cawader->id)->where('type','attend')->wherePivot('attendance1',$now_date)->first();
                 if($attend_before){
-                    return $this->returnError('401','تم تسجل الحضور من قبل لهذة الفعالية هذا اليوم');
+                    return $this->returnError('401','global.flash.api.attend_before');
                 }
                 if($distance > $event->area){ 
                     $distance_long = $distance - $event->area;
                     return $this->returnError('401',(
-                                                    ' لابد من تسجيل الحضور داخل نظاق الفعالية انت علي بعد '
+                                                    trans('global.flash.api.must_attend_in_area')
                                                     . round($distance_long,2) . 
-                                                    'متر من النطاق'
+                                                    trans('global.flash.api.meter_from_area')
                                                     )
                                             );
                 }
@@ -287,7 +339,7 @@ class EventApiController extends Controller
         ];
         event(new ChangeLocation($data));
 
-        return $this->returnSuccessMessage(__('Response Sent Succeessfully'));
+        return $this->returnSuccessMessage(trans('global.flash.api.attend'));
     }
 
     // calculate distance between twopoints_on_earth

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\User;
 use App\Http\Controllers\Controller; 
 use App\Models\User; 
 use App\Models\Visitor;
+use App\Models\Contactu;
 use App\Models\VisitorsFamily;
 use Illuminate\Http\Request;
 use Auth;
@@ -18,6 +19,33 @@ class UsersApiController extends Controller
 {
     use api_return;
     use MediaUploadingTrait;
+
+    public function contactus(Request $request){ 
+        $rules = [
+            'title' => 'required',
+            'phone' => 'required|size:10|regex:/(05)[0-9]{8}/', 
+            'name' => 'required|string',
+            'message' => 'required',
+            'email' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return $this->returnError('401', $validator->errors());
+        }
+        
+
+        $contactus = Contactu::create([
+            'title' => $request->title,
+            'phone' => $request->phone,
+            'name' => $request->name,
+            'message' => $request->message,
+            'email' => $request->email,
+        ]);
+
+        return $this->returnSuccessMessage(__('Sent Successfully'));
+    }
 
     public function profile()
     {  
@@ -52,15 +80,17 @@ class UsersApiController extends Controller
         }
 
         if(!$user)
-            return $this->returnError('404',('Not Found !!!'));
+            return $this->returnError('404',trans('global.flash.api.not_found'));
 
         $user->update($request->all());
         
         $visitor = Visitor::where('user_id',$user->id)->first();
         $visitor->national = $request->national;
         $visitor->save();
-
-        return $this->returnData(new UserResource($user),__('Profile Updated Successfully'));
+        
+        $user = User::find($user->id); // to solve problem photo is not return after update
+        
+        return $this->returnData(new UserResource($user),trans('global.flash.api.profile_updated'));
     } 
 
     public function update_password(Request $request){
@@ -78,11 +108,11 @@ class UsersApiController extends Controller
         $user = Auth::user();
         $hashedPassword = $user->password;
         if(!\Hash::check($request->old_password, $hashedPassword)){
-            return $this->returnError('401', 'Old Password Not Correct');
+            return $this->returnError('401', trans('global.flash.api.old_password_not_correct'));
         }else{
             $user->password = bcrypt($request->password);
             $user->save();
-            return $this->returnSuccessMessage(__('Changed Successfully'));
+            return $this->returnSuccessMessage(trans('global.flash.api.password_updated'));
         } 
     }
 

@@ -103,7 +103,7 @@ class UserAuthApiController extends Controller
         $cawader->specializations()->sync($request->input('specializations', []));
         
 
-        return $this->returnSuccessMessage('تم أرسال طلبك للأنضمام بنجاح');
+        return $this->returnSuccessMessage(trans('global.flash.api.registered'));
 
     }
 
@@ -127,6 +127,9 @@ class UserAuthApiController extends Controller
                 }
                 $token = Auth::user()->createToken('user_token')->plainTextToken; 
                 $cawader = Cawader::where('user_id',Auth::id())->first();
+                if($cawader->companies_and_institution_id != null){
+                    return $this->returnError('500',trans('global.flash.api.not_authenticated'));
+                }
                 return $this->returnData(
                     [
                         'user_token' => $token,
@@ -135,10 +138,10 @@ class UserAuthApiController extends Controller
                     ]
                 );
             }else{
-                return $this->returnError('500',__('Not Authenticated to use this app'));
+                return $this->returnError('500',trans('global.flash.api.not_authenticated'));
             }
         } else {
-            return $this->returnError('500',__('invalid username or password'));
+            return $this->returnError('500',trans('global.flash.api.invalid_user_or_password'));
         }
     }
 }

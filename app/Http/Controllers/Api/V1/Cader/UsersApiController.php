@@ -82,12 +82,13 @@ class UsersApiController extends Controller
         }
 
         if(!$user){
-            return $this->returnError('404',('Not Found !!!'));
+            return $this->returnError('404',trans('global.flash.api.not_found'));
         }
 
         $user->update($request->all()); 
+        $user = User::find($user->id); // to solve problem photo is not return after update
 
-        return $this->returnData(new CaderResource($user),__('Profile Updated Successfully'));
+        return $this->returnData(new CaderResource($user),trans('global.flash.api.profile_updated'));
     } 
 
     public function update_password(Request $request){
@@ -105,11 +106,11 @@ class UsersApiController extends Controller
         $user = Auth::user();
         $hashedPassword = $user->password;
         if(!\Hash::check($request->old_password, $hashedPassword)){
-            return $this->returnError('401', 'Old Password Not Correct');
+            return $this->returnError('401',trans('global.flash.api.old_password_not_correct'));
         }else{
             $user->password = bcrypt($request->password);
             $user->save();
-            return $this->returnSuccessMessage(__('Changed Successfully'));
+            return $this->returnSuccessMessage(trans('global.flash.api.password_updated'));
         } 
     }
 
@@ -128,11 +129,11 @@ class UsersApiController extends Controller
         $user = Auth::user();
 
         if(!$user)
-            return $this->returnError('404',('Not Found !!!'));
+            return $this->returnError('404',trans('global.flash.api.not_found'));
 
         $user->update($request->all());
 
 
-        return $this->returnSuccessMessage(__('Token Updated Successfully'));
+        return $this->returnSuccessMessage('Token Updated Successfully');
     } 
 }

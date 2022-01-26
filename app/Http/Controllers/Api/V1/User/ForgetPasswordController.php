@@ -33,7 +33,7 @@ class ForgetPasswordController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user){ 
-            return $this->returnError('404', 'Sorry! email not found.');
+            return $this->returnError('404', trans('passwords.user'));
         }    
 
         $six_digit_random_number = random_int(100000, 999999);
@@ -53,7 +53,7 @@ class ForgetPasswordController extends Controller
             });
         }
 
-        return $this->returnData(['code' => $six_digit_random_number], 'Successfully Sending Mail To ' . $request->email);
+        return $this->returnData(['code' => $six_digit_random_number], trans('passwords.sent') . ' ' . $request->email);
     } 
     public function reset(Request $request) {
         
@@ -72,28 +72,28 @@ class ForgetPasswordController extends Controller
         $passwordReset = PasswordReset::where('email',$request->email)->first();
             
         if (!$passwordReset){ 
-            return $this->returnError('401', 'Sorry! Code Expired');
+            return $this->returnError('401', trans('passwords.token'));
         }else{
             if($passwordReset->token != $request->code){
-                return $this->returnError('401', 'Wrong Code');
+                return $this->returnError('401', trans('passwords.token'));
             }
         }
             
         if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
             $passwordReset->delete();  
-            return $this->returnError('401', 'Sorry! Code Expired');
+            return $this->returnError('401', trans('passwords.token'));
         } 
 
 
         $user = User::where('email', $request->email)->first();
 
         if (!$user){  
-            return $this->returnError('401', 'Sorry! user not found.');
+            return $this->returnError('401', trans('passwords.user'));
         }
 
         $user->password = bcrypt($request->password);
         $user->save(); 
 
-        return $this->returnSuccessMessage('Password Changed Successfully');
+        return $this->returnSuccessMessage(trans('passwords.updated'));
     }
 }

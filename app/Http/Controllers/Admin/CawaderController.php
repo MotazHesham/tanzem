@@ -94,7 +94,7 @@ class CawaderController extends Controller
 
         $specializations = CawaderSpecialization::pluck('name_ar', 'id'); 
 
-        $companies_and_institutions = CompaniesAndInstitution::with('user')->get()->pluck('user.email', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $companies_and_institutions = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         return view('admin.cawaders.create', compact('cities', 'specializations', 'companies_and_institutions'));
     }
@@ -142,7 +142,7 @@ class CawaderController extends Controller
 
         $specializations = CawaderSpecialization::pluck('name_ar', 'id'); 
 
-        $companies_and_institutions = CompaniesAndInstitution::with('user')->get()->pluck('user.email', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $companies_and_institutions = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $cawader->load('city', 'specializations', 'user', 'companies_and_institution');
 

@@ -49,7 +49,7 @@ class EventsApiController extends Controller
         $eventsVisitor = $event->eventsVisitors()->wherePivot('visitor_id',$visitor->id)->orderBy('pivot_created_at','desc')->first();
         
         if($eventsVisitor && $eventsVisitor->pivot->status == 1){
-            return $this->returnError('401',('لا يكمن تسجل الدخول , بالفعل بالداخل'));
+            return $this->returnError('401',trans('global.flash.api.already_in_event'));
         }else{ 
             $event->eventsVisitors()->attach([
                 $visitor->id => [  
@@ -57,7 +57,7 @@ class EventsApiController extends Controller
                 ],
             ]);
 
-            return $this->returnSuccessMessage(__('تم سجيل الدخول'));
+            return $this->returnSuccessMessage(trans('global.flash.api.success_join'));
         } 
     }
 
@@ -75,12 +75,12 @@ class EventsApiController extends Controller
                         'status' => 0, 
                     ],
                 ]);
-                return $this->returnSuccessMessage(__('تم بنجاح'));
+                return $this->returnSuccessMessage(trans('global.flash.api.success_leave'));
             }else{
-                return $this->returnError('401',__('تم المغادرة من قبل'));
+                return $this->returnError('401',trans('global.flash.api.error_leave'));
             }
         }else{  
-            return $this->returnError('401',__('لم يتم تسجيل دخوله مسبفا'));
+            return $this->returnError('401',trans('global.flash.api.not_join_before'));
         } 
     } 
     
