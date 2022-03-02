@@ -178,7 +178,7 @@ class EventApiController extends Controller
         }
         $event = Event::find($request->event_id);
         if(!$event){
-            return $this->returnError('404',('Not Found !!!'));
+            return $this->returnError('404',trans('global.flash.api.not_found'));
         }
 
         $cawader = Cawader::where('user_id',Auth::id())->first();
@@ -233,7 +233,7 @@ class EventApiController extends Controller
         
         $event = Event::find($request->event_id); 
         if(!$event){ 
-            return $this->returnError('404',('Not Found !!!'));
+            return $this->returnError('404',trans('global.flash.api.not_found'));
         }
 
         $distance = $this->twopoints_on_earth($event->latitude,$event->longitude,
@@ -250,7 +250,7 @@ class EventApiController extends Controller
         // after cader leave the event stop get stream from apis
         $leave_before = $event->attendance()->wherePivot('cawader_id',$cawader->id)->where('type','leave')->wherePivot('attendance1',$now_date)->first();
         if($leave_before){
-            return $this->returnError('401','global.flash.api.attend_before');
+            return $this->returnError('401',trans('global.flash.api.attend_before'));
         } 
         
         if($request->type != 'stream'){  
@@ -258,7 +258,7 @@ class EventApiController extends Controller
             if($request->type == 'attend'){
                 $attend_before = $event->attendance()->wherePivot('cawader_id',$cawader->id)->where('type','attend')->wherePivot('attendance1',$now_date)->first();
                 if($attend_before){
-                    return $this->returnError('401','global.flash.api.attend_before');
+                    return $this->returnError('401',trans('global.flash.api.attend_before'));
                 }
                 if($distance > $event->area){ 
                     $distance_long = $distance - $event->area;

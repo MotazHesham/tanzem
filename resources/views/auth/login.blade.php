@@ -4,7 +4,7 @@
 
     <div class="login-form">
         <div class="logo">
-            <a href="{{ route('frontend.home') }}"><img src="{{ asset('frontend/images/logo-black-2.png') }}"
+            <a href="{{ route('frontend.home') }}"><img style="height: 100px" src="{{ asset('frontend/images/logo-black-2.png') }}"
                     alt="" /></a>
         </div>
         @if ($errors->count() > 0)

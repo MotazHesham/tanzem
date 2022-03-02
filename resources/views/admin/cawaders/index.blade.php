@@ -143,7 +143,8 @@
                     },
                     {
                         data: 'approved',
-                        name: 'approved'
+                        name: 'approved',
+                        searchable: false
                     },
                     {
                         data: 'actions',

@@ -25,7 +25,7 @@ class CawaderController extends Controller
         abort_if(Gate::denies('cawader_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Cawader::with(['city', 'specializations', 'user', 'companies_and_institution'])->select(sprintf('%s.*', (new Cawader())->table));
+            $query = Cawader::with(['city', 'specializations', 'user', 'companies_and_institution.user'])->select(sprintf('%s.*', (new Cawader())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');

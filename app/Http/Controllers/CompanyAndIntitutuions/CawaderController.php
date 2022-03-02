@@ -37,7 +37,7 @@ class CawaderController extends Controller
             }
 
 
-            $query = Cawader::where('companies_and_institution_id',$company->id)->with(['city', 'specializations', 'user', 'companies_and_institution'])->select(sprintf('%s.*', (new Cawader())->table));
+            $query = Cawader::where('companies_and_institution_id',$company->id)->with(['city', 'specializations', 'user', 'companies_and_institution.user'])->select(sprintf('%s.*', (new Cawader())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');

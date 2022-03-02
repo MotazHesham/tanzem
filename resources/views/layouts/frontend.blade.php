@@ -32,7 +32,12 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/templete.css') }}" />
     <link rel="stylesheet" href="{{ asset('frontend/fonts/stylesheet.css') }}" type="text/css" charset="utf-8" />
     <link class="skin" rel="stylesheet" type="text/css" href="{{ asset('frontend/css/skin/skin-1.css') }}" />
-
+    <style>
+        .header-transparent .header-nav .nav > li > a{
+            color:black;
+            font-size:23px;
+        }
+    </style>
     @yield('styles')
 
 </head>
@@ -46,12 +51,12 @@
         <header class="site-header header-transparent mo-left">
             <!-- main header -->
             <div class="sticky-header main-bar-wraper navbar-expand-lg">
-                <div class="main-bar clearfix">
+                <div class="main-bar clearfix" style="background:white">
                     <div class="container clearfix">
                         <!-- website logo -->
                         <div class="logo-header mostion">
-                            <a href="{{ route('frontend.home') }}" class="logo-1"><img src="{{ asset('frontend/images/logo-black-1.png') }}" alt="" /></a>
-                            <a href="{{ route('frontend.home') }}" class="logo-2"><img src="{{ asset('frontend/images/logo-black-2.png') }}" alt="" /></a>
+                            <a href="{{ route('frontend.home') }}" class="logo-1"><img src="{{ asset('frontend/images/logo-black-2.png') }}" style="height:100px" alt="" /></a>
+                            <a href="{{ route('frontend.home') }}" class="logo-2"><img src="{{ asset('frontend/images/logo-black-1.png') }}" style="height:100px" alt="" /></a>
                         </div>
                         <!-- nav toggle button -->
                         <button class="navbar-toggler collapsed navicon justify-content-end" type="button"
@@ -66,9 +71,9 @@
                             <div class="extra-cell">
                                 @auth 
                                     <a href="{{ route('login') }}" class="site-button radius-xl m-l10"><i
-                                        class="ti-import m-r5 rotate90"></i>لوحة التحكم</a>
+                                        class="ti-import m-r5 rotate90" style="font-size: 18px;"></i>لوحة التحكم</a>
                                 @else 
-                                    <a href="{{ route('login') }}" class="site-button radius-xl m-l10"><i
+                                    <a href="{{ route('login') }}" class="site-button radius-xl m-l10" style="font-size: 18px;"><i
                                             class="ti-import m-r5 rotate90"></i> تسجيل الدخول</a>
                                 @endauth
                             </div>

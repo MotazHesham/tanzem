@@ -22,11 +22,13 @@ use Illuminate\Http\Request;
 use Spatie\MediaLibrary\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
+use App\Traits\push_notification;
 use Alert;
 
 class EventsController extends Controller
 {
     use MediaUploadingTrait;
+    use push_notification; 
 
     public function partials_supervisor(Request $request){  
         $event = Event::findOrFail($request->event_id); 
@@ -55,11 +57,16 @@ class EventsController extends Controller
         $event_break->status = $status;
         $event_break->save();
         
+        $cawader = Cawader::find($event_break->cawader_id);
         if($status == 'accepted'){
             Alert::success('تم قبول الأذن');
+            $title = 'تم قبول الأذن';
         }else{
             Alert::success('تم رفض الأذن');
+            $title = 'تم رفض الأذن';
         }
+
+        $this->send_notification($title, '' , $title , '' , 'break' , $cawader->user_id, false,$status);
 
         return redirect()->route('admin.events.show',$event_break->event_id);
     }

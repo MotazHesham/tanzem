@@ -96,7 +96,7 @@
 { data: 'user_name', name: 'user.name' },
 { data: 'user_email', name: 'user.email' },
 { data: 'user_phone', name: 'user.phone' },
-{ data: 'specialization', name: 'specialization' },
+{ data: 'specialization', name: 'specializations.name_ar' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

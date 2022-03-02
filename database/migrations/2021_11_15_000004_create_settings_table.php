@@ -35,6 +35,10 @@ class CreateSettingsTable extends Migration
             $table->longText('said_about_tanzem')->nullable();
             $table->longText('organizers_text')->nullable();
             $table->longText('contact_us_text')->nullable();
+            $table->longText('goals')->nullable();
+            $table->longText('terms_cawader')->nullable();
+            $table->longText('terms_company')->nullable();
+            $table->longText('terms_visitor')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
