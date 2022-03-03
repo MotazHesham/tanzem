@@ -19,7 +19,7 @@
             </div>
         @endif
         <div class="card">
-            <div class="card-header">تحقق من عنوان بريدك الإلكتروني</div>
+            <div class="card-header">التحقق</div>
 
             <div class="card-body">
                 @if (session('resent'))
@@ -32,8 +32,13 @@
                 إذا لم تستلم البريد الإلكتروني,
                 <form class="d-inline" method="POST" action="{{ route('verification.resend') }}">
                     @csrf
-                    <button type="submit" class="btn btn-link p-0 m-0 align-baseline">انقر هنا لطلب آخر</button>.
+                    <button type="submit" class="btn btn-link p-0 m-0 align-baseline">انقر هنا لطلب آخر</button>. 
                 </form>
+                
+                <form class="d-inline" method="POST" action="{{ route('code.send') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-info"> أو أرسال كود  <span> لرقم الهاتف {{ Auth::user()->phone }}</span> </button>. 
+                </form> 
             </div>
         </div>
         <a href="#" class="c-sidebar-nav-link"

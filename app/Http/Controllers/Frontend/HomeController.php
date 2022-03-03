@@ -11,12 +11,14 @@ use App\Models\CompaniesAndInstitution;
 use App\Models\News;
 use App\Models\User;
 use App\Models\Cawader;
+use App\Models\Visitor;
 use App\Http\Requests\StoreSubscriptionRequest;  
 use App\Models\Subscription;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use Spatie\MediaLibrary\Models\Media;
 use App\Http\Requests\StoreCompaniesAndInstitutionRequest;
 use App\Http\Requests\StoreCawaderRequest; 
+use App\Http\Requests\StoreVisitorRequest; 
 use Alert;
 use Auth;
 
@@ -26,6 +28,10 @@ class HomeController extends Controller
 
     public function cader_register(){
         return view('auth.register_cader');
+    }
+
+    public function visitor_register(){
+        return view('auth.register_visitor');
     }
 
     public function register_company(StoreCompaniesAndInstitutionRequest $request)
@@ -103,6 +109,37 @@ class HomeController extends Controller
 
         Alert::success('تم أرسال طلبك للأنضمام بنجاح');
         return redirect()->route('frontend.home');
+    }
+    
+    public function register_visitor(StoreVisitorRequest $request)
+    {
+        
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'user_type' => 'visitor', 
+            'phone' => $request->phone,  
+        ]);
+
+
+        if ($request->input('photo', false)) {
+            $user->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+        }
+
+        if ($media = $request->input('ck-media', false)) {
+            Media::whereIn('id', $media)->update(['model_id' => $user->id]);
+        }
+
+        $visitor = Visitor::create([
+            'user_id' => $user->id,
+            'national' => $request->national
+        ]);
+
+        Auth::login($user);
+
+        //Alert::success('تم التسجيل بنجاح');
+        return view('auth.verify');
     }
 
     public function home(){ 

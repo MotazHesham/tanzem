@@ -12,7 +12,7 @@ class StoreVisitorRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('visitor_create') || Auth::user()->user_type == 'governmental_entity'|| Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client';
+        return true;
     }
 
     public function rules()

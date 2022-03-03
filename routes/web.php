@@ -9,7 +9,10 @@ Route::get('/home', function () {
     return redirect()->route('admin.home');
 });
 
-Route::get('userVerification/{token}', 'UserVerificationController@approve')->name('userVerification');
+//Route::get('userVerification/{token}', 'UserVerificationController@approve')->name('userVerification');
+
+Route::post('code/send','CodeController@send')->name('code.send');
+Route::post('code/verify','CodeController@verify')->name('code.verify');
 
 Auth::routes(['verify' => true]); 
 

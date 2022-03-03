@@ -25,7 +25,8 @@ class Government
         }elseif(Auth::user()->user_type == 'governmental_entity'){
             return $next($request);
         }else{
-            return abort(403);
+            Auth::logout();
+            return redirect()->route('frontend.home');
         }
     }
 }

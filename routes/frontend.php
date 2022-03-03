@@ -9,6 +9,8 @@ Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function(){
     Route::post('register/company', 'HomeController@register_company')->name('register.company');
     Route::get('register/cader', 'HomeController@cader_register')->name('cader_register');
     Route::post('register/cader', 'HomeController@register_cader')->name('register.cader');
+    Route::get('register/visitor', 'HomeController@visitor_register')->name('visitor_register');
+    Route::post('register/visitor', 'HomeController@register_visitor')->name('register.visitor');
 
     Route::get('news/{id}','HomeController@news')->name('news');
 
@@ -23,8 +25,8 @@ Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function(){
     Route::get('events/{id}','EventsController@event')->name('event');
     
     // activites
-    Route::get('activties','ActivtiesController@activties')->name('activties');
-    Route::get('activity/{id}','ActivtiesController@activity')->name('activity');
+    // Route::get('activties','ActivtiesController@activties')->name('activties');
+    // Route::get('activity/{id}','ActivtiesController@activity')->name('activity');
     
     // caders
     Route::get('caders','CadersController@caders')->name('caders');

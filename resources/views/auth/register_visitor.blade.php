@@ -19,16 +19,16 @@
             </div>
         @endif
         <div class="mb-4 mt-3">
-            <button class="active-button" > تسجيل شركة</button>
+            <form action="{{ route('register')}}" style="display: inline">
+                <button class="btn btn-light disabled-button" type="submit"> تسجيل شركة</button>
+            </form>
             <form action="{{ route('frontend.cader_register')}}" style="display: inline">
                 <button class="btn btn-light disabled-button" type="submit"> تسجيل كادر</button>
             </form> 
-            <form action="{{ route('frontend.visitor_register')}}" style="display: inline">
-                <button class="btn btn-light disabled-button" type="submit"> تسجيل زائر</button>
-            </form> 
+            <button class="active-button" > تسجيل زائر</button>
         </div> 
         
-        @include('auth.partials.company') 
+        @include('auth.partials.visitor') 
 
     </div>
 @endsection

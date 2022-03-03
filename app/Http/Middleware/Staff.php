@@ -25,7 +25,8 @@ class Staff
         }elseif(Auth::user()->user_type == 'staff'){
             return $next($request);
         }else{
-            return abort(403);
+            Auth::logout();
+            return redirect()->route('frontend.home');
         }
     }
 }

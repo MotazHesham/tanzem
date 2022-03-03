@@ -25,7 +25,8 @@ class Company
         }elseif(Auth::user()->user_type == 'companiesAndInstitution' || ( Auth::user()->user_type == 'cader' && Auth::user()->cawader->companies_and_institution_id != null) ){
             return $next($request);
         }else{
-            return abort(403);
+            Auth::logout();
+            return redirect()->route('frontend.home');
         }
     }
 }

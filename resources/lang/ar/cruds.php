@@ -399,8 +399,8 @@ return [
         ],
     ],
     'visitor' => [
-        'title'          => 'المشتركين',
-        'title_singular' => 'مشترك',
+        'title'          => 'الزوار',
+        'title_singular' => 'زائر',
         'fields'         => [
             'id'                => 'ID',
             'id_helper'         => ' ',

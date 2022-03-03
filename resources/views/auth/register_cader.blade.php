@@ -18,6 +18,9 @@
                 <button class="btn btn-light disabled-button" type="submit"> تسجيل شركة</button>
             </form>
             <button class="active-button" > تسجيل كادر</button>
+            <form action="{{ route('frontend.visitor_register')}}" style="display: inline">
+                <button class="btn btn-light disabled-button" type="submit"> تسجيل زائر</button>
+            </form> 
         </div> 
         
         @include('auth.partials.cader')

@@ -25,7 +25,8 @@ class Client
         }elseif(Auth::user()->user_type == 'client'){
             return $next($request);
         }else{
-            return abort(403);
+            Auth::logout();
+            return redirect()->route('frontend.home');
         }
     }
 }
