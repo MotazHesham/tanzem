@@ -10,6 +10,12 @@ class Visitor extends Model
 {
     use SoftDeletes;
 
+    public const VISITOR_TYPE_SELECT = [
+        'individual'  => 'فرد',
+        'family_author' => 'صاحب العائلة',
+        'family_individual'  => 'فرد في عائلة',
+    ];
+
     public $table = 'visitors';
 
     protected $dates = [
@@ -21,6 +27,8 @@ class Visitor extends Model
     protected $fillable = [
         'user_id',
         'national',
+        'visitor_type',
+        'parent_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -34,6 +42,16 @@ class Visitor extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Visitor::class, 'parent_id');
+    }
+
+    public function family_members()
+    {
+        return $this->hasMany(Visitor::class, 'parent_id');
     }
 
     public function events()

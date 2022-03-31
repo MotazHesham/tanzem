@@ -260,6 +260,8 @@ return [
             'companies_and_institution_helper' => ' ',
             'desceiption'                      => 'Desceiption',
             'desceiption_helper'               => ' ',
+            'has_skills'                       => 'Has Skills',
+            'has_skills_helper'                => ' ',
         ],
     ],
     'city' => [
@@ -410,6 +412,8 @@ return [
             'events_helper'     => ' ',
             'brands'            => 'Brands',
             'brands_helper'     => ' ',
+            'visitor_type'            => 'Type',
+            'visitor_type_helper'     => ' ',
             'created_at'        => 'Created at',
             'created_at_helper' => ' ',
             'updated_at'        => 'Updated at',

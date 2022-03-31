@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\PasswordReset;
-use Carbon\Carbon; 
+use Carbon\Carbon;
 use Auth;
 use Alert;
 
 class CodeController extends Controller
-{ 
-    public function send(Request $request){ 
+{
+    public function send(Request $request){
         $user = Auth::user();
         $phone = $user->phone ? substr($user->phone, 1) : 0;
 
@@ -19,7 +19,7 @@ class CodeController extends Controller
 
         $passwordReset = PasswordReset::where('email',$user->email)->first();
 
-        if(!$passwordReset){ 
+        if(!$passwordReset){
             $passwordReset = PasswordReset::updateOrCreate(
                 ['email' => $user->email],
                 [
@@ -27,60 +27,60 @@ class CodeController extends Controller
                     'token' => $random_code
                 ]
             );
-            $response =  Http::withHeaders([ 
+            $response =  Http::withHeaders([
                 'Content-Type' =>   'application/json',
-            ])->post('https://www.msegat.com/gw/sendsms.php', [  
+            ])->post('https://www.msegat.com/gw/sendsms.php', [
                 "userName" => "tanthimco2022",
                 "numbers" =>  "966".$phone,
-                "userSender" => "OTP",
+                "userSender" => "Tanthim",
                 "apiKey" => "15a07901abd2da24d240f4482d1ea3ab",
-                "msg" => "Pin Code is:". $random_code 
+                "msg" => "رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code
             ]);
             if($response['code'] == '1'){
 
             }else{
                 Alert::error('Try Again','Error Code '.$response['code']);
             }
-        }elseif (Carbon::parse($passwordReset->updated_at)->addMinutes(2)->isPast()) { 
+        }elseif (Carbon::parse($passwordReset->updated_at)->addMinutes(2)->isPast()) {
 
 
-            $response =  Http::withHeaders([ 
+            $response =  Http::withHeaders([
                 'Content-Type' =>   'application/json',
-            ])->post('https://www.msegat.com/gw/sendsms.php', [  
+            ])->post('https://www.msegat.com/gw/sendsms.php', [
                 "userName" => "tanthimco2022",
                 "numbers" =>  "966".$phone,
-                "userSender" => "OTP",
+                "userSender" => "Tanthim",
                 "apiKey" => "15a07901abd2da24d240f4482d1ea3ab",
-                "msg" => "Pin Code is:". $random_code 
+                "msg" => "رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code
             ]);
             if($response['code'] == '1'){
 
             }else{
                 Alert::error('Try Again','Error Code '.$response['code']);
             }
-        } 
+        }
 
         return view('auth.code');
     }
 
-    public function verify(Request $request) { 
+    public function verify(Request $request) {
 
         $user = Auth::user();
 
         $passwordReset = PasswordReset::where('email',$user->email)->first();
-            
-        if (!$passwordReset){ 
+
+        if (!$passwordReset){
             Alert::error('Something Went Wrong','Try Again Later');
             return view('auth.code');
-        } 
+        }
 
         if($passwordReset->token != $request->code){
             Alert::error('الكود غير صحيح');
             return view('auth.code');
-        } 
+        }
 
         $user->email_verified_at = date('Y-m-d H:i:s');
-        $user->save(); 
+        $user->save();
 
         return redirect()->route('admin.home');
     }

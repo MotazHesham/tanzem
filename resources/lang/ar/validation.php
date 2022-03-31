@@ -133,31 +133,31 @@ return [
         'zone_name' => 'أسم المنطقة',
         'landline_phone'   => 'رقم الهاتف الأرضي',
         'website' => 'الويب سايت',
-        'commerical_num'           => 'رقم السجل التجاري', 
-        'commerical_expiry'        => 'تاريخ انتهاء السجل التجاري', 
-        'licence_num'              => 'رقم الترخيص', 
+        'commerical_num'           => 'رقم السجل التجاري',
+        'commerical_expiry'        => 'تاريخ انتهاء السجل التجاري',
+        'licence_num'              => 'رقم الترخيص',
         'licence_expiry'           => 'تاريح انتهاء رقم الترخيص',
         'roles'                    => 'الأدوار',
-        'alert_text'        => 'المحتوي', 
+        'alert_text'        => 'المحتوي',
         'alert_link'        => 'الرابط',
         'message'        => 'الرسالة',
         'company_id'        => 'الشركة',
         'client_id'        => 'العميل',
         'government_id'        => 'الجهة الحكومية',
-        'available_gates'        => 'البوابات المتاحة', 
+        'available_gates'        => 'البوابات المتاحة',
         'address'        => 'العنوان',
-        'start_date'             => 'بداية الفعالية', 
-        'end_date'               => 'نهاية الفعالية', 
-        'start_time'             => 'بداية الحضور', 
+        'start_date'             => 'بداية الفعالية',
+        'end_date'               => 'نهاية الفعالية',
+        'start_time'             => 'بداية الحضور',
         'end_time'               => 'نهاية الحضور',
         'short_description'        => 'وصف مختصر',
         'long_description'        => 'الوصف',
-        'identity'        => 'رقم الهوية الوظنية',
+        'identity'        => 'رقم الهوية الوطنية',
         'gender'        => 'النوع',
         'visitor_id'        => 'المشترك',
         'job_position'        => 'المسمي الوظيفي',
-        'national'          => 'رقم الهوية الوظنية',
-    ], 
+        'national'          => 'رقم الهوية الوطنية',
+    ],
 
     'custom'      => [
         'phone' => [
@@ -172,6 +172,9 @@ return [
         ],
         'start_time' => [
             'start_time_check' => 'لابد ان يكون وقت بداية الفعالية أقل من النهاية'
+        ],
+        'visitor_family.*.identity' => [
+            'unique' => 'رقم الهوية لفرد من العائلة مأخوذ من قبل'
         ]
     ],
 ];

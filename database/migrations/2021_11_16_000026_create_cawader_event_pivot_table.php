@@ -12,12 +12,12 @@ class CreateCawaderEventPivotTable extends Migration
             $table->unsignedBigInteger('event_id');
             $table->foreign('event_id', 'event_id_fk_5352083')->references('id')->on('events')->onDelete('cascade');
             $table->unsignedBigInteger('cawader_id');
-            $table->foreign('cawader_id', 'cawader_id_fk_5352083')->references('id')->on('cawaders')->onDelete('cascade'); 
-            $table->unsignedBigInteger('supervisor_id');
+            $table->foreign('cawader_id', 'cawader_id_fk_5352083')->references('id')->on('cawaders')->onDelete('cascade');
+            $table->unsignedBigInteger('supervisor_id')->nullable();
             $table->double('hours');
             $table->double('amount');
             $table->double('extra_hours');
-            $table->timestamps(); 
+            $table->timestamps();
         });
     }
 }

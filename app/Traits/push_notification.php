@@ -9,21 +9,21 @@ trait push_notification
 {
 
     public function send_notification( $title , $body , $alert_text , $alert_link , $type , $user_id, $add_to_alerts = true, $data = null)
-    { 
+    {
         $user = User::findOrFail($user_id);
-        $key = 'key=AAAADJS7ZUc:APA91bGdlHaJEes0B2jJSRk5GgJF5DXI-45uNmDT1LtLo6Z9ZF8DvLW8UZnS9u_yQ9llOsFgQgE8QeU_R2SS7w_mpf166Jid9_5AUMp8OxfGLc13-XDqUPKOqHXMJWcjZfOGZVIP7lRB';
+        $key = 'key=AAAAgglWHgE:APA91bEUzDLzney0ogMIGkyLniomIso6G03MVGsogsYBW19E9VAr9NvFU9RUTlRALp8UgF5Yj7zrhhKuAc2RDGFzPhEGeEUV1lrvv8VDCIUUWStm9XE753Z1-JIgFNBQ0hjmfvniZwqS';
 
         if($add_to_alerts){
             $userAlert = UserAlert::create([
                 'alert_text' => $alert_text,
                 'alert_link' => $alert_link,
                 'type' => $type,
-            ]); 
-    
+            ]);
+
             $userAlert->users()->sync($user_id);
         }
 
-        if($type == 'break'){  
+        if($type == 'break'){
             Http::withHeaders([
                 'Authorization' => $key,
                 'Content-Type' =>   'application/json',
@@ -32,7 +32,7 @@ trait push_notification
                 "collapse_key" => "type_a",
                 "data" => [
                     "type" => $type,
-                    "route" => $data,
+                    "status" => $data,
                 ],
                 "notification" => [
                     "title"=> $title,

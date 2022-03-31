@@ -11,6 +11,7 @@ class CreateVisitorsTable extends Migration
         Schema::create('visitors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('national');
+            $table->string('visitor_type')->default('individual');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -7,7 +7,7 @@
             <div class="card-header">
                 {{ trans('global.show') }} {{ trans('cruds.visitor.title') }}
             </div>
-        
+
             <div class="card-body">
                 <div class="form-group">
                     <div class="form-group">
@@ -40,7 +40,7 @@
                                 <td>
                                     {{ $visitor->user->email }}
                                 </td>
-                            </tr> 
+                            </tr>
                             <tr>
                                 <th>
                                     {{ trans('cruds.user.fields.phone') }}
@@ -48,7 +48,7 @@
                                 <td>
                                     {{ $visitor->user->phone }}
                                 </td>
-                            </tr> 
+                            </tr>
                             <tr>
                                 <th>
                                     {{ trans('cruds.visitor.fields.national') }}
@@ -56,7 +56,22 @@
                                 <td>
                                     {{ $visitor->national }}
                                 </td>
-                            </tr> 
+                            </tr>
+                            <tr>
+                                <th>
+                                    {{ trans('cruds.visitor.fields.visitor_type') }}
+                                </th>
+                                <td>
+                                    @php
+                                        if($visitor->visitor_type == 'family_individual' && $visitor->parent_id != null){
+                                            $parent = $visitor->parent ? $visitor->parent->user->name : '';
+                                        }else{
+                                            $parent = '';
+                                        }
+                                        echo $visitor->visitor_type ? \App\Models\Visitor::VISITOR_TYPE_SELECT[$visitor->visitor_type] . '<br>' . $parent : '';
+                                    @endphp
+                                </td>
+                            </tr>
                             <tr>
                                 <th>
                                     {{ trans('cruds.user.fields.photo') }}

@@ -6,16 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\api_return;
 use App\Models\User;
-use App\Models\Cawader; 
+use App\Models\Cawader;
 use Validator;
 use Auth;
-use App\Http\Controllers\Traits\MediaUploadingTrait; 
+use App\Http\Controllers\Traits\MediaUploadingTrait;
 
 
 class UserAuthApiController extends Controller
-{ 
+{
     use api_return;
-    use MediaUploadingTrait;   
+    use MediaUploadingTrait;
 
     public function register(Request $request){
 
@@ -30,6 +30,10 @@ class UserAuthApiController extends Controller
             ],
             'degree' => [
                 'required',
+            ],
+            'has_skills' => [
+                'required',
+                'in:1,0',
             ],
             'specializations.*' => [
                 'integer',
@@ -58,50 +62,51 @@ class UserAuthApiController extends Controller
             ],
             'password' => [
                 'required',
-            ], 
+            ],
             'photo' => [
                 'required',
                 'image',
                 'mimes:jpeg,png,jpg',
                 'max:2048',
-            ], 
+            ],
             'phone' => [
                 'required',
                 'size:10',
-                'regex:/(05)[0-9]{8}/', 
-            ], 
+                'regex:/(05)[0-9]{8}/',
+            ],
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return $this->returnError('401', $validator->errors());
-        }  
-        
-        
+        }
+
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'user_type' => 'cader', 
-            'phone' => $request->phone,  
-            'approved' => 0,  
+            'user_type' => 'cader',
+            'phone' => $request->phone,
+            'approved' => 0,
         ]);
 
-        $user->addMedia(request('photo'))->toMediaCollection('photo'); 
+        $user->addMedia(request('photo'))->toMediaCollection('photo');
 
         $cawader = Cawader::create([
             'user_id' => $user->id,
             'dob' => $request->dob,
             'city_id' => $request->city_id,
+            'has_skills' => $request->has_skills,
             'degree' => $request->degree,
             'desceiption' => $request->desceiption,
             'working_hours' => $request->working_hours,
-            'identity_number' => $request->identity_number, 
+            'identity_number' => $request->identity_number,
         ]);
 
         $cawader->specializations()->sync($request->input('specializations', []));
-        
+
 
         return $this->returnSuccessMessage(trans('global.flash.api.registered'));
 
@@ -122,10 +127,10 @@ class UserAuthApiController extends Controller
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             if(Auth::user()->user_type == 'cader'){
-                if(!Auth::user()->approved){ 
+                if(!Auth::user()->approved){
                     return $this->returnError('500',trans('global.yourAccountNeedsAdminApproval'));
                 }
-                $token = Auth::user()->createToken('user_token')->plainTextToken; 
+                $token = Auth::user()->createToken('user_token')->plainTextToken;
                 $cawader = Cawader::where('user_id',Auth::id())->first();
                 if($cawader->companies_and_institution_id != null){
                     return $this->returnError('500',trans('global.flash.api.not_authenticated'));

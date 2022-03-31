@@ -38,7 +38,7 @@
                         <td>
                             {{ $cawader->user->email ?? '' }}
                         </td>
-                    </tr> 
+                    </tr>
                     <tr>
                         <th>
                             {{ trans('cruds.user.fields.phone') }}
@@ -46,7 +46,7 @@
                         <td>
                             {{ $cawader->user->phone ?? '' }}
                         </td>
-                    </tr> 
+                    </tr>
                     <tr>
                         <th>
                             {{ trans('cruds.cawader.fields.dob') }}
@@ -123,6 +123,14 @@
                         </th>
                         <td>
                             {{ $cawader->desceiption }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.cawader.fields.has_skills') }}
+                        </th>
+                        <td>
+                            {{ App\Models\Cawader::HAS_SKILLS_RADIO[$cawader->has_skills] ?? '' }}
                         </td>
                     </tr>
                 </tbody>

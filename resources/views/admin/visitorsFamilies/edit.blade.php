@@ -10,8 +10,9 @@
         <form method="POST" action="{{ route("admin.visitors-families.update", [$visitorsFamily->id]) }}" enctype="multipart/form-data">
             @method('PUT')
             @csrf
+            <input type="hidden" name="visitor_family_id" value="{{ $visitorsFamily->id }}">
             <input type="hidden" name="visitor_id" value="{{ $visitorsFamily->visitor->id }}">
-            <div class="row"> 
+            <div class="row">
                 <div class="form-group col-md-3">
                     <label class="required" for="name">{{ trans('cruds.visitorsFamily.fields.name') }}</label>
                     <input class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="name" id="name" value="{{ old('name', $visitorsFamily->name) }}" required>
@@ -66,7 +67,7 @@
                         </div>
                     @endif
                     <span class="help-block">{{ trans('cruds.visitorsFamily.fields.identity_helper') }}</span>
-                </div> 
+                </div>
             </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">

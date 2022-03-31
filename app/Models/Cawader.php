@@ -13,6 +13,11 @@ class Cawader extends Model
     use SoftDeletes;
     use Auditable;
 
+    public const HAS_SKILLS_RADIO = [
+        '0' => 'no',
+        '1' => 'yes',
+    ];
+
     public const DEGREE_SELECT = [
         'Literate without Certificate' => 'Literate without Certificate',
         'Primary Certificate'          => 'Primary Certificate',
@@ -39,10 +44,12 @@ class Cawader extends Model
         'working_hours',
         'identity_number',
         'user_id',
-        'longitude', 
-        'latitude', 
-        'companies_and_institution_id', 
+        'longitude',
+        'latitude',
+        'companies_and_institution_id',
         'desceiption',
+        'has_skills',
+        'out_of_zone',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -66,7 +73,7 @@ class Cawader extends Model
     public function specializations()
     {
         return $this->belongsToMany(CawaderSpecialization::class,'cawader_specialization','cawader_id','specialization_id');
-    } 
+    }
 
     public function events()
     {

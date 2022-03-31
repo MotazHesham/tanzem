@@ -35,8 +35,11 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true, 
-        "platform-check": false
+        "sort-packages": true,
+        "platform-check": false,
+        "platform": {
+            "php": "7.2.5"
+        }
     },
     "extra": {
         "laravel": {

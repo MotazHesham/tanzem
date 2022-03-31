@@ -14,7 +14,7 @@ use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
-use Spatie\MediaLibrary\Models\Media; 
+use Spatie\MediaLibrary\Models\Media;
 use Alert;
 
 class VisitorsController extends Controller
@@ -48,6 +48,14 @@ class VisitorsController extends Controller
             $table->editColumn('id', function ($row) {
                 return $row->id ? $row->id : '';
             });
+            $table->editColumn('visitor_type', function ($row) {
+                if($row->visitor_type == 'family_individual' && $row->parent_id != null){
+                    $parent = $row->parent ? $row->parent->user->name : '';
+                }else{
+                    $parent = '';
+                }
+                return $row->visitor_type ? Visitor::VISITOR_TYPE_SELECT[$row->visitor_type] . '<br>' . $parent : '';
+            });
             $table->addColumn('user_email', function ($row) {
                 return $row->user ? $row->user->email : '';
             });
@@ -58,7 +66,7 @@ class VisitorsController extends Controller
                 return $row->user ? $row->user->phone : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'user']);
+            $table->rawColumns(['actions', 'placeholder', 'user','visitor_type']);
 
             return $table->make(true);
         }
@@ -76,18 +84,18 @@ class VisitorsController extends Controller
 
         $brands = Brand::pluck('title', 'id');
 
-        return view('admin.visitors.create', compact('users', 'events', 'brands'));
+        //return view('admin.visitors.create', compact('users', 'events', 'brands'));
     }
 
     public function store(StoreVisitorRequest $request)
-    { 
+    {
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'user_type' => 'visitor', 
-            'phone' => $request->phone,  
+            'user_type' => 'visitor',
+            'phone' => $request->phone,
         ]);
 
 
@@ -134,7 +142,7 @@ class VisitorsController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password == null ? $user->password : bcrypt($request->password), 
+            'password' => $request->password == null ? $user->password : bcrypt($request->password),
             'phone' => $request->phone,
         ]);
 

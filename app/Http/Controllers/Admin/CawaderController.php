@@ -92,7 +92,7 @@ class CawaderController extends Controller
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $specializations = CawaderSpecialization::pluck('name_ar', 'id'); 
+        $specializations = CawaderSpecialization::pluck('name_ar', 'id');
 
         $companies_and_institutions = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -105,8 +105,8 @@ class CawaderController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'user_type' => 'cader', 
-            'phone' => $request->phone,  
+            'user_type' => 'cader',
+            'phone' => $request->phone,
         ]);
 
         if ($request->input('photo', false)) {
@@ -121,6 +121,7 @@ class CawaderController extends Controller
             'user_id' => $user->id,
             'dob' => $request->dob,
             'city_id' => $request->city_id,
+            'has_skills' => $request->has_skills,
             'degree' => $request->degree,
             'desceiption' => $request->desceiption,
             'working_hours' => $request->working_hours,
@@ -140,7 +141,7 @@ class CawaderController extends Controller
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $specializations = CawaderSpecialization::pluck('name_ar', 'id'); 
+        $specializations = CawaderSpecialization::pluck('name_ar', 'id');
 
         $companies_and_institutions = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -150,12 +151,13 @@ class CawaderController extends Controller
     }
 
     public function update(UpdateCawaderRequest $request, Cawader $cawader)
-    { 
-        $cawader->update([ 
+    {
+        $cawader->update([
             'dob' => $request->dob,
             'desceiption' => $request->desceiption,
             'city_id' => $request->city_id,
             'degree' => $request->degree,
+            'has_skills' => $request->has_skills,
             'working_hours' => $request->working_hours,
             'identity_number' => $request->identity_number,
             'companies_and_institution_id' => $request->companies_and_institution_id,
@@ -166,10 +168,10 @@ class CawaderController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password == null ? $user->password : bcrypt($request->password), 
-            'phone' => $request->phone,  
+            'password' => $request->password == null ? $user->password : bcrypt($request->password),
+            'phone' => $request->phone,
         ]);
-        
+
         if ($request->input('photo', false)) {
             if (!$user->photo || $request->input('photo') !== $user->photo->file_name) {
                 if ($user->photo) {

@@ -14,7 +14,7 @@ class CreateVisitorsFamiliesTable extends Migration
             $table->string('gender');
             $table->string('relation');
             $table->string('phone');
-            $table->string('identity');
+            $table->string('identity')->unique();
             $table->timestamps();
             $table->softDeletes();
         });

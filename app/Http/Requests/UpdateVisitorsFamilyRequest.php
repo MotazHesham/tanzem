@@ -35,12 +35,13 @@ class UpdateVisitorsFamilyRequest extends FormRequest
             'phone' => [
                 'required',
                 'size:10',
-                'regex:/(05)[0-9]{8}/', 
-            ], 
+                'regex:/(05)[0-9]{8}/',
+            ],
             'identity' => [
                 'string',
                 'required',
+                'unique:visitors_families,identity,' . request()->visitor_family_id,
             ],
         ];
-    } 
+    }
 }

@@ -35,12 +35,13 @@ class StoreVisitorsFamilyRequest extends FormRequest
             'phone' => [
                 'required',
                 'size:10',
-                'regex:/(05)[0-9]{8}/', 
-            ], 
+                'regex:/(05)[0-9]{8}/',
+            ],
             'identity' => [
                 'string',
                 'required',
+                'unique:visitors_families,identity',
             ],
         ];
-    } 
+    }
 }

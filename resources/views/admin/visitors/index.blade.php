@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 @section('content')
     @can('visitor_create')
-        <div style="margin-bottom: 10px;" class="row">
+        {{-- <div style="margin-bottom: 10px;" class="row">
             <div class="col-lg-12">
                 <a class="btn btn-success" href="{{ route('admin.visitors.create') }}">
                     {{ trans('global.add') }} {{ trans('cruds.visitor.title_singular') }}
                 </a>
             </div>
-        </div>
+        </div> --}}
     @endcan
     <div class="card">
         <div class="card-header">
@@ -32,6 +32,9 @@
                         </th>
                         <th>
                             {{ trans('cruds.user.fields.phone') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.visitor.fields.visitor_type') }}
                         </th>
                         <th>
                             &nbsp;
@@ -60,13 +63,13 @@
                 var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
                 return entry.id
                 });
-            
+
                 if (ids.length === 0) {
                 alert('{{ trans('global.datatables.zero_selected') }}')
-            
+
                 return
                 }
-            
+
                 if (confirm('{{ trans('global.areYouSure') }}')) {
                 $.ajax({
                 headers: {'x-csrf-token': _token},
@@ -106,6 +109,10 @@
                     {
                         data: 'user_phone',
                         name: 'user.phone'
+                    },
+                    {
+                        data: 'visitor_type',
+                        name: 'visitor_type'
                     },
                     {
                         data: 'actions',

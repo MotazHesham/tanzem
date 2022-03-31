@@ -10,6 +10,9 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
     Route::post('register','UserAuthApiController@register');
     Route::post('login','UserAuthApiController@login');
 
+    //send_sms_code
+    Route::post('send_sms','UserAuthApiController@send_sms_code');
+
     //forgetpassword
     Route::post('forgetpassword','ForgetPasswordController@create_token');
     Route::post('forgetpassword/reset','ForgetPasswordController@reset');
@@ -21,7 +24,7 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
     Route::group(['middleware' => ['auth:sanctum']],function () {
 
         Route::post('fcm-token','UsersApiController@update_fcm_token');
-        
+
         // myEvents
         Route::get('myevents','EventsApiController@myevents');
 
@@ -30,22 +33,22 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
             Route::get('/','UsersApiController@profile');
             Route::post('update','UsersApiController@update');
             Route::post('update_password','UsersApiController@update_password');
-        }); 
+        });
 
         // visitor_familiies
         Route::group(['prefix' =>'visitor_families'],function(){
             Route::get('/','VisitorsFamiliesApiController@index') ;
             Route::post('add','VisitorsFamiliesApiController@store') ;
             Route::get('delete/{specialization_id}','VisitorsFamiliesApiController@delete') ;
-        }); 
+        });
 
         // events
         Route::group(['prefix' =>'events'],function(){
             Route::get('/','EventsApiController@index') ;
             // Route::get('search/{search}','EventsApiController@search') ;
-            Route::post('join','EventsApiController@join') ; 
-            Route::post('leave','EventsApiController@leave') ; 
-        });  
+            Route::post('join','EventsApiController@join') ;
+            Route::post('leave','EventsApiController@leave') ;
+        });
 
         // notifications
         Route::get('notifications','NotificationsApiController@index');

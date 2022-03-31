@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\V1\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\api_return;
-use App\Models\VisitorsFamily; 
-use App\Models\Visitor; 
+use App\Models\VisitorsFamily;
+use App\Models\Visitor;
 use Validator;
 use Auth;
 use App\Http\Resources\V1\User\VisitorFamilyResource;
@@ -23,12 +23,12 @@ class VisitorsFamiliesApiController extends Controller
     }
 
     public function store(Request $request){
-        
-        $rules = [ 
+
+        $rules = [
             'name' => 'required|string',
             'relation' => 'required|string',
             'phone' => 'required|string',
-            'identity' => 'required|string',
+            'identity' => 'required|unique:visitors_families,identity',
             'gender' => 'in:male,female',
         ];
 
@@ -39,7 +39,7 @@ class VisitorsFamiliesApiController extends Controller
         }
 
         $visitor = Visitor::where('user_id',Auth::id())->first();
-        
+
         VisitorsFamily::create([
             'visitor_id' => $visitor->id,
             'name' => $request->name,
@@ -48,16 +48,16 @@ class VisitorsFamiliesApiController extends Controller
             'phone' => $request->phone,
             'identity' => $request->identity,
         ]);
-        
+
 
         return $this->returnSuccessMessage(trans('global.flash.success'));
-    } 
+    }
 
     public function delete($id){
         $visitor = Visitor::where('user_id',Auth::id())->first();
-        
+
         VisitorsFamily::find($id)->delete();
 
-        return $this->returnSuccessMessage(trans('global.flash.deleted')); 
+        return $this->returnSuccessMessage(trans('global.flash.deleted'));
     }
 }

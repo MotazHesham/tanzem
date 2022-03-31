@@ -17,6 +17,7 @@ class CreateCawadersTable extends Migration
             $table->longText('desceiption')->nullable();
             $table->double('longitude')->nullable();
             $table->double('latitude')->nullable();
+            $table->string('has_skills')->default(0);
             $table->tinyInteger('out_of_zone')->default(0);
             $table->timestamps();
             $table->softDeletes();

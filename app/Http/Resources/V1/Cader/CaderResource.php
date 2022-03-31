@@ -16,12 +16,13 @@ class CaderResource extends JsonResource
     {
         $image = $this->photo ? asset($this->photo->getUrl()) : null;
         $image = str_replace('public/public','public',$image);
-        return [ 
-            'id' => $this->id, 
-            'name' => $this->name, 
-            'phone' => $this->phone,  
-            'email' => $this->email,  
-            'photo' => $image, 
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'photo' => $image,
+            'has_skills' => $this->cawader->has_skills,
         ];
     }
 }

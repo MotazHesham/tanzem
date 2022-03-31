@@ -131,6 +131,9 @@ return [
         ],
         'start_time' => [
             'start_time_check' => 'Must be StartTime lower than EndTime'
+        ],
+        'visitor_family.*.identity' => [
+            'unique' => 'identity to one of family members'
         ]
     ],
 ];

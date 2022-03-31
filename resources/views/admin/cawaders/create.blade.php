@@ -39,7 +39,7 @@
                         </div>
                     @endif
                     <span class="help-block">{{ trans('cruds.user.fields.password_helper') }}</span>
-                </div> 
+                </div>
                 <div class="form-group col-md-3">
                     <label class="required" for="phone">{{ trans('cruds.user.fields.phone') }}</label>
                     <input class="form-control {{ $errors->has('phone') ? 'is-invalid' : '' }}" type="text" name="phone" id="phone" value="{{ old('phone', '') }}" required>
@@ -49,7 +49,7 @@
                         </div>
                     @endif
                     <span class="help-block">{{ trans('cruds.user.fields.phone_helper') }}</span>
-                </div> 
+                </div>
                 <div class="form-group col-md-3">
                     <label class="required" for="dob">{{ trans('cruds.cawader.fields.dob') }}</label>
                     <input class="form-control date {{ $errors->has('dob') ? 'is-invalid' : '' }}" type="text" name="dob" id="dob" value="{{ old('dob') }}" required>
@@ -59,6 +59,21 @@
                         </div>
                     @endif
                     <span class="help-block">{{ trans('cruds.cawader.fields.dob_helper') }}</span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>{{ trans('cruds.cawader.fields.has_skills') }}</label>
+                    @foreach(App\Models\Cawader::HAS_SKILLS_RADIO as $key => $label)
+                        <div class="form-check {{ $errors->has('has_skills') ? 'is-invalid' : '' }}">
+                            <input class="form-check-input" type="radio" id="has_skills_{{ $key }}" name="has_skills" value="{{ $key }}" {{ old('has_skills', '0') === (string) $key ? 'checked' : '' }}>
+                            <label class="form-check-label" for="has_skills_{{ $key }}">{{ $label }}</label>
+                        </div>
+                    @endforeach
+                    @if($errors->has('has_skills'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('has_skills') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.cawader.fields.has_skills_helper') }}</span>
                 </div>
                 <div class="form-group col-md-3">
                     <label class="required" for="city_id">{{ trans('cruds.cawader.fields.city') }}</label>
@@ -163,7 +178,7 @@
                     @endif
                     <span class="help-block">{{ trans('cruds.user.fields.photo_helper') }}</span>
                 </div>
-            </div>  
+            </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
