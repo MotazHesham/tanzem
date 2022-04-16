@@ -44,6 +44,7 @@ class Setting extends Model
         'said_about_tanzem',
         'organizers_text',
         'contact_us_text',
+        'contact_us_text_2',
         'goals',
         'terms_cawader',
         'terms_company',

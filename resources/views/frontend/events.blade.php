@@ -9,7 +9,7 @@
             <div class="container">
                 <div class="dlab-bnr-inr-entry">
                     <h1 class="text-white">الفعاليات</h1>
-                    <p>هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة</p>
+                    <p>{{$setting->events_text }}</p>
                     <!-- Breadcrumb row -->
                     <div class="breadcrumb-row">
                         <ul class="list-inline">

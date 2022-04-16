@@ -504,6 +504,8 @@ return [
             'organizers_text_helper'    => ' ',
             'contact_us_text'           => 'Contact Us Text',
             'contact_us_text_helper'    => ' ',
+            'contact_us_text_2'           => 'Contact Us Text 2',
+            'contact_us_text_2_helper'    => ' ',
             'goals'                     => 'Our Goals',
             'goals_helper'              => ' ',
             'terms_cawader'                     => 'Terms And Condition For Cawader',

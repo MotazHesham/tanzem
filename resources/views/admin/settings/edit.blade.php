@@ -262,6 +262,16 @@
                     <span class="help-block">{{ trans('cruds.setting.fields.contact_us_text_helper') }}</span>
                 </div> 
                 <div class="form-group col-md-3">
+                    <label for="contact_us_text_2">{{ trans('cruds.setting.fields.contact_us_text_2') }}</label>
+                    <textarea class="form-control {{ $errors->has('contact_us_text') ? 'is-invalid' : '' }}" name="contact_us_text_2" id="contact_us_text">{{ old('contact_us_text', $setting->contact_us_text_2) }}</textarea>
+                    @if($errors->has('contact_us_text'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('contact_us_text_2') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.setting.fields.contact_us_text_helper') }}</span>
+                </div>
+                <div class="form-group col-md-3">
                     <label for="goals">{{ trans('cruds.setting.fields.goals') }}</label>
                     <textarea class="form-control {{ $errors->has('goals') ? 'is-invalid' : '' }}" name="goals" id="goals">{{ old('goals', $setting->goals) }}</textarea>
                     @if($errors->has('goals'))

@@ -10,8 +10,7 @@
                 <div class="dlab-bnr-inr-entry">
                     <h1 class="text-white">تواصل معنا</h1>
                     <p>
-                        هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد
-                        هذا النص من مولد النص العربى
+                      {{$setting->contact_us_text }}
                     </p>
                     <!-- Breadcrumb row -->
                     <div class="breadcrumb-row">
@@ -36,8 +35,8 @@
                             <div class="icon-content">
                                 <h5 class="dlab-tilte text-uppercase">البريد الإلكتروني</h5>
                                 <p>
-                                    info@example.com <br />
-                                    info@example.com
+                                    {{$setting->email_1 }} <br />
+                                    {{$setting->email_2 }}
                                 </p>
                             </div>
                         </div>
@@ -50,8 +49,8 @@
                             <div class="icon-content">
                                 <h5 class="dlab-tilte text-uppercase">التليفون</h5>
                                 <p>
-                                    +61 3 8376 6284 <br />
-                                    +23 123 456 7890
+                                    {{$setting->phone_1}} <br />
+                                    {{$setting->phone_2 }}
                                 </p>
                             </div>
                         </div>
@@ -65,10 +64,7 @@
                                 <h2 class="box-title">تواصل معنا</h2>
                                 <div class="dlab-separator bg-primary"></div>
                                 <p>
-                                    هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم
-                                    توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل
-                                    هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد
-                                    الحروف التى يولدها التطبيق
+                                    {{$setting->contact_us_text_2 }}
                                 </p>
                             </div>
                             <div class="dzFormMsg"></div>

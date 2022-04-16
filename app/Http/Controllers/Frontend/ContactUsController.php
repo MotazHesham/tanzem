@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreContactuRequest;
 use App\Models\Contactu;
+use App\Models\Setting;
 use Alert;
 
 class ContactUsController extends Controller
 {
     public function contactus(){
-        return view('frontend.contactus');
+        $setting = Setting::first();
+        return view('frontend.contactus',compact('setting'));
     }
 
     public function store(StoreContactuRequest $request)
