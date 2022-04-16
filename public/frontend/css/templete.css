@@ -1085,7 +1085,7 @@ ol.comment-list li.comment .reply a::before {
 	display: flex;
 }
 .wonder-bx .wonder-theme{
-	background-color: #60e4c3;
+	/*background-color: #60e4c3;*/
 	height: 70px;
 	width: 70px;
 	border-radius: 50px;
@@ -1598,7 +1598,7 @@ blockquote h6{
 		margin-right: 15px;
 	}
 	.wonder-bx .wonder-theme {
-		height: 40px;
+		height: auto;
 		width: 40px;
 		line-height: 40px;
 		font-size: 14px;
@@ -5187,10 +5187,10 @@ font-size: 17px;
 .is-fixed .logo-header .logo-2 {
 	display: table-cell;
 }
-.logo-header .logo-2 ,
-.is-fixed .logo-header .logo-1 {
-	display: none;
-}
+/*.logo-header .logo-2 ,*/
+/*.is-fixed .logo-header .logo-1 {*/
+/*	display: none;*/
+/*}*/
 
 /* featured-star-right */
 .featured-star-left .listing-media,

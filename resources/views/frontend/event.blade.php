@@ -2,12 +2,15 @@
 
 @section('styles') 
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/star-rating-svg.css') }}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 @endsection
 
 @section('content')
 
     <!-- Content -->
-    <div class="page-content bg-white">
+    <div id="event_page" class="page-content bg-white">
         <!-- inner page banner -->
         <div class="dlab-bnr-inr dlab-bnr-inr-sm overlay-black-middle" style="background-image: url('{{ asset('frontend/images/banner/bnr1.jpg') }}')">
             <div class="container">
@@ -79,15 +82,55 @@
                                 </h3>
                             </div>
                             <div class="content-body">
-                                <ul class="icon-box-list list-col-4">
+                                <ul id="iconbox" class="icon-box-list list-col-4">
                                     @foreach($event->eventBrands as $brand)
                                         <li>
-                                            <a href="javascript:void(0);" class="icon-box-info">
+                                    <button id="myBtn" type="button" class="btn btn-primary shadow-none" data-bs-toggle="modal" data-bs-target="#exampleModal{{$brand->id}}">
+                                        
+                                        <a href="javascript:void(0);" class="icon-box-info">
                                                 <div class="icon-cell bg-gray">
                                                     <img src="{{ $brand->photo ? $brand->photo->getUrl('thumb') : '' }}" class="rounded-circle" alt="">
                                                 </div>
                                                 <span>{{ $brand->title ?? ''}}</span>
                                             </a>
+                                            
+                                      </button>
+                                       <!-- Modal pop up-->
+                                        <div class="modal fade" id="exampleModal{{$brand->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                          <div class="modal-dialog">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">
+                                                    {{ $brand->title ?? ''}}</h5>
+                                                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                                              </div>
+                                              <div class="modal-body">
+                                                <div class="brand-info">
+                                                    <p class="brand_tit">الصورة</p>
+                                                    <img src="{{ $brand->photo ? $brand->photo->getUrl('thumb') : '' }}" class="" alt="">
+                                                    
+                                                </div>
+                                                <div class="brand-info">
+                                                    <p class="brand_tit">المكان</p>
+                                                                   <p>{{ $brand->zone_name ?? ''}}</p>
+                                                 
+                                                    </div>
+                                               <div class="brand-info">      
+                                                                                            <p class="brand_tit">التفاصيل</p>
+                                                    <p>{{ $brand->description ?? ''}}</p>
+                                                    </div>
+                                              </div>
+                                        
+                                            </div>
+                                          </div>
+                                        </div>
+                                            <!--<a href="javascript:void(0);" class="icon-box-info">-->
+                                            <!--    <div class="icon-cell bg-gray">-->
+                                            <!--        <img src="{{ $brand->photo ? $brand->photo->getUrl('thumb') : '' }}" class="rounded-circle" alt="">-->
+                                            <!--    </div>-->
+                                            <!--    <span>{{ $brand->title ?? ''}}</span>-->
+                                            
+                                            <!--</a>-->
                                         </li> 
                                     @endforeach
                                 </ul>
