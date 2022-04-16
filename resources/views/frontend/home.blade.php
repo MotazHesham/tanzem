@@ -97,6 +97,74 @@
                     </div>
                 </div>
                 <!-- Featured Destinations End -->
+                
+                 <!-- Why Choose Us -->
+                <div class=" section-full g-img-fix most-visited content-inner overlay-primary-dark "
+                    style="background-image: url('{{ asset('frontend/images/bg1.jpg') }}')">
+                    <div class="container">
+                        <div class="section-head text-white text-center">
+                            <h2 class="box-title">مـــن نحن</h2>
+                            <div class="dlab-separator bg-white"></div>
+                            <!--<p>-->
+                            <!--    <?php echo nl2br($setting->how_we_work_header ?? ''); ?>-->
+                            <!--</p>-->
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4">
+                                <div class="icon-bx-wraper sr-box center box1 m-b30">
+                                    <div class="icon-bx-lg radius bg-white m-b20">
+                                        <a href="javascript:void(0)" class="icon-cell text-primary"><i
+                                                class="ti-eye"></i></a>
+                                    </div>
+                                    <div class="icon-content">
+                                        <h3 class="dlab-tilte">الرؤية</h3>
+                                        <p>
+                                           
+                                         {{$setting->vision }}
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4">
+                                <div class="icon-bx-wraper sr-box center m-b30">
+                                    <div class="icon-bx-lg radius bg-white m-b20">
+                                        <a href="javascript:void(0)" class="icon-cell text-primary"><i
+                                                class="ti-book"></i></a>
+                                    </div>
+                                    <div class="icon-content">
+                                        <h3 class="dlab-tilte">
+                                            الرسالة
+                                        </h3>
+                                        <p>
+                                           
+                                            {{$setting->message }}
+
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4">
+                                <div class="icon-bx-wraper sr-box center box1 m-b30">
+                                    <div class="icon-bx-lg radius bg-white m-b20">
+                                        <a href="javascript:void(0)" class="icon-cell text-primary"><i
+                                                class="ti-target"></i></a>
+                                    </div>
+                                    <div class="icon-content">
+                                        <h3 class="dlab-tilte">الأهداف</h3>
+                                        <p>
+                                            {{$setting->goals }}
+
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Why Chose Us End -->
+                
 
                 <!-- Our Services -->
                 <div class="section-full bg-gray content-inner about-us" style="direction: ltr">
@@ -245,7 +313,7 @@
                 <div class="section-full bg-white content-inner">
                     <div class="container">
                         <div class="section-head text-black text-center">
-                            <h2 class="box-title">المنظمين المشاركين</h2>
+                            <h2 class="box-title">الشركات والمؤسسات</h2>
                             <div class="dlab-separator bg-primary"></div>
                             <p>
                                 <?php echo nl2br($setting->organizers_text ?? ''); ?>

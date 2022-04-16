@@ -311,6 +311,26 @@
                     @endif
                     <span class="help-block">{{ trans('cruds.setting.fields.terms_visitor_helper') }}</span>
                 </div> 
+                <div class="form-group col-md-3">
+                    <label for="vision">{{ trans('cruds.setting.fields.vision') }}</label>
+                    <textarea class="form-control {{ $errors->has('vision') ? 'is-invalid' : '' }}" name="vision" id="vision">{{ old('vision', $setting->vision) }}</textarea>
+                    @if($errors->has('vision'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('vision') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.setting.fields.terms_visitor_helper') }}</span>
+                </div> 
+                <div class="form-group col-md-3">
+                    <label for="message">{{ trans('cruds.setting.fields.message') }}</label>
+                    <textarea class="form-control {{ $errors->has('message') ? 'is-invalid' : '' }}" name="message" id="message">{{ old('message', $setting->message) }}</textarea>
+                    @if($errors->has('message'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('message') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.setting.fields.terms_visitor_helper') }}</span>
+                </div> 
             </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">

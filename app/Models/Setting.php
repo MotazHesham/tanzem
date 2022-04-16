@@ -49,6 +49,8 @@ class Setting extends Model
         'terms_cawader',
         'terms_company',
         'terms_visitor',
+        'vision',
+        'message',
         'created_at',
         'updated_at',
         'deleted_at',
