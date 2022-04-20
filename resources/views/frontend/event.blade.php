@@ -54,6 +54,8 @@
                             <p class="m-b0">
                                 <?php echo nl2br($event->description ?? ''); ?>
                             </p>
+                            <input type="hidden" value="{{$event->latitude}}" name="latitude" id="latitude">
+                            <input type="hidden" value="{{$event->longitude}}" name="longitude" id="longitude">
                         </div>
                         <div class="dlab-divider bg-gray-dark"></div>
                         <div class="widget widget_getintuch widget_listing">
@@ -236,7 +238,7 @@
                     <div class="col-xl-4 col-lg-5 col-md-12 sticky-top p-b30">
                         <aside class="side-bar listing-side-bar">
                             <div class="widget widget_map">
-                                <div id="map3" class="m-b30 align-self-stretch" style="width: 100%; height: 400px"></div>
+                                <div id="map" class="m-b30 align-self-stretch" style="width: 100%; height: 400px"></div>
                                 <a href="javascript:void(0)"
                                     class=" site-button button-lg radius-xl m-b30  text-uppercase ">الموقع
                                     على الخريطة</a>
@@ -314,10 +316,37 @@
     
     <script src="{{ asset('frontend/js/jquery.star-rating-svg.js')}}"></script>
     <!-- STAR RATING SVG -->
-    <script src="https://maps.google.com/maps/api/js?key=AIzaSyBjirg3UoMD5oUiFuZt3P9sErZD-2Rxc68&sensor=false"></script>
+    
     <!-- GOOGLE MAP -->
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <!-- Google API For Recaptcha  -->
     <script src="{{ asset('frontend/js/map.script.js') }}"></script>
     <!-- CONTACT JS  -->
-@endsection
+    <script type="text/javascript">
+
+        var map;
+        var lat = parseFloat(document.getElementById('latitude').value);
+        var lng = parseFloat(document.getElementById('longitude').value);
+       
+           function initAutocomplete() {
+                  var pos = {lat:  lat ,  lng:lng };
+                  map = new google.maps.Map(document.getElementById('map'), {
+                      zoom: 12,
+                      center: pos
+                  });
+              infoWindow = new google.maps.InfoWindow;
+                  geocoder = new google.maps.Geocoder();
+                  marker = new google.maps.Marker({
+                      position: pos,
+                      map: map,
+                      title: ''
+                  });
+                  infoWindow.setContent('موقع الفعاليه');
+                  infoWindow.open(map, marker);
+          }
+      </script>
+      
+      <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9D9VYMWp1sTVSDnGToKdKN4RnEtfyuAY&callback=initAutocomplete">
+      </script>
+      @endsection

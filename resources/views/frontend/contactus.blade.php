@@ -134,9 +134,11 @@
                     </div>
                     <!-- Left part END -->
                     <!-- right part start -->
-                    <div class="col-lg-6 d-flex">
-                        <div id="map3" class="m-b30 align-self-stretch" style="width: 100%; min-height: 300px"></div>
+                            <div class="col-lg-6 d-flex">
+                        <div id="mapp" class="m-b30 align-self-stretch" style="width: 100%; min-height: 300px"></div>
                     </div>
+                    <input type="hidden" value="{{$setting->latitude}}" name="latitude" id="latitude">
+                            <input type="hidden" value="{{$setting->longitude}}" name="longitude" id="longitude">
                     <!-- right part END -->
                 </div>
             </div>
@@ -147,12 +149,38 @@
 
 
 @section('scripts')
-    
-    <script src="https://maps.google.com/maps/api/js?key=AIzaSyBjirg3UoMD5oUiFuZt3P9sErZD-2Rxc68&sensor=false"></script>
+   
     <!-- GOOGLE MAP -->
     <script src="https://www.google.com/recaptcha/api.js"></script>
     <!-- Google API For Recaptcha  -->
 
     <script src="{{ asset('frontend/js/map.script.js') }}"></script>
     <!-- CONTACT JS  -->
+   <script type="text/javascript">
+
+  var map;
+  var lat = parseFloat(document.getElementById('latitude').value);
+  var lng = parseFloat(document.getElementById('longitude').value);
+ 
+     function initAutocomplete() {
+            var pos = {lat:  lat ,  lng:lng };
+            map = new google.maps.Map(document.getElementById('mapp'), {
+                zoom: 12,
+                center: pos
+            });
+        infoWindow = new google.maps.InfoWindow;
+            geocoder = new google.maps.Geocoder();
+            marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                title: ''
+            });
+            infoWindow.setContent('موقعنا');
+            infoWindow.open(map, marker);
+    }
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9D9VYMWp1sTVSDnGToKdKN4RnEtfyuAY&callback=initAutocomplete">
+</script>
 @endsection
