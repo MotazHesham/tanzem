@@ -38,6 +38,7 @@ class EventsController extends Controller
             $title = $request->title;
             $events = $events->where('title','like', '%' . $title . '%');
         }
+
         $events = $events->paginate(12);
         $events->appends($request->all());
         
