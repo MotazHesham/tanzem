@@ -10,6 +10,8 @@ Route::group(['prefix' => 'company', 'as' => 'company.', 'namespace' => 'Company
     Route::post('events/media', 'EventsController@storeMedia')->name('events.storeMedia');
     Route::post('events/ckmedia', 'EventsController@storeCKEditorImages')->name('events.storeCKEditorImages');
     Route::resource('events', 'EventsController');
+    Route::get('event/{id}/cawders', 'EventsController@choose_cawder')->name('events.choose_cawder');
+    Route::post('event/cawders/add', 'EventsController@save_cawder')->name('events.save_cawder');
 
     // Brands
     Route::delete('brands/destroy', 'BrandsController@massDestroy')->name('brands.massDestroy');

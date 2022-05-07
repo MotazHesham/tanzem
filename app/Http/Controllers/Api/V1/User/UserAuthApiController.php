@@ -13,21 +13,24 @@ use Auth;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use Illuminate\Support\Facades\Http;
 use App\Models\PasswordReset;
+use App\Traits\send_mail_trait;
 use Carbon\Carbon;
 
 
 class UserAuthApiController extends Controller
 {
     use api_return;
+    use send_mail_trait;
     use MediaUploadingTrait;
 
     public function send_sms_code(Request $request){
 
         $rules = [
             'phone' => 'required|size:10|regex:/(05)[0-9]{8}/',
+            'email' => 'required|unique:users',
         ];
 
-
+            
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
@@ -38,6 +41,8 @@ class UserAuthApiController extends Controller
         $phone = $request->phone ? substr($request->phone, 1) : 0;
 
         $random_code = random_int(1000, 9999);
+        
+               $email=$this->sendEmail("رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code,$request->email,"منصة تنظيم");
 
         $passwordReset = PasswordReset::where('email',$request->phone)->first();
 
@@ -49,16 +54,17 @@ class UserAuthApiController extends Controller
                     'token' => $random_code
                 ]
             );
+            
             $response =  Http::withHeaders([
                 'Content-Type' =>   'application/json',
             ])->post('https://www.msegat.com/gw/sendsms.php', [
                 "userName" => "tanthimco2022",
                 "numbers" =>  "966".$phone,
-                "userSender" => "Tanthim",
-                "apiKey" => "15a07901abd2da24d240f4482d1ea3ab",
+                "userSender" => "Tanthim-AD",
+                "apiKey" => "08019771490cd9960d726674344dfe1e",
                 "msg" => "رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code
             ]);
-            if($response['code'] == '1'){
+            if($response['code'] == '1'||$email==1){
                 return $this->returnData(['code' => $random_code]);
             }else{
                 return $this->returnError('401', 'Error Code '.$response['code']);
@@ -71,11 +77,11 @@ class UserAuthApiController extends Controller
             ])->post('https://www.msegat.com/gw/sendsms.php', [
                 "userName" => "tanthimco2022",
                 "numbers" =>  "966".$phone,
-                "userSender" => "Tanthim",
-                "apiKey" => "15a07901abd2da24d240f4482d1ea3ab",
+                "userSender" => "Tanthim-AD",
+                "apiKey" => "08019771490cd9960d726674344dfe1e",
                 "msg" => "رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code
             ]);
-            if($response['code'] == '1'){
+            if($response['code'] == '1'||$email==1){
                 return $this->returnData(['code' => $random_code]);
             }else{
                 return $this->returnError('401', 'Error Code '.$response['code']);
@@ -84,18 +90,27 @@ class UserAuthApiController extends Controller
             return $this->returnError('401', 'انتظر دقيقتين للأرسال مرة أخري');
         }
 
+
+
     }
 
     public function register(Request $request){
 
         $rules = [
             'name' => 'required|string',
-            'email' => 'required|unique:users',
+            'email' => 'required',
             'password' => 'required|min:6|max:20',
             'national' => 'required|unique:visitors',
             'visitor_type' => 'in:individual,family_author,family_individual',
             'phone' => 'required|size:10|regex:/(05)[0-9]{8}/',
-            'visitor_family.*.identity' => 'unique:visitors_families,identity'
+            'visitor_family.*.identity' => 'unique:visitors_families,identity',
+            'visitor_family.*.email' => 'unique:visitors_families,email',
+            'health_status'=>
+            [
+                'required',
+                'in:1,0',
+            ],
+
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -137,7 +152,9 @@ class UserAuthApiController extends Controller
                         'relation' => $family_member['relation'],
                         'phone' => $family_member['phone'],
                         'identity' => $family_member['identity'],
+                        'email' => $family_member['email'],
                     ]);
+                    $this->custom_mail($family_member['email'],"thanthim");
                 }
             }
         }elseif($validated_requests['visitor_type'] == 'family_individual'){
@@ -172,7 +189,7 @@ class UserAuthApiController extends Controller
     public function login(Request $request){
 
         $rules = [
-            'email' => 'required|email',
+            'phone' => 'required',
             'password' => 'required|min:6|max:20'
         ];
 
@@ -182,7 +199,7 @@ class UserAuthApiController extends Controller
             return $this->returnError('401', $validator->errors());
         }
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::attempt(['phone' => $request->phone, 'password' => $request->password])) {
             if(Auth::user()->user_type == 'visitor'){
                 $token = Auth::user()->createToken('user_token')->plainTextToken;
                 return $this->returnData(
@@ -198,4 +215,4 @@ class UserAuthApiController extends Controller
             return $this->returnError('500',trans('global.flash.api.invalid_user_or_password'));
         }
     }
-}
+}           

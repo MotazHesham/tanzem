@@ -22,7 +22,10 @@ class Company
             return redirect()->route('client.home');
         }elseif(Auth::user()->user_type == 'governmental_entity'){ 
             return redirect()->route('government.home');
-        }elseif(Auth::user()->user_type == 'companiesAndInstitution' || ( Auth::user()->user_type == 'cader' && Auth::user()->cawader->companies_and_institution_id != null) ){
+        }elseif(Auth::user()->user_type == 'visitor'){ 
+            return redirect()->route('frontend.home');
+        }
+        elseif(Auth::user()->user_type == 'companiesAndInstitution' || ( Auth::user()->user_type == 'cader' && Auth::user()->cawader->companies_and_institution_id != null) ){
             return $next($request);
         }else{
             Auth::logout();

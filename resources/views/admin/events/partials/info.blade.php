@@ -73,6 +73,30 @@
                             @endif
                         </td>
                     </tr> 
+                    <tr>
+                        <th>
+                            {{ trans('cruds.event.fields.photos') }}
+                        </th>
+                        <td>
+                            @foreach($event->photos as $key => $media)
+                                <a href="{{ $media->getUrl() }}" target="_blank" style="display: inline-block">
+                                    <img src="{{ $media->getUrl('thumb') }}">
+                                </a>
+                            @endforeach
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.event.fields.videos') }}
+                        </th>
+                        <td>
+                            @foreach($event->videos as $key => $media)
+                                <a href="{{ $media->getUrl() }}" target="_blank">
+                                    {{ trans('global.view_file') }}
+                                </a>
+                            @endforeach
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

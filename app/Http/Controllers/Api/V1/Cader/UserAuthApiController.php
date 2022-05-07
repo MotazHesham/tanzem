@@ -51,6 +51,9 @@ class UserAuthApiController extends Controller
             'identity_number' => [
                 'string',
                 'required',
+                'size:10',
+                'regex:/(10)[0-9]{8}|(11)[0-9]{8}|(12)[0-9]{8}|(13)[0-9]{8}|(14)[0-9]{8}|(15)[0-9]{8}|(20)[0-9]{8}|(21)[0-9]{8}|(22)[0-9]{8}|(23)[0-9]{8}|(24)[0-9]{8}|(25)[0-9]{8}/',                
+                
             ],
             'name' => [
                 'string',
@@ -58,7 +61,7 @@ class UserAuthApiController extends Controller
             ],
             'email' => [
                 'required',
-                'unique:users',
+              //  'unique:users',
             ],
             'password' => [
                 'required',
@@ -73,6 +76,21 @@ class UserAuthApiController extends Controller
                 'required',
                 'size:10',
                 'regex:/(05)[0-9]{8}/',
+            ],
+            'experience_years'=>
+            [
+                'required',
+                'integer',
+                'min:-2147483648',
+                'max:2147483647',
+            ],
+            'skills' => [
+                'array',
+            ],
+            'health_status'=>
+            [
+                'required',
+                'integer',
             ],
         ];
 
@@ -90,6 +108,7 @@ class UserAuthApiController extends Controller
             'user_type' => 'cader',
             'phone' => $request->phone,
             'approved' => 0,
+            'health_status' => $request->health_status,
         ]);
 
         $user->addMedia(request('photo'))->toMediaCollection('photo');
@@ -103,10 +122,12 @@ class UserAuthApiController extends Controller
             'desceiption' => $request->desceiption,
             'working_hours' => $request->working_hours,
             'identity_number' => $request->identity_number,
+            'experience_years' => $request->experience_years,
         ]);
 
         $cawader->specializations()->sync($request->input('specializations', []));
 
+        $cawader->skills()->sync($request->input('skills', []));
 
         return $this->returnSuccessMessage(trans('global.flash.api.registered'));
 
@@ -115,7 +136,7 @@ class UserAuthApiController extends Controller
     public function login(Request $request){
 
         $rules = [
-            'email' => 'required|email',
+            'phone' => 'required',
             'password' => 'required|min:6|max:20'
         ];
 
@@ -125,7 +146,7 @@ class UserAuthApiController extends Controller
             return $this->returnError('401', $validator->errors());
         }
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::attempt(['phone' => $request->phone, 'password' => $request->password])) {
             if(Auth::user()->user_type == 'cader'){
                 if(!Auth::user()->approved){
                     return $this->returnError('500',trans('global.yourAccountNeedsAdminApproval'));

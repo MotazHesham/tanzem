@@ -122,7 +122,7 @@ return [
         'working_hours' => 'ساعات العمل',
         'city_id' => 'المدينة',
         'dob' => 'تاريخ الميلاد',
-        'identity_number' => 'رقم الهوية الوطنية',
+        'identity_number' => 'رقم الهوية ',
         'password' => 'كلمة المرور',
         'name_ar' => 'الأسم باللغة العربية',
         'name_en' => 'الأسم باللغة الأنجليزية',
@@ -152,11 +152,11 @@ return [
         'end_time'               => 'نهاية الحضور',
         'short_description'        => 'وصف مختصر',
         'long_description'        => 'الوصف',
-        'identity'        => 'رقم الهوية الوطنية',
+        'identity'        => 'رقم الهوية ',
         'gender'        => 'النوع',
         'visitor_id'        => 'المشترك',
         'job_position'        => 'المسمي الوظيفي',
-        'national'          => 'رقم الهوية الوطنية',
+        'national'          => 'رقم الهوية ',
     ],
 
     'custom'      => [

@@ -27,7 +27,7 @@
             <td><input {{ old('cawaders.' . $cawader->id, $cawader->hours) ? 'checked' : null }}
                     data-id="{{ $cawader->id }}" data-working_hours="{{ $cawader->working_hours }}" type="checkbox" class="cawader-enable"></td>
                     
-            <td>{{ $cawader->user->name }}</td>
+           <td> <a href="{{ route('frontend.cader',$cawader->id)}}" target="_blank">{{ $cawader->user->name }}</a></td>
 
             <td><input value="{{ old('cawaders.' . $cawader->id . '.hours', $cawader->hours) ?? null }}"
                     {{ old('cawaders.' . $cawader->id, $cawader->hours) ? null : 'disabled' }}

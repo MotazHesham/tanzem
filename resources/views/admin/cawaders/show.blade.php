@@ -130,7 +130,15 @@
                             {{ trans('cruds.cawader.fields.has_skills') }}
                         </th>
                         <td>
-                            {{ App\Models\Cawader::HAS_SKILLS_RADIO[$cawader->has_skills] ?? '' }}
+                            {{ trans('global.'.App\Models\Cawader::HAS_SKILLS_RADIO[$cawader->has_skills] ?? '') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.cawader.fields.health_status') }}
+                        </th>
+                        <td>
+                            {{ trans('global.'.App\Models\User::HAS_health_status_RADIO[$cawader->user->health_status]) }}
                         </td>
                     </tr>
                 </tbody>

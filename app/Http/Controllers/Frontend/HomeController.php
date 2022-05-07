@@ -11,6 +11,7 @@ use App\Models\CompaniesAndInstitution;
 use App\Models\News;
 use App\Models\User;
 use App\Models\Cawader;
+use App\Models\Slider;
 use App\Models\Visitor;
 use App\Http\Requests\StoreSubscriptionRequest;  
 use App\Models\Subscription;
@@ -148,8 +149,9 @@ class HomeController extends Controller
         $saidAboutTanzem = SaidAboutTanzem::orderBy('created_at','desc')->get()->take(3);
         $companiesAndInstitution = CompaniesAndInstitution::orderBy('created_at','desc')->get()->take(12);
         $news = News::where('status','active')->orderBy('created_at','desc')->get()->take(12);
+        $sliders=Slider::where('status',1)->get();
         
-        return view('frontend.home',compact('setting','events','saidAboutTanzem','companiesAndInstitution','news'));
+        return view('frontend.home',compact('setting','events','saidAboutTanzem','companiesAndInstitution','news','sliders'));
     } 
 
     public function news($id){
@@ -178,5 +180,24 @@ class HomeController extends Controller
         $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+    }
+    public function terms($id){
+  
+        if($id==1){
+            $cawder = 'terms_cawader_' . app()->getLocale(); 
+            $terms=Setting::first()->$cawder;
+     }
+     elseif($id==2){
+            $company = 'terms_company_' . app()->getLocale(); 
+            $terms=Setting::first()->$company;
+     }
+     else{
+         $visitor = 'terms_visitor_' . app()->getLocale(); 
+         $terms=Setting::first()->$visitor;
+        
+
+     }
+      return view('frontend.terms',compact('terms'));
+
     }
 }

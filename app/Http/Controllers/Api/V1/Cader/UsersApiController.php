@@ -9,11 +9,14 @@ use App\Models\Event;
 use App\Models\City;
 use App\Models\CawaderSpecialization;
 use App\Models\BreakType;
+use App\Models\Skill;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Auth;
 use App\Http\Resources\V1\Cader\CaderResource;
 use App\Http\Resources\V1\Cader\CityResource;
 use App\Http\Resources\V1\Cader\SpecializationResource;
+use App\Http\Resources\V1\Cader\SkillResource;
 use App\Http\Resources\V1\Cader\DegreeResource;
 use App\Traits\api_return;
 use Validator;
@@ -29,6 +32,11 @@ class UsersApiController extends Controller
     public function specializations(){
         $specializations = CawaderSpecialization::all();
         return $this->returnData(SpecializationResource::collection($specializations));
+    }
+
+    public function skills(){
+        $skills = Skill::all();
+        return $this->returnData(SkillResource::collection($skills));
     }
 
     public function cities(){
@@ -144,4 +152,25 @@ class UsersApiController extends Controller
 
         return $this->returnSuccessMessage('Token Updated Successfully');
     }
-}
+
+    public function terms(Request $request){
+       
+       
+        if($request->type==1){
+               $cawder = 'terms_cawader_' . app()->getLocale(); 
+               $terms=Setting::first()->$cawder;
+        }
+        elseif($request->type==2){
+               $company = 'terms_company_' . app()->getLocale(); 
+               $terms=Setting::first()->$company;
+        }
+        else{
+            $visitor = 'terms_visitor_' . app()->getLocale(); 
+            $terms=Setting::first()->$visitor;
+           
+
+        }
+         return   $this->returnData($terms);
+            
+        }
+    }

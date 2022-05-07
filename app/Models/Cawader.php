@@ -50,6 +50,7 @@ class Cawader extends Model
         'desceiption',
         'has_skills',
         'out_of_zone',
+        'experience_years',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -88,6 +89,11 @@ class Cawader extends Model
     public function companies_and_institution()
     {
         return $this->belongsTo(CompaniesAndInstitution::class, 'companies_and_institution_id');
+    }
+
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class);
     }
 
     protected function serializeDate(DateTimeInterface $date)

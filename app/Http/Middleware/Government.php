@@ -22,7 +22,10 @@ class Government
             return redirect()->route('client.home');
         }elseif(Auth::user()->user_type == 'staff'){ 
             return redirect()->route('admin.home');
-        }elseif(Auth::user()->user_type == 'governmental_entity'){
+        }elseif(Auth::user()->user_type == 'visitor'){ 
+            return redirect()->route('frontend.home');
+        }
+        elseif(Auth::user()->user_type == 'governmental_entity'){
             return $next($request);
         }else{
             Auth::logout();

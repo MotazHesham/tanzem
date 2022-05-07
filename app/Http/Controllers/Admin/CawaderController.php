@@ -11,6 +11,7 @@ use App\Models\City;
 use App\Models\CompaniesAndInstitution;
 use App\Models\CawaderSpecialization;
 use App\Models\User;
+use App\Models\Skill;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -94,9 +95,11 @@ class CawaderController extends Controller
 
         $specializations = CawaderSpecialization::pluck('name_ar', 'id');
 
+        $skills = Skill::pluck('name_ar', 'id');
+
         $companies_and_institutions = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.cawaders.create', compact('cities', 'specializations', 'companies_and_institutions'));
+        return view('admin.cawaders.create', compact('cities', 'specializations', 'companies_and_institutions','skills'));
     }
 
     public function store(StoreCawaderRequest $request)
@@ -107,6 +110,7 @@ class CawaderController extends Controller
             'password' => bcrypt($request->password),
             'user_type' => 'cader',
             'phone' => $request->phone,
+            'health_status' => $request->health_status,
         ]);
 
         if ($request->input('photo', false)) {
@@ -127,11 +131,15 @@ class CawaderController extends Controller
             'working_hours' => $request->working_hours,
             'identity_number' => $request->identity_number,
             'companies_and_institution_id' => $request->companies_and_institution_id,
+            'experience_years'=>$request->experience_years,
         ]);
 
         $cawader->specializations()->sync($request->input('specializations', []));
 
+        $cawader->skills()->sync($request->input('skills', []));
+
         Alert::success('تم بنجاح', 'تم إضافة الكادر بنجاح ');
+                        
         return redirect()->route('admin.cawaders.index');
     }
 
@@ -147,20 +155,29 @@ class CawaderController extends Controller
 
         $cawader->load('city', 'specializations', 'user', 'companies_and_institution');
 
-        return view('admin.cawaders.edit', compact('cities', 'specializations', 'companies_and_institutions', 'cawader'));
+        $skills = Skill::pluck('name_ar', 'id');
+
+        return view('admin.cawaders.edit', compact('cities', 'specializations', 'companies_and_institutions', 'cawader','skills'));
     }
 
     public function update(UpdateCawaderRequest $request, Cawader $cawader)
     {
+      
+        if($request->skills)
+            $has=1;
+        else
+            $has=0;
+
         $cawader->update([
             'dob' => $request->dob,
             'desceiption' => $request->desceiption,
             'city_id' => $request->city_id,
             'degree' => $request->degree,
-            'has_skills' => $request->has_skills,
+            'has_skills' =>$has,
             'working_hours' => $request->working_hours,
             'identity_number' => $request->identity_number,
             'companies_and_institution_id' => $request->companies_and_institution_id,
+             'experience_years'=>$request->experience_years
         ]);
 
         $user = User::find($request->user_id);
@@ -170,6 +187,7 @@ class CawaderController extends Controller
             'email' => $request->email,
             'password' => $request->password == null ? $user->password : bcrypt($request->password),
             'phone' => $request->phone,
+            'health_status' => $request->health_status,
         ]);
 
         if ($request->input('photo', false)) {
@@ -184,6 +202,8 @@ class CawaderController extends Controller
         }
 
         $cawader->specializations()->sync($request->input('specializations', []));
+
+        $cawader->skills()->sync($request->input('skills', []));
 
         Alert::success('تم بنجاح', 'تم تعديل بيانات الكادر بنجاح ');
         return redirect()->route('admin.cawaders.index');

@@ -30,6 +30,7 @@ class VisitorsFamily extends Model
         'relation',
         'phone',
         'identity',
+        'email',
         'created_at',
         'updated_at',
         'deleted_at',

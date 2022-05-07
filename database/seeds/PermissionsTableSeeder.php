@@ -470,6 +470,66 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 116,
+                'title' => 'slider_create',
+            ],
+            [
+                'id'    => 117,
+                'title' => 'slider_edit',
+            ],
+            [
+                'id'    => 118,
+                'title' => 'slider_show',
+            ],
+            [
+                'id'    => 119,
+                'title' => 'slider_delete',
+            ],
+            [
+                'id'    => 120,
+                'title' => 'slider_access',
+            ],
+            [
+                'id'    => 121,
+                'title' => 'skill_create',
+            ],
+            [
+                'id'    => 122,
+                'title' => 'skill_edit',
+            ],
+            [
+                'id'    => 123,
+                'title' => 'skill_show',
+            ],
+            [
+                'id'    => 124,
+                'title' => 'skill_delete',
+            ],
+            [
+                'id'    => 125,
+                'title' => 'skill_access',
+            ],
+            [
+                'id'    => 126,
+                'title' => 'rate_create',
+            ],
+            [
+                'id'    => 127,
+                'title' => 'rate_edit',
+            ],
+            [
+                'id'    => 128,
+                'title' => 'rate_show',
+            ],
+            [
+                'id'    => 129,
+                'title' => 'rate_delete',
+            ],
+            [
+                'id'    => 130,
+                'title' => 'rate_access',
+            ],
+            [
+                'id'    => 131,
                 'title' => 'profile_password_edit',
             ],
         ];

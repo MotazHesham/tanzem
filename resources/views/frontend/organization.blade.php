@@ -276,7 +276,7 @@
                                                 <div class="col-lg-6">
                                                     <div class="listing-bx event-listing m-b30">
                                                         <div class="listing-media">
-                                                            <a href="#">
+                                                            <a href="{{route('frontend.event',$event->id) }}">
                                                                 <img src="{{ $event->photo ? $event->photo->getUrl('preview3') : '' }}" alt="" />
                                                             </a>
                                                         </div>
@@ -409,14 +409,14 @@
                                                 </li>
                                             </ul>
                                             <ul class="list-inline m-tb20">
-                                                <li>
+                                              <!--  <li>
                                                     <a href="{{ $company->facebook ?? '' }}" class="site-button radius-no sharp"><i
                                                             class="fa fa-facebook"></i></a>
                                                 </li>
-                                                <li>
+                                               <li>
                                                     <a href="mailto:{{ $company->gmail ?? '' }}" class="site-button radius-no sharp"><i
                                                             class="fa fa-google-plus"></i></a>
-                                                </li>
+                                                </li>-->
                                                 <li>
                                                     <a href="{{ $company->linked ?? '' }}" class="site-button radius-no sharp"><i
                                                             class="fa fa-linkedin"></i></a>
@@ -566,7 +566,7 @@
                                                 <div class="col-lg-4">
                                                     <div class="listing-bx event-listing m-b30">
                                                         <div class="listing-media">
-                                                            <a href="#">
+                                                          <a href="{{route('frontend.event',$event->id) }}">
                                                                 <img src="{{ $event->photo ? $event->photo->getUrl('preview3') : '' }}" alt="" />
                                                             </a>
                                                         </div>

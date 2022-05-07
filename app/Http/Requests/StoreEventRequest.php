@@ -82,18 +82,12 @@ class StoreEventRequest extends FormRequest
                 'required',
                 'array',
             ],
-            'cawaders' => [
+           
+            'photos' => [
                 'array',
-                'required',
             ],
-            'cawaders.*.hours' => [ 
-                'required',
-            ],
-            'cawaders.*.amount' => [ 
-                'required',
-            ],
-            'cawaders.*.extra_hours' => [ 
-                'required',
+            'videos' => [
+                'array',
             ],
         ];
     }

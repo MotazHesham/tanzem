@@ -22,6 +22,15 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/css/perfect-scrollbar.min.css" rel="stylesheet" />
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
+        <style>
+             a.c-header-nav-link.admin-home-link {
+                /*color: #25a8f6 !important;*/
+                color:#ec4c57 !important;
+                font-weight: bold;
+                font-size: 20px;
+            }
+        </style>
+    
     @if(app()->getLocale() == 'ar')
         <style>
             .c-sidebar-nav .c-sidebar-nav-dropdown-items{
@@ -53,8 +62,8 @@
             </button>
 
             <ul class="c-header-nav @if(app()->getLocale() == 'ar') mr-auto @else ml-auto @endif">
-                <li class="c-header-nav-item">
-                    <a href="{{route('frontend.home')}}" class="c-header-nav-link">
+                <li class="c-header-nav-item admin-home-link-li">
+                    <a href="{{route('frontend.home')}}" class="c-header-nav-link admin-home-link">
                         {{trans('global.homepage')}} &nbsp;
                         <i class="fa fa-home"></i>
                     </a>
@@ -185,7 +194,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
     
-    <script src="https://maps.google.com/maps/api/js?key=AIzaSyCq2UTcMzYp__KQb0P_By0dmzCjP9Twors&libraries=places&v=weekly"></script>
+   <script src="https://maps.google.com/maps/api/js?key=AIzaSyD9D9VYMWp1sTVSDnGToKdKN4RnEtfyuAY&libraries=places&v=weekly"></script>
     <script src="{{ asset('js/main.js') }}"></script>
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css">

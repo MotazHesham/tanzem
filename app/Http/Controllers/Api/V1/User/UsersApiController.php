@@ -59,6 +59,8 @@ class UsersApiController extends Controller
             'phone' => 'required|size:10|regex:/(05)[0-9]{8}/', 
             'name' => 'required|string',
             'national' => 'required',
+            'health_status'=> 'required|integer',
+           
         ];
 
         $validator = Validator::make($request->all(), $rules);

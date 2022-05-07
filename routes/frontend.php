@@ -13,6 +13,8 @@ Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function(){
     Route::post('register/visitor', 'HomeController@register_visitor')->name('register.visitor');
 
     Route::get('news/{id}','HomeController@news')->name('news');
+    
+    Route::get('terms/{id}', 'HomeController@terms')->name('terms');
 
     Route::post('subscription','HomeController@subscription')->name('subscription');
     
@@ -34,4 +36,6 @@ Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function(){
     
     Route::get('contactus','ContactUsController@contactus')->name('contactus');
     Route::post('contactus/store','ContactUsController@store')->name('contactus.store'); 
+
+    Route::post('rate','EventsController@rate')->name('event.rate');
 });

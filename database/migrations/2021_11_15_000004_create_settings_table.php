@@ -37,9 +37,12 @@ class CreateSettingsTable extends Migration
             $table->longText('contact_us_text')->nullable();
             $table->longText('contact_us_text_2')->nullable();
             $table->longText('goals')->nullable();
-            $table->longText('terms_cawader')->nullable();
-            $table->longText('terms_company')->nullable();
-            $table->longText('terms_visitor')->nullable();
+            $table->longText('terms_cawader_ar')->nullable();
+            $table->longText('terms_company_ar')->nullable();
+            $table->longText('terms_visitor_ar')->nullable();
+            $table->longText('terms_cawader_en')->nullable();
+            $table->longText('terms_company_en')->nullable();
+            $table->longText('terms_visitor_en')->nullable();
             $table->longText('vision')->nullable();
             $table->longText('message')->nullable();
             $table->timestamps();

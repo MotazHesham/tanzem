@@ -165,6 +165,7 @@
             @endif
             <span class="help-block">{{ trans('cruds.event.fields.photo_helper') }}</span>
         </div>
+        
         <div class="col-md-6">
             <label for="description">{{ trans('cruds.event.fields.description') }}</label>
             <textarea class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" name="description"
@@ -175,6 +176,28 @@
                 </div>
             @endif
             <span class="help-block">{{ trans('cruds.event.fields.description_helper') }}</span>
+        </div>
+        <div class="form-group col-md-12">>
+            <label for="photos">{{ trans('cruds.event.fields.photos') }}</label>
+            <div class="needsclick dropzone {{ $errors->has('photos') ? 'is-invalid' : '' }}" id="photos-dropzone">
+            </div>
+            @if($errors->has('photos'))
+                <div class="invalid-feedback">
+                    {{ $errors->first('photos') }}
+                </div>
+            @endif
+            <span class="help-block">{{ trans('cruds.event.fields.photos_helper') }}</span>
+        </div>
+        <div class="form-group col-md-12">
+            <label for="videos">{{ trans('cruds.event.fields.videos') }}</label>
+            <div class="needsclick dropzone {{ $errors->has('videos') ? 'is-invalid' : '' }}" id="videos-dropzone">
+            </div>
+            @if($errors->has('videos'))
+                <div class="invalid-feedback">
+                    {{ $errors->first('videos') }}
+                </div>
+            @endif
+            <span class="help-block">{{ trans('cruds.event.fields.videos_helper') }}</span>
         </div>
         <div class="form-group col-md-12">
             <div class="partials-scrollable mt-3">

@@ -11,6 +11,7 @@ class CreateVisitorsFamiliesTable extends Migration
         Schema::create('visitors_families', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('email')->unique()->nullable();
             $table->string('gender');
             $table->string('relation');
             $table->string('phone');

@@ -3,6 +3,8 @@
 return [
     'actions'                        => 'Actions',
     'add'                            => 'Add',
+    'healty'                         =>'healty',
+    'special'                        =>'special needs',
     'allRightsReserved'              => 'All rights reserved.',
     'areYouSure'                     => 'Are you sure?',
     'clickHereToVerify'              => 'Click here to verify',
@@ -411,6 +413,9 @@ return [
             'success_leave' => 'Signed out successfully',
             'error_leave' => 'logged out before',
             'not_join_before' => 'Not logged in before',   
+            'rate' => 'rate successfully',
+            'not_rate' => 'You are not authorized to use this action',
+
 
         ], 
     ], 

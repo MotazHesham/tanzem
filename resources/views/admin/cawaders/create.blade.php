@@ -64,8 +64,8 @@
                     <label>{{ trans('cruds.cawader.fields.has_skills') }}</label>
                     @foreach(App\Models\Cawader::HAS_SKILLS_RADIO as $key => $label)
                         <div class="form-check {{ $errors->has('has_skills') ? 'is-invalid' : '' }}">
-                            <input class="form-check-input" type="radio" id="has_skills_{{ $key }}" name="has_skills" value="{{ $key }}" {{ old('has_skills', '0') === (string) $key ? 'checked' : '' }}>
-                            <label class="form-check-label" for="has_skills_{{ $key }}">{{ $label }}</label>
+                            <input class="form-check-input" type="radio" id="has_skills_{{ $key }}" name="has_skills" value="{{ $key }}" {{ old('has_skills', '0') === (string) $key ? 'checked' : '' }} >
+                            <label class="form-check-label" for="has_skills_{{ $key }}">{{ trans('global.'.$label)}}</label>
                         </div>
                     @endforeach
                     @if($errors->has('has_skills'))
@@ -74,6 +74,24 @@
                         </div>
                     @endif
                     <span class="help-block">{{ trans('cruds.cawader.fields.has_skills_helper') }}</span>
+                </div>
+                <div class="form-group col-md-12" id="skillDIV" style="display:none">
+                    <label for="skills">{{ trans('cruds.cawader.fields.skill') }}</label>
+                    <div style="padding-bottom: 4px">
+                        <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
+                        <span class="btn btn-info btn-xs deselect-all" style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
+                    </div>
+                    <select class="form-control select2 {{ $errors->has('skills') ? 'is-invalid' : '' }}" name="skills[]" id="skills" multiple>
+                        @foreach($skills as $id => $skill)
+                            <option value="{{ $id }}" {{ in_array($id, old('skills', [])) ? 'selected' : '' }}>{{ $skill }}</option>
+                        @endforeach
+                    </select>
+                    @if($errors->has('skills'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('skills') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.cawader.fields.skill_helper') }}</span>
                 </div>
                 <div class="form-group col-md-3">
                     <label class="required" for="city_id">{{ trans('cruds.cawader.fields.city') }}</label>
@@ -138,6 +156,16 @@
                     @endif
                     <span class="help-block">{{ trans('cruds.cawader.fields.companies_and_institution_helper') }}</span>
                 </div>
+                <div class="form-group col-md-3">
+                    <label for="experience_years">{{ trans('cruds.cawader.fields.experience_years') }}</label>
+                    <input class="form-control {{ $errors->has('experience_years') ? 'is-invalid' : '' }}" type="number" name="experience_years" id="experience_years" value="{{ old('experience_years', '') }}" step="1">
+                    @if($errors->has('experience_years'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('experience_years') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.cawader.fields.experience_years_helper') }}</span>
+                </div>
                 <div class="form-group col-md-6">
                     <label class="required" for="specializations">{{ trans('cruds.cawader.fields.specialization') }}</label>
                     <div style="padding-bottom: 4px">
@@ -155,6 +183,21 @@
                         </div>
                     @endif
                     <span class="help-block">{{ trans('cruds.cawader.fields.specialization_helper') }}</span>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>{{ trans('cruds.cawader.fields.health_status') }}</label>
+                    @foreach(App\Models\User::HAS_health_status_RADIO as $key => $label)
+                        <div class="form-check {{ $errors->has('has_skills') ? 'is-invalid' : '' }}">
+                            <input class="form-check-input" type="radio" id="health_status{{ $key }}" name="health_status" value="{{ $key }}" {{ old('health_status', '0') === (string) $key ? 'checked' : '' }} >
+                            <label class="form-check-label" for="health_status{{ $key }}">{{ trans('global.'.$label)}}</label>
+                        </div>
+                    @endforeach
+                    @if($errors->has('health_status'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('health_status') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.cawader.fields.health_status_helper') }}</span>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="desceiption">{{ trans('cruds.cawader.fields.desceiption') }}</label>
@@ -246,4 +289,17 @@
             }
         }
     </script>
+    <script>
+   $('input:radio[name="has_skills"]').change(
+    function(){
+        if ($(this).is(':checked') && $(this).val() == '1') {
+          var x = document.getElementById("skillDIV");
+            x.style.display = "block";
+        }
+        else{
+        var x = document.getElementById("skillDIV");
+            x.style.display = "none";
+        }
+    });
+        </script>
 @endsection

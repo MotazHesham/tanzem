@@ -10,11 +10,14 @@ use App\Models\Visitor;
 use Validator;
 use Auth;
 use App\Http\Resources\V1\User\VisitorFamilyResource;
+use App\Traits\send_mail_trait;
+
 
 class VisitorsFamiliesApiController extends Controller
 {
 
     use api_return;
+    use send_mail_trait;
 
     public function index(){
         $visitor = Visitor::where('user_id',Auth::id())->first();
@@ -30,6 +33,7 @@ class VisitorsFamiliesApiController extends Controller
             'phone' => 'required|string',
             'identity' => 'required|unique:visitors_families,identity',
             'gender' => 'in:male,female',
+            'email'=>'required|unique:visitors_families,'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -47,9 +51,10 @@ class VisitorsFamiliesApiController extends Controller
             'relation' => $request->relation,
             'phone' => $request->phone,
             'identity' => $request->identity,
+            'email'=>$request->email,
         ]);
 
-
+        $this->custom_mail($request->email,"thanthim");
         return $this->returnSuccessMessage(trans('global.flash.success'));
     }
 

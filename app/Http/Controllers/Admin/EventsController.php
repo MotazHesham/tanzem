@@ -17,6 +17,7 @@ use App\Models\Gate as EventGate;
 use App\Models\GovernmentalEntity;
 use App\Models\Specialization;
 use App\Models\Visitor;
+use App\Events\CaderRequest;
 use Gate;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\Models\Media;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
 use App\Traits\push_notification;
 use Alert;
+use Carbon\Carbon;
 
 class EventsController extends Controller
 {
@@ -184,8 +186,10 @@ class EventsController extends Controller
         return view('admin.events.index');
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $specialization_id = null;
+
         abort_if(Gate::denies('event_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
@@ -211,28 +215,48 @@ class EventsController extends Controller
         $event = Event::create($request->all());
         $event->available_gates()->sync($request->input('available_gates', []));
         $event->specializations()->sync($request->input('specializations', [])); 
-        $event->cawaders()->sync($data['cawaders']);
         if ($request->input('photo', false)) {
             $event->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+        }
+
+        foreach ($request->input('photos', []) as $file) {
+            $event->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photos');
+        }
+
+        foreach ($request->input('videos', []) as $file) {
+            $event->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('videos');
         }
 
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $event->id]);
         }
 
-        Alert::success('تم بنجاح', 'تم إضافة الفعالية بنجاح ');
-        return redirect()->route('admin.events.index');
+        Alert::success('تم بنجاح', '  برجاء اختيار كودار للفعاليه ');
+        return redirect()->route('admin.events.choose_cawder',$event->id);
     }
 
-    public function edit(Event $event)
+    public function edit(Event $event,Request $request)
     {
         abort_if(Gate::denies('event_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        global $from; 
+
+        global $to; 
+
+        global $id;
+
+        $specialization_id = null;
+        
+        $skill_id = null;
+
+        $id=$event->id;
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $companies = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $available_gates = EventGate::pluck('gate', 'id');
+
 
         $specializations = Specialization::pluck('name_ar', 'id'); 
 
@@ -241,8 +265,34 @@ class EventsController extends Controller
         $governments = GovernmentalEntity::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $event->load('city', 'company', 'specializations', 'cawaders', 'reviews', 'client', 'government', 'available_gates');
+     
+        $from=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->start_date)->format('d-m-Y')); 
+        $to=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->end_date)->format('d-m-Y')); 
 
-        $cawaders = Cawader::with('user')->where('companies_and_institution_id',null)->get()->map(function($cawader) use ($event) {
+        $cawaders =Cawader::with('user')->where('companies_and_institution_id',null)->whereDoesntHave('events',function ($query) {
+            $query->whereDate('start_date', '<=', $GLOBALS['from'])
+            ->whereDate('end_date', '>=', $GLOBALS['to'])
+            ->orwhere('start_date',$GLOBALS['from'])->orwhere('end_date',$GLOBALS['to']);
+            
+           
+        })->OrwhereHas('events',function ($query) {
+            $query->where('id', $GLOBALS['id']);
+        });
+        if($request->has('specialization_id') && $request->specialization_id != null){
+            global $specialization_id;
+            $specialization_id = $request->specialization_id;
+            $cawaders = $cawaders->whereHas('specializations',function ($query) {
+                $query->where('id', 'like', $GLOBALS['specialization_id']);
+            });
+        }
+        if($request->has('skill_id') && $request->skill_id != null){
+            global $skill_id;
+            $skill_id = $request->skill_id;
+            $cawaders = $cawaders->whereHas('skills',function ($query) {
+                $query->where('id', 'like', $GLOBALS['skill_id']);
+            });
+        }
+       $cawaders =$cawaders->get()->map(function($cawader) use ($event) {
             $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
             $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
             $cawader->extra_hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.extra_hours') ?? null;
@@ -270,6 +320,52 @@ class EventsController extends Controller
         } elseif ($event->photo) {
             $event->photo->delete();
         }
+        if (count($event->photos) > 0) {
+            foreach ($event->photos as $media) {
+                if (!in_array($media->file_name, $request->input('photos', []))) {
+                    $media->delete();
+                }
+            }
+        }
+        $media = $event->photos->pluck('file_name')->toArray();
+        foreach ($request->input('photos', []) as $file) {
+            if (count($media) === 0 || !in_array($file, $media)) {
+                $event->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photos');
+            }
+        }
+
+        if (count($event->videos) > 0) {
+            foreach ($event->videos as $media) {
+                if (!in_array($media->file_name, $request->input('videos', []))) {
+                    $media->delete();
+                }
+            }
+        }
+        $media = $event->videos->pluck('file_name')->toArray();
+        foreach ($request->input('videos', []) as $file) {
+            if (count($media) === 0 || !in_array($file, $media)) {
+                $event->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('videos');
+            }
+        }
+          /////
+          foreach( $event->cawaders as $cawader_event){
+        
+            $title = 'تم اضافتك في فعاليه جديده ';
+            $body = 'عزيزي'.' '.$cawader_event->user->name.' '.'تطلبك شركة فعاليات للإنضمام معها في احدى فعالياتها في مدينة '.$event->city->name_ar ;
+
+            $data = [
+                'user_id' =>$cawader_event->user_id, 
+                'name' => $cawader_event->user->name,
+                'event_id' =>$event->id,
+            ];
+            event(new CaderRequest($data));
+
+        $this->send_notification($title,$body , '' ,'', 'cader_request' , $cawader_event->user_id,false,$data);
+
+     
+        
+    }
+    ////
 
         Alert::success('تم بنجاح', 'تم تعديل بيانات الفعالية بنجاح ');
         return redirect()->route('admin.events.index');
@@ -312,4 +408,78 @@ class EventsController extends Controller
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
     }
+
+    public function choose_cawder(Request $request,$event_id){
+
+        global $from;
+         global $to;
+         $specialization_id = null;
+         $skill_id = null;
+  //check if any cader found in event within that date
+        $event=Event::findOrfail($event_id);
+
+        $from=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->start_date)->format('d-m-Y')); 
+        $to=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->end_date)->format('d-m-Y')); 
+
+        $cawaders_full_time = Cawader::with('user')->where('companies_and_institution_id',null)->whereDoesntHave('events',function ($query) {
+            $query->whereDate('start_date', '<=', $GLOBALS['from'])
+            ->whereDate('end_date', '>=', $GLOBALS['to'])
+            ->orwhere('start_date',$GLOBALS['from'])->orwhere('end_date',$GLOBALS['to']);
+           
+        }); 
+
+        if($request->has('specialization_id') && $request->specialization_id != null){
+            global $specialization_id;
+            $specialization_id = $request->specialization_id;
+            $cawaders_full_time = $cawaders_full_time->whereHas('specializations',function ($query) {
+                $query->where('id', 'like', $GLOBALS['specialization_id']);
+            });
+        }
+        if($request->has('skill_id') && $request->skill_id != null){
+            global $skill_id;
+            $skill_id = $request->skill_id;
+            $cawaders_full_time = $cawaders_full_time->whereHas('skills',function ($query) {
+                $query->where('id', 'like', $GLOBALS['skill_id']);
+            });
+        }
+
+          $cawaders_full_time=$cawaders_full_time->get();   
+       /* $cawaders_part_time = Cawader::with('user','events')->where('companies_and_institution_id',null)->whereHas('events',function ($query) {
+            $query->whereBetween('start_date',[$GLOBALS['from'],$GLOBALS['to']])->orwhereBetween('end_date',[$GLOBALS['from'],$GLOBALS['to']]);
+        
+        })->get(); */
+        $event_id=$event->id;
+     return view('admin.events.partials.caders_new',compact('cawaders_full_time','event_id'));
+
+
+}
+
+     public function save_cawder(Request $request){
+
+        $data = $request;
+        $event=Event::findOrfail($request->event_id);
+        $event->cawaders()->sync($data['cawaders']);
+       
+        /////
+        foreach( $event->cawaders as $cawader_event){
+        
+            $title = 'تم اضافتك في فعاليه جديده ';
+            $body = 'عزيزي'.' '.$cawader_event->user->name. 'تطلبك شركة فعاليات للإنضمام معها في احدى فعالياتها في مدينة  '.$event->city->name_ar ;
+
+
+                $data = [
+                    'user_id' =>$cawader_event->user_id, 
+                    'name' => $cawader_event->user->name,
+                    'event_id' =>$event->id,
+                ];
+                event(new CaderRequest($data));
+
+            $this->send_notification($title,$body , '' ,'', 'cader_request' , $cawader_event->user_id,true,$data) ;
+            
+        }
+
+        Alert::success('تم بنجاح', 'تم إضافة الكوادر للفعالية بنجاح ');
+        return redirect()->route('admin.events.index');
+
+     }
 }

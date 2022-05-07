@@ -20,6 +20,7 @@ class StoreCompaniesAndInstitutionRequest extends FormRequest
             'commerical_num' => [
                 'string',
                 'required',
+                'unique:companies_and_institutions',
             ],
             'commerical_expiry' => [
                 'required',

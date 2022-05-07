@@ -54,6 +54,9 @@
                     </div>
                     <div class="row">
                         @foreach($events as $event)
+                         @php
+                          $ratings=$event->reviews()->avg('rate');
+                        @endphp
                             <div class="col-lg-4 col-md-6 col-sm-6 m-b30">
                                 <div class="listing-bx overlap">
                                     <div class="listing-media">
@@ -63,11 +66,11 @@
                                     </div>
                                     <div class="listing-info">
                                         <ul class="featured-star">
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
-                                            <li><i class="fa fa-star"></i></li>
+                                              @if($ratings!=0)
+                                            @for($i=0;$i<=round($ratings);$i++)
+                                              <li><i class="fa fa-star"></i></li>
+                                            @endfor
+                                            @endif
                                         </ul>
                                         <h3 class="title">
                                             <a href="{{ route('frontend.event',$event->id) }}">{{ $event->title ?? '' }}</a>

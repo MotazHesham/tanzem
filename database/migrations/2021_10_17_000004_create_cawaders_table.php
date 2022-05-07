@@ -19,6 +19,7 @@ class CreateCawadersTable extends Migration
             $table->double('latitude')->nullable();
             $table->string('has_skills')->default(0);
             $table->tinyInteger('out_of_zone')->default(0);
+            $table->integer('experience_years')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

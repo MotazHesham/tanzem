@@ -25,6 +25,21 @@
         <script src="js/html5shiv.min.js"></script>
         <script src="js/respond.min.js"></script>
     <![endif]-->
+    
+    
+    <!-- FONT AWSOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/fontawesome.min.css" integrity="sha512-xX2rYBFJSj86W54Fyv1de80DWBq7zYLn2z0I9bIhQG+rxIF6XVJUpdGnsNHWRa6AvP89vtFupEPDP8eZAtu9qA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.css" integrity="sha512-1hsteeq9xTM5CX6NsXiJu3Y/g+tj+IIwtZMtTisemEv3hx+S9ngaW4nryrNcPM4xGzINcKbwUJtojslX2KG+DQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+     
+      <!-- FONT AWSOME -->
+    
+    <!-- Owl Carousel -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+  
+    <!-- Owl Carousel End-->
+  
 
     <!-- STYLESHEETS -->
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/plugins.css') }}" />
@@ -69,12 +84,20 @@
                         <!-- extra nav -->
                         <div class="extra-nav">
                             <div class="extra-cell">
-                                @auth 
+                                @auth
+                                @if(Auth::user()->user_type=='staff'||Auth::user()->user_type=='companiesAndInstitution')
                                     <a href="{{ route('login') }}" class="site-button radius-xl m-l10"><i
                                         class="ti-import m-r5 rotate90" style="font-size: 18px;"></i>لوحة التحكم</a>
+                                @else
+                                <a href="#"  onclick="event.preventDefault(); document.getElementById('logoutform').submit();" class="site-button radius-xl m-l10"><i
+                                        class="ti-import m-r5 rotate90" style="font-size: 18px;"></i>تسجيل الخروج </a>
+                                <form id="logoutform" action="{{ route('logout') }}" method="POST" style="display: none;">
+                {{ csrf_field() }}
+            </form>
+                                @endif
                                 @else 
                                     <a href="{{ route('login') }}" class="site-button radius-xl m-l10" style="font-size: 18px;"><i
-                                            class="ti-import m-r5 rotate90"></i> تسجيل الدخول</a>
+                                            class="ti-import m-r5 rotate90"></i> الدخول للمنصة</a>
                                 @endauth
                             </div>
                         </div>
@@ -94,7 +117,11 @@
             <!-- main header END -->
         </header>
         <!-- header END -->
-
+        <div class="fixed-whatsapp">
+           <a href="https://wa.me/{{$setting->phone_1}}" target="_blank">
+             <i class="fa-brands fa-whatsapp"></i>
+            </a> 
+        </div>
         @yield('content')
 
         <!-- Footer -->
@@ -124,7 +151,7 @@
                                     </form>
                                 </div>
                                 <ul class="list-inline m-a0">
-                                    <li>
+                                  <!--  <li>
                                         <a href="{{ $setting->facebook ?? ''}}" class="site-button facebook circle"><i
                                                 class="fa fa-facebook"></i></a>
                                     </li>
@@ -135,7 +162,7 @@
                                     <li>
                                         <a href="{{ $setting->linkedin ?? ''}}" class="site-button linkedin circle"><i
                                                 class="fa fa-linkedin"></i></a>
-                                    </li>
+                                    </li>-->
                                     <li>
                                         <a href="{{ $setting->instagram ?? ''}}" class="site-button instagram circle"><i
                                                 class="fa fa-instagram"></i></a>
@@ -160,17 +187,21 @@
                         <div class="col-xl-3 col-lg-3 col-md-5 col-sm-12 col-12">
                             <div class="widget widget_getintuch">
                                 <h5 class="m-b30 text-white">تواصل معنا</h5>
-                                <ul>
+                                 <ul>
                                     <li>
                                         <i class="ti-location-pin"></i><strong>العنوان</strong>
                                         {{ $setting->address ?? '' }}
                                     </li>
-                                    <li>
+                                    <li><a href="tel:{{ $setting->phone_1}} ">
                                         <i class="ti-mobile"></i><strong>التليفون</strong>{{ $setting->phone_1 ?? '' }} (24/7
                                         Support)
+                                    </a>
                                     </li>
-                                    <li>
-                                        <i class="ti-email"></i><strong>اللايميل</strong>{{ $setting->email_1 ?? '' }}
+                                    <li><a href="mailto:{{ $setting->email_1}}">
+                                        <i class="ti-email"></i><strong>
+                                            الايميل
+                                        </strong>{{ $setting->email_1 ?? '' }}
+                                    </a>
                                     </li>
                                 </ul>
                             </div>
@@ -182,10 +213,10 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-12 text-center">
-                            <span class="fbottom-like">© 2022 جميع الحقوق محفوظة
+                            <span class="fbottom-like">© 2022 جميع الحقوق محفوظة لشركة تمكين الوطنية 
                                 <a class="like-btn" href="javascript:void(0)"><i class="fa fa-heart"></i></a>
-                                تصميم وبرمجة
-                                <a href="https://alliance-sa.com/">تحالف الرؤى</a> 
+                                تصميم وتنفيذ
+                                <a href="https://alliance-sa.com/">شركة تحالف الرؤى</a> 
                             </span>
                         </div>
                     </div>
@@ -236,6 +267,90 @@
     <!-- SweetAlert2 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.2.0/sweetalert2.all.min.js"></script>
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script>
+        $('.home-slider').owlCarousel({
+            center: true,
+            loop:true,
+            margin:0,
+            animateOut: 'fadeOut',
+            autoplay:true,
+            autoplayTimeout:3000,
+            nav:true,
+            dots:false,
+            navText:["<div class='nav-btn prev-slide'></div>","<div class='nav-btn next-slide'></div>"],
+            rtl:true,
+            responsive:{
+                0:{
+                    items:1
+                },
+                600:{
+                    items:1
+                },
+                1120:{
+                    items:1
+                }
+            }
+        })
+        </script>
+        
+         <script>
+        $('.events-slider').owlCarousel({
+            center: true,
+            loop:true,
+            margin:20,
+            autoplay:true,
+            autoplayTimeout:3000,
+            nav:true,
+            navText:["<div class='nav-btn prev-slide'></div>","<div class='nav-btn next-slide'></div>"],
+            dots:true,
+            rtl:true,
+            responsive:{
+                0:{
+                    items:1
+                },
+                600:{
+                    items:2
+                },
+                1120:{
+                    items:4
+                }
+            }
+        })
+        </script>
+
+
+         
+         <script>
+        $('.vid-slider').owlCarousel({
+            center: true,
+            loop:true,
+            margin:20,
+            autoplay:true,
+            autoplayTimeout:3000,
+            nav:true,
+            navText:["<div class='nav-btn prev-slide'></div>","<div class='nav-btn next-slide'></div>"],
+            autoplayHoverPause:true,
+            dots:true,
+            rtl:true,
+            responsive:{
+                0:{
+                    items:1
+                },
+                600:{
+                    items:2
+                },
+                1120:{
+                    items:4
+                }
+            }
+        })
+        </script>
+    <!-- Owl Carousel -->
+
 
     <script>
         function showFrontendAlert(type, title, message){

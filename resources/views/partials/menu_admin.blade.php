@@ -278,9 +278,30 @@
                             </a>
                         </li>
                     @endcan
+                    @can('skill_access')
+                    <li class="c-sidebar-nav-item">
+                        <a href="{{ route("admin.skills.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/skills") || request()->is("admin/skills/*") ? "c-active" : "" }}">
+                            <i class="fa-fw fas fa-award c-sidebar-nav-icon">
+
+                            </i>
+                            {{ trans('cruds.skill.title') }}
+                        </a>
+                    </li>
+                @endcan
+         
                 </ul>
             </li>
         @endcan
+        @can('slider_access')
+        <li class="c-sidebar-nav-item">
+            <a href="{{ route("admin.sliders.index") }}" class="c-sidebar-nav-link {{ request()->is("admin/sliders") || request()->is("admin/sliders/*") ? "c-active" : "" }}">
+                <i class="fa-fw far fa-images c-sidebar-nav-icon">
+
+                </i>
+                {{ trans('cruds.slider.title') }}
+            </a>
+        </li>
+    @endcan
         {{-- @if(file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php')))
             @can('profile_password_edit')
                 <li class="c-sidebar-nav-item">

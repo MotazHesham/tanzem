@@ -23,6 +23,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('events/partials/cader_break', 'EventsController@partials_cader_break')->name('events.partials.cader_break'); 
     Route::get('events/partials/cader_break_status/{id}/{status}', 'EventsController@partials_cader_break_status')->name('events.partials.cader_break_status'); 
     Route::get('events/status/{id}/{status}', 'EventsController@changeStatus')->name('events.status');
+    Route::get('event/{id}/cawders', 'EventsController@choose_cawder')->name('events.choose_cawder');
+    Route::post('event/cawders/add', 'EventsController@save_cawder')->name('events.save_cawder');
 }); 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth','staff']], function () {
@@ -137,7 +139,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Cawader Specialization
     Route::delete('cawader-specializations/destroy', 'CawaderSpecializationController@massDestroy')->name('cawader-specializations.massDestroy');
     Route::resource('cawader-specializations', 'CawaderSpecializationController');
+   // Slider
+   Route::delete('sliders/destroy', 'SliderController@massDestroy')->name('sliders.massDestroy');
+   Route::post('sliders/media', 'SliderController@storeMedia')->name('sliders.storeMedia');
+   Route::post('sliders/ckmedia', 'SliderController@storeCKEditorImages')->name('sliders.storeCKEditorImages');
+   Route::resource('sliders', 'SliderController');
 
+   // Skills
+   Route::delete('skills/destroy', 'SkillsController@massDestroy')->name('skills.massDestroy');
+   Route::resource('skills', 'SkillsController');
+
+   // Rate
+   Route::delete('rates/destroy', 'RateController@massDestroy')->name('rates.massDestroy');
+   Route::resource('rates', 'RateController');
 
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {

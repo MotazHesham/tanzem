@@ -283,7 +283,7 @@
                 </div> 
                 <div class="form-group col-md-3">
                     <label for="terms_cawader">{{ trans('cruds.setting.fields.terms_cawader') }}</label>
-                    <textarea class="form-control {{ $errors->has('terms_cawader') ? 'is-invalid' : '' }}" name="terms_cawader" id="terms_cawader">{{ old('terms_cawader', $setting->terms_cawader) }}</textarea>
+                    <textarea class="form-control {{ $errors->has('terms_cawader') ? 'is-invalid' : '' }}" name="terms_cawader_ar" id="terms_cawader">{{ old('terms_cawader', $setting->terms_cawader_ar) }}</textarea>
                     @if($errors->has('terms_cawader'))
                         <div class="invalid-feedback">
                             {{ $errors->first('terms_cawader') }}
@@ -293,7 +293,7 @@
                 </div> 
                 <div class="form-group col-md-3">
                     <label for="terms_company">{{ trans('cruds.setting.fields.terms_company') }}</label>
-                    <textarea class="form-control {{ $errors->has('terms_company') ? 'is-invalid' : '' }}" name="terms_company" id="terms_company">{{ old('terms_company', $setting->terms_company) }}</textarea>
+                    <textarea class="form-control {{ $errors->has('terms_company') ? 'is-invalid' : '' }}" name="terms_company_ar" id="terms_company">{{ old('terms_company', $setting->terms_company_ar) }}</textarea>
                     @if($errors->has('terms_company'))
                         <div class="invalid-feedback">
                             {{ $errors->first('terms_company') }}
@@ -303,7 +303,47 @@
                 </div> 
                 <div class="form-group col-md-3">
                     <label for="terms_visitor">{{ trans('cruds.setting.fields.terms_visitor') }}</label>
-                    <textarea class="form-control {{ $errors->has('terms_visitor') ? 'is-invalid' : '' }}" name="terms_visitor" id="terms_visitor">{{ old('terms_visitor', $setting->terms_visitor) }}</textarea>
+                    <textarea class="form-control {{ $errors->has('terms_visitor') ? 'is-invalid' : '' }}" name="terms_visitor_ar" id="terms_visitor">{{ old('terms_visitor', $setting->terms_visitor_ar) }}</textarea>
+                    @if($errors->has('terms_visitor'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('terms_visitor') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.setting.fields.terms_visitor_helper') }}</span>
+                </div> 
+                <div class="form-group col-md-3">
+                    <label for="vision">{{ trans('cruds.setting.fields.vision') }}</label>
+                    <textarea class="form-control {{ $errors->has('vision') ? 'is-invalid' : '' }}" name="vision" id="vision">{{ old('vision', $setting->vision) }}</textarea>
+                    @if($errors->has('vision'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('vision') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.setting.fields.terms_visitor_helper') }}</span>
+                </div> 
+                <div class="form-group col-md-3">
+                    <label for="terms_cawader">{{ trans('cruds.setting.fields.terms_cawader') }}</label>
+                    <textarea class="form-control {{ $errors->has('terms_cawader') ? 'is-invalid' : '' }}" name="terms_cawader_en" id="terms_cawader">{{ old('terms_cawader', $setting->terms_cawader_en) }}</textarea>
+                    @if($errors->has('terms_cawader'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('terms_cawader') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.setting.fields.terms_cawader_helper') }}</span>
+                </div> 
+                <div class="form-group col-md-3">
+                    <label for="terms_company">{{ trans('cruds.setting.fields.terms_company') }}</label>
+                    <textarea class="form-control {{ $errors->has('terms_company') ? 'is-invalid' : '' }}" name="terms_company_en" id="terms_company">{{ old('terms_company', $setting->terms_company_en) }}</textarea>
+                    @if($errors->has('terms_company'))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('terms_company') }}
+                        </div>
+                    @endif
+                    <span class="help-block">{{ trans('cruds.setting.fields.terms_company_helper') }}</span>
+                </div> 
+                <div class="form-group col-md-3">
+                    <label for="terms_visitor">{{ trans('cruds.setting.fields.terms_visitor') }}</label>
+                    <textarea class="form-control {{ $errors->has('terms_visitor') ? 'is-invalid' : '' }}" name="terms_visitor_en" id="terms_visitor">{{ old('terms_visitor', $setting->terms_visitor_en) }}</textarea>
                     @if($errors->has('terms_visitor'))
                         <div class="invalid-feedback">
                             {{ $errors->first('terms_visitor') }}

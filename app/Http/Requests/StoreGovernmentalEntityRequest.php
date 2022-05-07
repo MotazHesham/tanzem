@@ -32,6 +32,7 @@ class StoreGovernmentalEntityRequest extends FormRequest
                 'required',
                 'size:10',
                 'regex:/(05)[0-9]{8}/', 
+                'unique:users',
             ], 
             'landline_phone' => [
                 'string',

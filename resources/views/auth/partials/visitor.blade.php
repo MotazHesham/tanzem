@@ -72,7 +72,7 @@
     <div class="form-group">
         <div>
             <input type="checkbox" id="terms_cader" name="terms_cader" value="terms_cader" required>
-            <label for="terms_cader" style="display: inline">أوافق علي <a href=""  data-toggle="modal" data-target="#exampleModal">الشروط والأحكام</a></label> 
+            <label for="terms_cader" style="display: inline">أوافق علي <a href="{{ route('frontend.terms',2) }}"  target="_blank">الشروط والأحكام</a></label> 
         </div> 
         <br>
         <button class="site-button button-md btn-block" type="submit">تسجيل</button>
@@ -85,25 +85,3 @@
     </div>
 </form>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background:#512d6d">
-                <h5 class="modal-title" id="exampleModalLabel">الشروط والأحكام للزوار</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                @php
-                    $setting = \App\Models\Setting::first();
-                @endphp
-                {{ $setting->terms_visitor ?? '' }}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
-            </div>
-        </div>
-    </div>
-</div>

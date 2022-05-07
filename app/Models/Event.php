@@ -28,6 +28,8 @@ class Event extends Model implements HasMedia
 
     protected $appends = [
         'photo',
+        'photos',
+        'videos',
     ];
 
     protected $dates = [
@@ -177,6 +179,23 @@ class Event extends Model implements HasMedia
     public function government()
     {
         return $this->belongsTo(GovernmentalEntity::class, 'government_id');
+    }
+
+    public function getPhotosAttribute()
+    {
+        $files = $this->getMedia('photos');
+        $files->each(function ($item) {
+            $item->url = $item->getUrl();
+            $item->thumbnail = $item->getUrl('thumb');
+            $item->preview = $item->getUrl('preview');
+        });
+
+        return $files;
+    }
+
+    public function getVideosAttribute()
+    {
+        return $this->getMedia('videos');
     }
 
     protected function serializeDate(DateTimeInterface $date)

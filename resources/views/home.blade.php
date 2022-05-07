@@ -1,5 +1,13 @@
 @extends('layouts.admin')
 @section('content')
+<head>
+    <style>
+        .text-value-lg, .text-value-lg a {
+                color: #fff;
+                font-size: 1.3125rem;
+            }
+    </style>
+</head>
 <div class="content">
     <div class="row">
         <div class="col-lg-12">
@@ -22,7 +30,7 @@
                                     <i style="font-size: 91px;color:#082a482e" class="fa-fw fas fa-camera-retro c-sidebar-nav-icons"></i>
                                 </div>
                                 <div class="card-body pb-0">
-                                    <div class="text-value-lg">{{ $settings1['chart_title'] }}</div>
+                                    <a href="{{ route("admin.events.index") }}"><div class="text-value-lg">{{ $settings1['chart_title'] }}</div></a>
                                     <div style="font-size: 20px">{{ number_format($settings1['total_number']) }} </div>
                                     <br>
                                 </div>
@@ -34,7 +42,7 @@
                                     <i style="font-size: 91px;color:#082a482e" class="fa-fw fas fa-user c-sidebar-nav-icons"></i>
                                 </div>
                                 <div class="card-body pb-0">
-                                    <div class="text-value-lg">{{ $settings2['chart_title'] }}</div>
+                                    <div class="text-value-lg"><a href="{{ route("admin.cawaders.index") }}">{{ $settings2['chart_title'] }}</a></div>
                                     <div style="font-size: 20px">{{ number_format($settings2['total_number']) }} </div>
                                     <br>
                                 </div>
@@ -46,7 +54,7 @@
                                     <i style="font-size: 91px;color:#082a482e" class="fa-fw fas fa-user-friends c-sidebar-nav-icons"></i>
                                 </div>
                                 <div class="card-body pb-0">
-                                    <div class="text-value-lg">{{ $settings3['chart_title'] }}</div>
+                                    <div class="text-value-lg"><a href="{{ route("admin.visitors.index") }}" >{{ $settings3['chart_title'] }}</a></div>
                                     <div style="font-size: 20px">{{ number_format($settings3['total_number']) }} </div>
                                     <br>
                                 </div>
@@ -58,7 +66,7 @@
                                     <i style="font-size: 91px;color:#082a482e" class="fa-fw fas fa-newspaper c-sidebar-nav-icons"></i>
                                 </div>
                                 <div class="card-body pb-0">
-                                    <div class="text-value-lg">{{ $settings4['chart_title'] }}</div>
+                                    <div class="text-value-lg">  <a href="{{ route("admin.news.index") }}">{{ $settings4['chart_title'] }}</a></div>
                                     <div style="font-size: 20px">{{ number_format($settings4['total_number']) }} </div>
                                     <br>
                                 </div>
@@ -96,10 +104,10 @@
                                                         {{ $entry->{$key} }}
                                                     @elseif(is_iterable($entry->{$key}))
                                                         @foreach($entry->{$key} as $subEentry)
-                                                            <span class="label label-info">{{ $subEentry->{$value} }}</span>
+                                                             <span class="label label-info">{{ $subEentry->{$value} }}</span>
                                                         @endforeach
                                                     @else
-                                                        {{ data_get($entry, $key . '.' . $value) }}
+                                                         <a href="{{ route("admin.governmental-entities.show",$entry->id) }}" >  {{ data_get($entry, $key . '.' . $value) }}</a>
                                                     @endif
                                                 </td>
                                             @endforeach
@@ -138,7 +146,7 @@
                                                             <span class="label label-info">{{ $subEentry->{$value} }}</span>
                                                         @endforeach
                                                     @else
-                                                        {{ data_get($entry, $key . '.' . $value) }}
+                                                        <a href="{{ route("admin.clients.show",$entry->id) }}"> {{ data_get($entry, $key . '.' . $value) }}</a>
                                                     @endif
                                                 </td>
                                             @endforeach
@@ -177,7 +185,7 @@
                                                             <span class="label label-info">{{ $subEentry->{$value} }}</span>
                                                         @endforeach
                                                     @else
-                                                        {{ data_get($entry, $key . '.' . $value) }}
+                                                      <a href="{{ route("admin.companies-and-institutions.show",$entry->id) }}"> {{ data_get($entry, $key . '.' . $value) }}</a>
                                                     @endif
                                                 </td>
                                             @endforeach

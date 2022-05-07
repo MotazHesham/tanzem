@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use App\Traits\api_return;
 use App\Models\Event; 
 use App\Models\Visitor; 
+use App\Models\EventReviews;
 use Validator;
 use Auth;
 use App\Http\Resources\V1\User\EventsResource;
+use App\Http\Resources\V1\Cader\RatingResource;
 
 class EventsApiController extends Controller
 {
@@ -83,5 +85,47 @@ class EventsApiController extends Controller
             return $this->returnError('401',trans('global.flash.api.not_join_before'));
         } 
     } 
-    
-}
+    public function rate(Request $request){
+
+        $rules = [
+            'event_id' => 'required|integer', 
+            'rate' => 'required|integer',  
+            'comment'=>'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return $this->returnError('401', $validator->errors());
+        }
+        
+     $visitor = Visitor::where('user_id',Auth::id())->first();
+     
+     
+          
+          if(!$visitor){
+             
+            return $this->returnError('500',trans('global.flash.api.not_rate'));
+          }
+  
+          $review=EventReviews::create([
+                 'event_id'=>$request->event_id,
+                 'visitor_id'=>$visitor->id,
+                 'rate'=>$request->rate,
+                 'review'=>$request->comment,
+          ]);
+             return $this->returnSuccessMessage(trans('global.flash.api.rate'));
+      }
+      public function getRatings ($event_id) {
+
+         $reviews=EventReviews::where('event_id',$event_id)->Orderby('created_at','DESC')->paginate(10);
+         
+         $new=RatingResource::collection($reviews);
+
+         return $this->returnPaginationData($new,$reviews,"success");
+         
+
+      }
+  }
+  
+

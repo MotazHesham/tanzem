@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Yajra\DataTables\Facades\DataTables;
 use Alert;
 use Auth;
+use Carbon\Carbon;
 
 class EventsController extends Controller
 {
@@ -137,13 +138,13 @@ class EventsController extends Controller
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
-        $cawaders = Cawader::with('user')->where('companies_and_institution_id',null)->get(); 
+
 
         $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $governments = GovernmentalEntity::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('company.events.create', compact('cities', 'company', 'available_gates','specializations','cawaders','clients','governments'));
+        return view('company.events.create', compact('cities', 'company', 'available_gates','specializations','clients','governments'));
     }
 
     public function store(StoreEventRequest $request)
@@ -160,14 +161,18 @@ class EventsController extends Controller
             Media::whereIn('id', $media)->update(['model_id' => $event->id]);
         }
 
-        Alert::success('تم بنجاح', 'تم إضافة الفعالية بنجاح ');
-        return redirect()->route('company.events.index');
+        Alert::success('تم بنجاح', '  برجاء اختيار كودار للفعاليه ');
+        return redirect()->route('company.events.choose_cawder',$event->id);
     }
 
-    public function edit(Event $event)
+    public function edit(Event $event,Request $request)
     { 
 
-        
+        global $from;
+        global $to;
+        global $id;
+
+        $id=$event->id;
         if(Auth::user()->user_type == 'cader'){
             $cawader = Cawader::where('user_id',Auth::id())->first(); 
             $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
@@ -189,15 +194,39 @@ class EventsController extends Controller
         $available_gates = EventGate::pluck('gate', 'id');
 
         $specializations = Specialization::pluck('name_ar', 'id');
+        $from=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->start_date)->format('d-m-Y')); 
+        $to=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->end_date)->format('d-m-Y')); 
 
-        $cawaders = Cawader::with('user')->where('companies_and_institution_id',null)->get()->map(function($cawader) use ($event) {
+        if($request->has('specialization_id') && $request->specialization_id != null){
+            global $specialization_id;
+            $specialization_id = $request->specialization_id;
+            $cawaders = $cawaders->whereHas('specializations',function ($query) {
+                $query->where('id', 'like', $GLOBALS['specialization_id']);
+            });
+        }
+        if($request->has('skill_id') && $request->skill_id != null){
+            global $skill_id;
+            $skill_id = $request->skill_id;
+            $cawaders = $cawaders->whereHas('skills',function ($query) {
+                $query->where('id', 'like', $GLOBALS['skill_id']);
+            });
+        }
+       $cawaders =Cawader::with('user')->where('companies_and_institution_id',null)->whereDoesntHave('events',function ($query) {
+        $query->whereDate('start_date', '<=', $GLOBALS['from'])
+        ->whereDate('end_date', '>=', $GLOBALS['to'])
+        ->orwhere('start_date',$GLOBALS['from'])->orwhere('end_date',$GLOBALS['to']);
+        
+       
+    })->OrwhereHas('events',function ($query) {
+        $query->where('id', $GLOBALS['id']);
+    })->get()->map(function($cawader) use ($event) {
             $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
             $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
             $cawader->extra_hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.extra_hours') ?? null;
             return $cawader;
         });
-        
 
+        
         $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $governments = GovernmentalEntity::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
@@ -291,4 +320,33 @@ class EventsController extends Controller
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
     }
+    
+    public function save_cawder(Request $request){
+
+        $data = $request;
+        $event=Event::findOrfail($request->event_id);
+        $event->cawaders()->sync($data['cawaders']);
+       
+        /////
+        foreach( $event->cawaders as $cawader_event){
+        
+            $title = 'تم اضافتك في فعاليه جديده ';
+            $body = 'عزيزي'.' '.$cawader_event->user->name. 'تطلبك شركة فعاليات للإنضمام معها في احدى فعالياتها في مدينة  '.$event->city->name_ar ;
+
+
+                $data = [
+                    'user_id' =>$cawader_event->user_id, 
+                    'name' => $cawader_event->user->name,
+                    'event_id' =>$event->id,
+                ];
+                event(new CaderRequest($data));
+
+            $this->send_notification($title,$body , '' ,'', 'cader_request' , $cawader_event->user_id,true,$data) ;
+            
+        }
+
+        Alert::success('تم بنجاح', 'تم إضافة الكوادر للفعالية بنجاح ');
+        return redirect()->route('company.events.index');
+
+     }
 }

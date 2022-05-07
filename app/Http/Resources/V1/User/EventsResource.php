@@ -3,6 +3,8 @@
 namespace App\Http\Resources\V1\User;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\V1\Cader\MediaResource;
+use App\Http\Resources\V1\Cader\VideoResource;
 use App\Models\Visitor;
 use Auth;
 
@@ -36,6 +38,9 @@ class EventsResource extends JsonResource
             'gates' => EventGatesResource::collection($this->available_gates),
             'brands' => BrandsResource::collection($this->eventBrands),
             'subscription' => $this->eventsVisitors()->wherePivot('visitor_id',$visitor->id)->first() ? true : false,
+            'photos'          => MediaResource::collection($this->getMedia('photos')),
+            'videos'=> VideoResource::collection($this->getMedia('videos')),
+            'ratings_avg'=>$this->reviews()->avg('rate'),
         ];
     }
 }

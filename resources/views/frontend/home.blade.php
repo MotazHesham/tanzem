@@ -4,11 +4,26 @@
     
 
         <!-- Content -->
-        <div class="page-content bg-white">
+        <div class="page-content home-page bg-white">
+            <!-- New slider section -->
+            <div class="new-home-slider">
+                 <div id="slider-home" class="home-slider owl-carousel owl-theme owl-container">
+
+                          @foreach ($sliders as $slider )
+                                <div class="item">
+                                    <img class="slider-pic" src="{{$slider->photo->getUrl('preview2') }}">
+                                </div>  
+                                @endforeach
+                                
+                    </div> 
+            </div>
+            <!-- New slider section End-->
             <!-- Section Banner -->
-            <div class="dlab-bnr-inr dlab-bnr-inr-md bnr-style1" style=" background-image: url('{{asset('frontend/images/slide1.jpg')}}'); background-size: cover; " id="dezParticles">
+            <!--<div class="dlab-bnr-inr dlab-bnr-inr-md bnr-style1 home-search-sec" style=" background-image: url('{{asset('frontend/images/slide1.jpg')}}'); background-size: cover; " id="dezParticles">-->
+            <div class="dlab-bnr-inr dlab-bnr-inr-md bnr-style1 home-search-sec" style=" background-image: url('{{asset('frontend/images/search-bg.jpeg')}}'); background-size: cover; " id="dezParticles">
+
                 <div class="container">
-                    <div class="dlab-bnr-inr-entry align-m dlab-home">
+                    <div class="dlab-bnr-inr-entry align-m dlab-home" style="padding-top:40px;">
                         <div class="bnr-content">
                             <h2> {{ $setting->home_text_1 ?? '' }} </h2>
                             <p>
@@ -41,10 +56,10 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="navbar scroll-button">
-                            <a href="#page_content" class="site-button button-style1 scroll"><i
-                                    class="la la-long-arrow-down"></i></a>
-                        </div>
+                        <!--<div class="navbar scroll-button">-->
+                        <!--    <a href="#page_content" class="site-button button-style1 scroll"><i-->
+                        <!--            class="la la-long-arrow-down"></i></a>-->
+                        <!--</div>-->
                     </div>
                 </div>
             </div>
@@ -55,6 +70,38 @@
                 <div class="container"></div>
             </div>
             <!-- Search Filter END -->
+            
+            
+             <!-- Our Portfolio -->
+                <div class="section-full content-inner bg-gray app-download-section" style="direction: ltr">
+                    <div class="container">
+                        <div class="row download-section-row">
+                             <div class="col-lg-7 col-md-6">
+                                 <div class="download-app-img-wrap">
+                                     <img src="{{ asset('frontend/images/app-image.png') }}">
+                                 </div>
+                             </div>
+                            <div class="col-lg-5 col-md-6 download-app-right">
+                       <h1 class="download-app">
+                          اكتشف تطبيق تنظيم الجديد
+                           <br>
+                           حمل تطبيقنا الآن
+                       </h1>
+                       <div class="download-btns">
+                           <a class="download-ios-android" href="https://apps.apple.com/eg/app/tanthim/id1614904266">
+                               <img src="{{ asset('frontend/images/logo_appstore.svg') }}">
+                           </a>
+                           <a class="download-ios-android" href="#">
+                               <img src="{{ asset('frontend/images/logo_playstore.svg') }}">
+                           </a>
+                           
+                       </div>
+                       </div>
+                      
+                    </div>
+                    </div>
+                </div>
+                <!-- Our Portfolio END -->
 
             <div class="content-block">
                 <!-- Featured Destinations -->
@@ -69,6 +116,9 @@
                         </div>
                         <div class="row">
                             @foreach($events as $event)
+                            @php
+                             $ratings=$event->reviews()->avg('rate');
+                           @endphp
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="featured-bx m-b30">
                                         <div class="featured-media">
@@ -76,11 +126,11 @@
                                         </div>
                                         <div class="featured-info">
                                             <ul class="featured-star">
-                                                <li><i class="fa fa-star"></i></li>
-                                                <li><i class="fa fa-star"></i></li>
-                                                <li><i class="fa fa-star"></i></li>
-                                                <li><i class="fa fa-star"></i></li>
-                                                <li><i class="fa fa-star"></i></li>
+                                                @if($ratings!=0)
+                                            @for($i=0;$i<=round($ratings);$i++)
+                                              <li><i class="fa fa-star"></i></li>
+                                            @endfor
+                                            @endif
                                             </ul>
                                             <h5 class="title">
                                                 <a href="{{ route('frontend.event',$event->id) }}"> {{ $event->title ?? '' }} </a>
@@ -99,8 +149,8 @@
                 <!-- Featured Destinations End -->
                 
                  <!-- Why Choose Us -->
-                <div class=" section-full g-img-fix most-visited content-inner overlay-primary-dark "
-                    style="background-image: url('{{ asset('frontend/images/bg1.jpg') }}')">
+                <div class=" section-full g-img-fix most-visited content-inner "
+                    style="background-image: url('{{ asset('frontend/images/Group4.png') }}')">
                     <div class="container">
                         <div class="section-head text-white text-center">
                             <h2 class="box-title">مـــن نحن</h2>
@@ -179,7 +229,7 @@
                         <div class=" most-visite owl-carousel owl-btn-center-lr owl-btn-1 primary ">
                             @foreach($news as $raw)
                                 <div class="item">
-                                    <div class="listing-bx featured-star-left m-b30">
+                                    <div class="listing-bx listing-bx-news featured-star-left m-b30" style="aspect-ratio:auto !important;">
                                         <div class="listing-media">
                                             <img src="{{ $raw->photo ? $raw->photo->getUrl('preview2') : '' }}" alt="" />
                                         </div>
@@ -192,7 +242,7 @@
                                             </p>
                                             <ul class="place-info"> 
                                                 <li class="open">
-                                                    <a href="{{ route('frontend.news',$raw->id) }}"> المزيد <i class="fa fa-plus"></i> </a>
+                                                    <a style="color: #25a8f6;" href="{{ route('frontend.news',$raw->id) }}"> المزيد <i class="fa fa-plus"></i> </a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -205,8 +255,8 @@
                 <!-- Our Services -->
 
                 <!-- Why Choose Us -->
-                <div class=" section-full g-img-fix most-visited content-inner overlay-primary-dark "
-                    style="background-image: url('{{ asset('frontend/images/bg1.jpg') }}')">
+                <div class=" section-full g-img-fix most-visited content-inner"
+                    style="background-image: url('{{ asset('frontend/images/Group4.png') }}')">
                     <div class="container">
                         <div class="section-head text-white text-center">
                             <h2 class="box-title">كيف نعمل</h2>

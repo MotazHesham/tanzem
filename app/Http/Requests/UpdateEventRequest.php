@@ -95,6 +95,12 @@ class UpdateEventRequest extends FormRequest
             'cawaders.*.extra_hours' => [ 
                 'required',
             ],
+            'photos' => [
+                'array',
+            ],
+            'videos' => [
+                'array',
+            ],
         ];
     } 
 }

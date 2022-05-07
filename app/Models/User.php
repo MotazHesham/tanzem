@@ -26,6 +26,12 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 
     public $table = 'users';
 
+    public const HAS_health_status_RADIO = [
+        '0' => 'healty',
+        '1' => 'special',
+    ];
+
+
     protected $appends = [
         'photo',
     ];
@@ -55,6 +61,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         'landline_phone',
         'website',
         'user_type',
+        'health_status',
         'created_at',
         'updated_at',
         'deleted_at',

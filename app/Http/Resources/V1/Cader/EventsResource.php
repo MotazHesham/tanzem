@@ -32,6 +32,9 @@ class EventsResource extends JsonResource
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,  
             'photo' => $image,  
+            'photos'          => MediaResource::collection($this->getMedia('photos')),
+            'videos'=> VideoResource::collection($this->getMedia('videos')),
+            'ratings_avg'=>$this->reviews()->avg('rate'),
         ];
     }
 }

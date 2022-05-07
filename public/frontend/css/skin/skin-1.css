@@ -68,7 +68,8 @@
 .search-filter.filter-style3 .bootstrap-select div.dropdown-menu ul li.selected a,
 .site-header.header-style1 .header-nav .nav > li.active:after,
 .tag-new{
-    background-color: #512d6d;
+    /*background-color: #512d6d;*/
+    background-color:#25a8f6 !important;
 }
 /*Hex color :hover */
 .site-button:active,

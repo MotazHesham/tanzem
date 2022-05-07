@@ -9,7 +9,7 @@ trait send_mail_trait
 
     public function sendEmail($mailText, $email, $subject, $fileNameToStore = null)
     { 
-        $fromName = "Tanzem";
+        $fromName = "Tanthim";
         $fromAddress = "mails@tanthim.com";
         $fromPass = "E(U=DKYVu3%L";
         $fromDriver = "smtp";
@@ -45,4 +45,11 @@ trait send_mail_trait
         }
     }
 
+    public function custom_mail($email,$subject)
+    {
+        Mail::send('emails.echo',[], function($message) use ($email, $subject)
+{
+    $message->to($email,$subject )->subject($subject);
+});
+    }
 }

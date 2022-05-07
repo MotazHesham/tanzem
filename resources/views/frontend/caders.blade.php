@@ -23,45 +23,103 @@
                 </div>
             </div>
         </div>
-        <!-- inner page banner END -->
-        <div class="section-full content-inner">
-            <div class="container">
-                <div class="row"> 
-                    @foreach($cawaders as $cader)
-                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-                            <div class="team-one__single team-one__content">
-                                @php
-                                    if($cader->user && $cader->user->photo){
-                                        $cader_image = $cader->user->photo->getUrl('preview2');
-                                    }else{
-                                        $cader_image = '';
-                                    }   
-                                @endphp
-                                <div class="team-one__image">
-                                    <img src="{{ $cader_image }}" alt="" />
-                                </div>
-                                <!-- /.team-one__image -->
-                                <div class="">
-                                    <h2 class="team-one__name">
-                                        <a href="{{ route('frontend.cader',$cader->id)}}">{{ $cader->user->name ?? '' }}</a>
-                                    </h2>
-                                    <!-- /.team-one__name -->
-                                    <p>{{ $cader->specializations()->first()->name_ar ?? '' }}</p>
-                                    <a href="{{ route('frontend.cader',$cader->id)}}">
-                                        <button name="submit" value="Submit" type="submit"
-                                            class="site-button radius-xl">
-                                            المــزيد
-                                        </button></a>
-                                    <!-- /.team-one__text -->
-                                </div>
-                                <!-- /.team-one__content -->
+          <!-- Contact area -->
+        <div class="content-block">
+            <div class="section-full content-inner bg-white">
+                <div class="container">
+                    <div class="listing-filter m-b40">
+                        <div class="d-flex">
+                            <div class="ml-auto">
+                                <form action="" id="search_cader"> 
+                                    <ul class="filter m-b0">
+                                        <li>
+                                            <select name="specialization_id" id="specialization_id">
+                                                <option value="">
+                                                   التخصص
+                                                </option>
+                                                @foreach(\App\Models\CawaderSpecialization::get() as $specialization)
+                                                    <option value="{{ $specialization->id }}" @isset($specialization_id) @if($specialization_id == $specialization->id) selected @endif @endisset>{{ $specialization->name_ar }}</option> 
+                                                @endforeach
+                                                   
+                                              
+                                            </select>
+                                        </li>
+                                        <li>
+                                            <select name="skill_id" id="skill_id">
+                                                <option value="">
+                                                المهارات
+                                                </option>
+                                                
+                                                @foreach(\App\Models\Skill::get() as $skill)
+                                                <option value="{{ $skill->id }}" @isset($skill_id) @if($skill_id == $skill->id) selected @endif @endisset>{{ $skill->name_ar }}</option> 
+                                            @endforeach
+                                            </select>
+                                        </li>
+                                    </ul>
+                                </form>
                             </div>
-                        </div> 
-                    @endforeach
+                        </div>
+                    </div>
+                    <div class="row">
+                        @foreach($cawaders as $cader)
+                            <div class="col-lg-4 col-md-6 col-sm-6 m-b30">
+                                <div class="listing-bx overlap">
+                                    <div class="listing-media">
+                                        <a href="#">
+                                            @php
+                                            if($cader->user && $cader->user->photo){
+                                                $cader_image = $cader->user->photo->getUrl('preview2');
+                                            }else{
+                                                $cader_image = '';
+                                            } 
+                                            $now_date = date('Y-m-d',strtotime('now'));
+                                           $event = $cader->events()->where('status','active')->where('start_date','<=',$now_date)->where('end_date','>=',$now_date)->get()->first(); 
+                       
+                                        @endphp
+                                            <img src="{{$cader_image}}" />
+                                        </a>
+                                    </div>
+                                    <div class="listing-info">
+                                        
+                                        <h3 class="title team-one__name">
+                                            <a href="{{ route('frontend.cader',$cader->id)}}">{{ $cader->user->name ?? '' }}</a>
+                                        </h3>
+                                        <div class="cader-member-info-wrap">
+                                        <p class="experience-years">
+                                            سنوات الخبرة:
+                                            <span>{{$cader->experience_years }} سنوات</span>
+                                        </p>
+                                        <p class="cader-status"> @if($event)
+                                            مشارك الان في فعاليات   
+                                           
+                                            @else 
+                                            متاح الأن
+                                            @endif</p>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        @endforeach
+                    </div>
+                    {{ $cawaders->links() }}
+                    <!-- Pagination start --> 
+                    <!-- Pagination END -->
                 </div>
-                {{ $cawaders->links() }}
             </div>
         </div>
+        <!-- Contact area END -->
     </div>
     <!-- Content END-->
+@endsection
+@section('scripts')
+    <script>
+        $('#specialization_id').on('change',function(){
+            $('#search_cader').submit();
+        });
+        $('#skill_id').on('change',function(){
+            $('#search_cader').submit();
+        });
+    </script>
 @endsection

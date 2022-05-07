@@ -12,9 +12,11 @@ Route::group(['prefix' => 'v1/cader', 'as' => 'api.', 'namespace' => 'Api\V1\Cad
     
     // settings 
     Route::get('specializations','UsersApiController@specializations');
+    Route::get('skills','UsersApiController@skills');
     Route::get('cities','UsersApiController@cities');
     Route::get('degrees','UsersApiController@degrees'); 
     Route::get('breaks_type','UsersApiController@breaks_type');
+    Route::Post('terms','UsersApiController@terms');
 
     Route::group(['middleware' => ['auth:sanctum']],function () {
 

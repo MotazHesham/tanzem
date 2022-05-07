@@ -17,6 +17,8 @@ use Auth;
 use Validator;
 use DateTime;
 use App\Http\Resources\V1\Cader\EventsResource;
+use App\Http\Resources\V1\Cader\MediaResource;
+use App\Http\Resources\V1\Cader\VideoResource;
 
 class EventApiController extends Controller
 { 
@@ -160,6 +162,10 @@ class EventApiController extends Controller
             'actual_attendance' => str_pad(floor(($actual_attendance - $out_of_zone_minutes) / 60), 2, '0', STR_PAD_LEFT) .':'. str_pad( ($actual_attendance - $out_of_zone_minutes) % 60, 2, '0', STR_PAD_LEFT),
             'extra_hours' => str_pad(floor($extra_hours / 60), 2, '0', STR_PAD_LEFT) .':'. str_pad($extra_hours % 60, 2, '0', STR_PAD_LEFT), // str_pad() function for leading 0 to match time 00:00
             'history' => $all_history,
+            'photos'          => MediaResource::collection($event->getMedia('photos')),
+            'videos'=> VideoResource::collection($event->getMedia('videos')),
+            'ratings_avg'=>$event->reviews()->avg('rate'),
+            
         ]; 
 
         return $this->returnData($data);

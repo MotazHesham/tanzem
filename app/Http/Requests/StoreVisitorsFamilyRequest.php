@@ -36,11 +36,14 @@ class StoreVisitorsFamilyRequest extends FormRequest
                 'required',
                 'size:10',
                 'regex:/(05)[0-9]{8}/',
+                'unique:users',
             ],
             'identity' => [
                 'string',
                 'required',
                 'unique:visitors_families,identity',
+                'regex:/(10)[0-9]{8}|(11)[0-9]{8}|(12)[0-9]{8}|(13)[0-9]{8}|(14)[0-9]{8}|(15)[0-9]{8}|(20)[0-9]{8}|(21)[0-9]{8}|(22)[0-9]{8}|(23)[0-9]{8}|(24)[0-9]{8}|(25)[0-9]{8}/',                
+                'unique:users',
             ],
         ];
     }

@@ -30,7 +30,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 m-b30">
                         <div class="icon-bx-wraper p-lr20 p-tb50 center seth contact-bx">
                             <div class="icon-bx-sm radius m-b20 bg-primary m-b20">
-                                <a href="#" class="icon-cell"><i class="ti-email"></i></a>
+                                <a href="mailto:{{ $setting->email_1}}" class="icon-cell"><i class="ti-email"></i></a>
                             </div>
                             <div class="icon-content">
                                 <h5 class="dlab-tilte text-uppercase">البريد الإلكتروني</h5>
@@ -44,7 +44,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 m-b30">
                         <div class="icon-bx-wraper p-lr20 p-tb50 center seth contact-bx">
                             <div class="icon-bx-sm radius m-b20 bg-primary m-b20">
-                                <a href="#" class="icon-cell"><i class="ti-mobile"></i></a>
+                                <a href="tel:{{ $setting->phone_1}} " class="icon-cell"><i class="ti-mobile"></i></a>
                             </div>
                             <div class="icon-content">
                                 <h5 class="dlab-tilte text-uppercase">التليفون</h5>

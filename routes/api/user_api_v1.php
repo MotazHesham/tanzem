@@ -52,8 +52,20 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
 
         // notifications
         Route::get('notifications','NotificationsApiController@index');
+        
+      //ratting
+    
+        Route::group(['prefix' =>'rating'],function(){
+       
+            Route::post('rate','EventsApiController@rate') ;
+            Route::get('/get/{event_id}','EventsApiController@getRatings') ;
+           
+        });
+    
 
     });
+
+  
 });
 
 

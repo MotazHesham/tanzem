@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('landline_phone')->nullable();
             $table->string('website')->nullable();
             $table->string('user_type');
+            $table->boolean('health_status')->default(0)->nullable(); 
             $table->string('fcm_token',2000)->nullable();
             $table->timestamps();
             $table->softDeletes();
