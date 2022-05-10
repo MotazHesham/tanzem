@@ -5,7 +5,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/fontawesome.min.css" integrity="sha512-xX2rYBFJSj86W54Fyv1de80DWBq7zYLn2z0I9bIhQG+rxIF6XVJUpdGnsNHWRa6AvP89vtFupEPDP8eZAtu9qA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.css" integrity="sha512-1hsteeq9xTM5CX6NsXiJu3Y/g+tj+IIwtZMtTisemEv3hx+S9ngaW4nryrNcPM4xGzINcKbwUJtojslX2KG+DQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 @endsection
-
+    <style>
+        .skills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+p.skill-p {
+    margin-bottom: 7px;
+    color: #fff;
+    background-color: #25a8f6;
+    margin-left: 10px;
+    padding: 7px 10px;
+    border-radius: 20px;
+}
+    </style>
 @section('content')
 
     <!-- Content -->
@@ -20,9 +35,9 @@
                                 $cader_image = $cader->user->photo->getUrl('preview2');
                             }else{
                                 $cader_image = '';
-                            }  
+                            }
                             $now_date = date('Y-m-d',strtotime('now'));
-                            $event = $cader->events()->where('status','active')->where('start_date','<=',$now_date)->where('end_date','>=',$now_date)->get()->first(); 
+                            $event = $cader->events()->where('status','active')->where('start_date','<=',$now_date)->where('end_date','>=',$now_date)->get()->first();
                         @endphp
                         <div class="wonder-theme">
                             <img src="{{ $cader_image }}" class="rounded-circle" />
@@ -34,9 +49,9 @@
                         <div class="wonder-btn">
                             <a href="javascript:void(0);" class="site-button button-lg radius-no text-uppercase">
                                 @if($event)
-                                مشارك الان في فعاليات   
+                                مشارك الان في فعاليات
                                 {{ $event->title ?? '' }}
-                                @else 
+                                @else
                                 متاح الأن
                                 @endif
                             </a>
@@ -50,14 +65,14 @@
         <div class="section-full content-inner">
             <div class="container">
                 <div class="dlab-post-media m-b50">
-                    <a href="javascript:void(0);"><img src="{{ asset('frontend/images/event-big.jpg') }}" alt="" /></a>
+                   <!-- <a href="javascript:void(0);"><img src="{{ asset('frontend/images/event-big.jpg') }}" alt="" /></a>-->
                 </div>
                 <div class="row">
                     <!-- Left part start -->
                     <div class="col-xl-8 col-lg-7 col-md-12 p-b30">
                         <div class="section-head text-black mb-3">
                             <h2 class="box-title">{{ $cader->user->name ?? '' }}</h2>
-                            <p class="m-b0"> 
+                            <p class="m-b0">
                                 <?php echo nl2br($cader->desceiption ?? ''); ?>
                             </p>
                         </div>
@@ -72,7 +87,7 @@
                                 </li>
                                 <li>
                                     <i class="fa fa-phone text-primary"></i>
-                                    <p class="m-b0">{{ $cader->user->phone ?? ''}}</p> 
+                                    <p class="m-b0">{{ $cader->user->phone ?? ''}}</p>
                                 </li>
                                 <li>
                                     <i class="fa fa-envelope text-primary"></i>
@@ -82,7 +97,7 @@
                             @else
                             <div class="data-shown-message">
                                 <p>
-                				عذراً.. لا يمكنك رؤية هذه البيانات لأنك لم تقم بتسجيل الدخول... 
+                				عذراً.. لا يمكنك رؤية هذه البيانات لأنك لم تقم بتسجيل الدخول...
                 			 <i class="fa-solid fa-face-frown-open" style="position:relative;"></i>
                 			    <br>
                 			 <a href="https://tanthim.com/login" class="signin-data">قم بتسجيل الدخول الآن</a>
@@ -91,8 +106,25 @@
                             @endauth
                         </div>
 
-                        <div class="dlab-divider bg-gray-dark"></div> 
+                        <div class="dlab-divider bg-gray-dark"></div>
+                         <h4 class="m-b10">التخصصات</h4>
+                        <div class="skills-wrap">
 
+                        @foreach($cader->specializations as $key => $specialization)
+
+                                  <p class="skill-p">{{ $specialization->name_ar }}</p>
+                            @endforeach</p>
+                        </div>
+                        <div class="dlab-divider bg-gray-dark"></div>
+
+                        <div class="dlab-divider bg-gray-dark"></div>
+                         <h4 class="m-b10">المهارات</h4>
+                        <div class="skills-wrap">
+                         @foreach($cader->skills as $key => $skills)
+
+                                  <p class="skill-p">{{ $skills->name_ar }}</p>
+                            @endforeach</p>
+                        </div>
                         <div class="dlab-divider bg-gray-dark"></div>
                         <h4 class="m-b10">الفعاليات الحالية</h4>
 
@@ -121,11 +153,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                @empty 
+                                @empty
                                 <div class="container text-center mt-4 mb-4 alert alert-dark">
                                     متاح الأن
                                 </div>
-                            @endforelse 
+                            @endforelse
                         </div>
 
                         <div class="dlab-divider bg-gray-dark"></div>
@@ -156,7 +188,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach  
+                            @endforeach
                         </div>
 
                         <!-- blog END -->
@@ -209,8 +241,8 @@
 @endsection
 
 
-@section('scripts') 
+@section('scripts')
 
     <script src="{{ asset('frontend/js/jquery.star-rating-svg.js') }}"></script>
-    <!-- STAR RATING SVG --> 
+    <!-- STAR RATING SVG -->
 @endsection

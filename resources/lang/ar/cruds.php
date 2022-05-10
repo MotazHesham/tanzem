@@ -270,7 +270,7 @@ return [
             'experience_years_helper'          => ' ',
             'health_status'                 => 'الحاله الصحيه',
             'health_status_helper'          => ' ',
-            
+
         ],
     ],
     'city' => [
@@ -611,6 +611,8 @@ return [
             'updated_at_helper'        => ' ',
             'deleted_at'               => 'Deleted at',
             'deleted_at_helper'        => ' ',
+            'photos'                   => 'الصور',
+            'photos_helper'            => ' ',
         ],
     ],
     'subscription' => [
@@ -741,7 +743,7 @@ return [
             'updated_at_helper' => ' ',
             'deleted_at'        => 'Deleted at',
             'deleted_at_helper' => ' ',
-            
+
         ],
     ],
 ];

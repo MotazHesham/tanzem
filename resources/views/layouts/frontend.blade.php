@@ -118,7 +118,7 @@
         </header>
         <!-- header END -->
         <div class="fixed-whatsapp">
-           <a href="https://wa.me/{{$setting->phone_1}}" target="_blank">
+           <a href="https://wa.link/s5pw5u" target="_blank">
              <i class="fa-brands fa-whatsapp"></i>
             </a> 
         </div>

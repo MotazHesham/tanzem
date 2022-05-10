@@ -72,7 +72,7 @@
                             {{ trans('cruds.news.fields.status') }}
                         </th>
                         <td>
-                            @php 
+                            @php
                                 if($news->status == 'active'){
                                     $news_status = 'success';
                                 }elseif($news->status == 'pending'){
@@ -84,8 +84,20 @@
                                 }else{
                                     $news_status = 'dark';
                                 }
-                            @endphp 
+                            @endphp
                             <span class="badge badge-{{$news_status}}">{{ trans('global.news_status.'.$news->status) ?? '' }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.news.fields.photos') }}
+                        </th>
+                        <td>
+                            @foreach($news->photos as $key => $media)
+                                <a href="{{ $media->getUrl() }}" target="_blank" style="display: inline-block">
+                                    <img src="{{ $media->getUrl('thumb') }}">
+                                </a>
+                            @endforeach
                         </td>
                     </tr>
                 </tbody>

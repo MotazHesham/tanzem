@@ -175,6 +175,7 @@ class VisitorsController extends Controller
         abort_if(Gate::denies('visitor_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $visitor->delete();
+        $user=User::findOrfail($visitor->user_id)->delete();
 
         Alert::success('تم بنجاح', 'تم  حذف المشترك بنجاح ');
         return 1;
@@ -182,7 +183,11 @@ class VisitorsController extends Controller
 
     public function massDestroy(MassDestroyVisitorRequest $request)
     {
+        $visitors=Visitor::whereIn('id', request('ids'))->get();
         Visitor::whereIn('id', request('ids'))->delete();
+
+        foreach($visitors as $visitor)
+          User::findOrfail($visitor->user_id)->delete();
 
         return response(null, Response::HTTP_NO_CONTENT);
     }

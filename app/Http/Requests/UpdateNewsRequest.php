@@ -12,7 +12,7 @@ class UpdateNewsRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('news_edit') || Auth::user()->user_type == 'governmental_entity' || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client'; 
+        return Gate::allows('news_edit') || Auth::user()->user_type == 'governmental_entity' || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client';
     }
 
     public function rules()
@@ -31,7 +31,10 @@ class UpdateNewsRequest extends FormRequest
             ],
             'photo' => [
                 'required',
-            ], 
+            ],
+            'photos' => [
+                'array',
+            ],
         ];
     }
 }

@@ -27,20 +27,20 @@ use Carbon\Carbon;
 
 class EventsController extends Controller
 {
-    use MediaUploadingTrait; 
-    
+    use MediaUploadingTrait;
+
     public function index(Request $request)
-    { 
+    {
 
         if ($request->ajax()) {
 
             if(Auth::user()->user_type == 'cader'){
-                $cawader = Cawader::where('user_id',Auth::id())->first(); 
-                $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+                $cawader = Cawader::where('user_id',Auth::id())->first();
+                $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id);
             }else{
-                $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+                $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
             }
-    
+
 
             $query = Event::where('company_id',$company->id)->with(['city', 'company.user', 'available_gates', 'specializations'])->select(sprintf('%s.*', (new Event())->table));
             $table = Datatables::of($query);
@@ -48,10 +48,10 @@ class EventsController extends Controller
             $table->addColumn('placeholder', '&nbsp;');
             $table->addColumn('actions', '&nbsp;');
 
-            $table->editColumn('actions', function ($row) { 
+            $table->editColumn('actions', function ($row) {
                 $crudRoutePart = 'company.events';
 
-                return view('partials.datatablesActions_noAuth', compact( 
+                return view('partials.datatablesActions_noAuth', compact(
                     'crudRoutePart',
                     'row'
                 ));
@@ -62,7 +62,7 @@ class EventsController extends Controller
             });
             $table->editColumn('title', function ($row) {
                 return $row->title ? $row->title : '';
-            }); 
+            });
             $table->editColumn('date', function ($row) {
                 $start = $row->start_date ? $row->start_date : '';
                 $end = $row->end_date ? $row->end_date : '';
@@ -121,16 +121,16 @@ class EventsController extends Controller
     }
 
     public function create()
-    { 
+    {
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        
+
         if(Auth::user()->user_type == 'cader'){
-            $cawader = Cawader::where('user_id',Auth::id())->first(); 
-            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+            $cawader = Cawader::where('user_id',Auth::id())->first();
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id);
         }else{
-            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
         }
 
 
@@ -166,7 +166,7 @@ class EventsController extends Controller
     }
 
     public function edit(Event $event,Request $request)
-    { 
+    {
 
         global $from;
         global $to;
@@ -174,19 +174,19 @@ class EventsController extends Controller
 
         $id=$event->id;
         if(Auth::user()->user_type == 'cader'){
-            $cawader = Cawader::where('user_id',Auth::id())->first(); 
-            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+            $cawader = Cawader::where('user_id',Auth::id())->first();
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id);
         }else{
-            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
         }
 
-        
+
         // check record auth
         $check = not_auth_recored($event->company_id, $company->id);
         if($check){
             return redirect()->route($check);
         }
-        
+
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $companies = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
@@ -194,8 +194,8 @@ class EventsController extends Controller
         $available_gates = EventGate::pluck('gate', 'id');
 
         $specializations = Specialization::pluck('name_ar', 'id');
-        $from=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->start_date)->format('d-m-Y')); 
-        $to=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->end_date)->format('d-m-Y')); 
+        $from=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->start_date)->format('d-m-Y'));
+        $to=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->end_date)->format('d-m-Y'));
 
         if($request->has('specialization_id') && $request->specialization_id != null){
             global $specialization_id;
@@ -215,8 +215,8 @@ class EventsController extends Controller
         $query->whereDate('start_date', '<=', $GLOBALS['from'])
         ->whereDate('end_date', '>=', $GLOBALS['to'])
         ->orwhere('start_date',$GLOBALS['from'])->orwhere('end_date',$GLOBALS['to']);
-        
-       
+
+
     })->OrwhereHas('events',function ($query) {
         $query->where('id', $GLOBALS['id']);
     })->get()->map(function($cawader) use ($event) {
@@ -226,7 +226,7 @@ class EventsController extends Controller
             return $cawader;
         });
 
-        
+
         $clients = Client::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $governments = GovernmentalEntity::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
@@ -258,14 +258,14 @@ class EventsController extends Controller
     }
 
     public function show(Event $event)
-    { 
+    {
 
-        
+
         if(Auth::user()->user_type == 'cader'){
-            $cawader = Cawader::where('user_id',Auth::id())->first(); 
-            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+            $cawader = Cawader::where('user_id',Auth::id())->first();
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id);
         }else{
-            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
         }
 
 
@@ -280,17 +280,17 @@ class EventsController extends Controller
     }
 
     public function destroy(Event $event)
-    { 
+    {
 
-        
+
         if(Auth::user()->user_type == 'cader'){
-            $cawader = Cawader::where('user_id',Auth::id())->first(); 
-            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id); 
+            $cawader = Cawader::where('user_id',Auth::id())->first();
+            $company = CompaniesAndInstitution::findOrFail($cawader->companies_and_institution_id);
         }else{
-            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first(); 
+            $company = CompaniesAndInstitution::where('user_id',Auth::id())->first();
         }
 
-        
+
         // check record auth
         $check = not_auth_recored($event->company_id, $company->id);
         if($check){
@@ -311,7 +311,7 @@ class EventsController extends Controller
     }
 
     public function storeCKEditorImages(Request $request)
-    { 
+    {
 
         $model         = new Event();
         $model->id     = $request->input('crud_id', 0);
@@ -320,33 +320,77 @@ class EventsController extends Controller
 
         return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
     }
-    
+
     public function save_cawder(Request $request){
 
         $data = $request;
         $event=Event::findOrfail($request->event_id);
         $event->cawaders()->sync($data['cawaders']);
-       
+
         /////
         foreach( $event->cawaders as $cawader_event){
-        
+
             $title = 'تم اضافتك في فعاليه جديده ';
-            $body = 'عزيزي'.' '.$cawader_event->user->name. 'تطلبك شركة فعاليات للإنضمام معها في احدى فعالياتها في مدينة  '.$event->city->name_ar ;
+            $body = 'عزيزي'.' '.$cawader_event->user->name. 'تطلبك شركة فعاليات للإنضمام معها في احدى فعالياتها    ';
 
 
                 $data = [
-                    'user_id' =>$cawader_event->user_id, 
+                    'user_id' =>$cawader_event->user_id,
                     'name' => $cawader_event->user->name,
                     'event_id' =>$event->id,
                 ];
                 event(new CaderRequest($data));
 
             $this->send_notification($title,$body , '' ,'', 'cader_request' , $cawader_event->user_id,true,$data) ;
-            
+
         }
 
         Alert::success('تم بنجاح', 'تم إضافة الكوادر للفعالية بنجاح ');
         return redirect()->route('company.events.index');
 
      }
+     public function choose_cawder(Request $request,$event_id){
+
+        global $from;
+         global $to;
+         $specialization_id = null;
+         $skill_id = null;
+  //check if any cader found in event within that date
+        $event=Event::findOrfail($event_id);
+
+        $from=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->start_date)->format('d-m-Y'));
+        $to=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->end_date)->format('d-m-Y'));
+
+        $cawaders_full_time = Cawader::with('user')->where('companies_and_institution_id',null)->whereDoesntHave('events',function ($query) {
+            $query->whereDate('start_date', '<=', $GLOBALS['from'])
+            ->whereDate('end_date', '>=', $GLOBALS['to'])
+            ->orwhere('start_date',$GLOBALS['from'])->orwhere('end_date',$GLOBALS['to']);
+
+        });
+
+        if($request->has('specialization_id') && $request->specialization_id != null){
+            global $specialization_id;
+            $specialization_id = $request->specialization_id;
+            $cawaders_full_time = $cawaders_full_time->whereHas('specializations',function ($query) {
+                $query->where('id', 'like', $GLOBALS['specialization_id']);
+            });
+        }
+        if($request->has('skill_id') && $request->skill_id != null){
+            global $skill_id;
+            $skill_id = $request->skill_id;
+            $cawaders_full_time = $cawaders_full_time->whereHas('skills',function ($query) {
+                $query->where('id', 'like', $GLOBALS['skill_id']);
+            });
+        }
+
+          $cawaders_full_time=$cawaders_full_time->get();
+       /* $cawaders_part_time = Cawader::with('user','events')->where('companies_and_institution_id',null)->whereHas('events',function ($query) {
+            $query->whereBetween('start_date',[$GLOBALS['from'],$GLOBALS['to']])->orwhereBetween('end_date',[$GLOBALS['from'],$GLOBALS['to']]);
+
+        })->get(); */
+        $event_id=$event->id;
+     return view('admin.events.partials.caders_new',compact('cawaders_full_time','event_id'));
+
+
+}
 }

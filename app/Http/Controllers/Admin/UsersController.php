@@ -8,6 +8,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Cawader;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,9 +24,23 @@ class UsersController extends Controller
         $user = User::find($request->id);
         $user->approved = $request->status;
         $user->save();
-        return 1; 
+        return 1;
     }
-    
+
+    public function massApprove(Request $request)
+    {
+
+        $cawaders=Cawader::whereIn('id', request('ids'))->get();
+
+        foreach($cawaders as $cader){
+          $user = User::find($cader->id);
+          $user->approved =0;
+          $user->save();
+        }
+        return 1;
+
+    }
+
     public function index()
     {
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');

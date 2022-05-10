@@ -25,6 +25,7 @@ class News extends Model implements HasMedia
 
     protected $appends = [
         'photo',
+        'photos',
     ];
 
     protected $dates = [
@@ -67,6 +68,18 @@ class News extends Model implements HasMedia
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function getPhotosAttribute()
+    {
+        $files = $this->getMedia('photos');
+        $files->each(function ($item) {
+            $item->url = $item->getUrl();
+            $item->thumbnail = $item->getUrl('thumb');
+            $item->preview = $item->getUrl('preview');
+        });
+
+        return $files;
     }
 
     protected function serializeDate(DateTimeInterface $date)

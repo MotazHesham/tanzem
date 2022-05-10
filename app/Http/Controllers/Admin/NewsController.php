@@ -59,6 +59,10 @@ class NewsController extends Controller
             $news->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
         }
 
+        foreach ($request->input('photos', []) as $file) {
+            $news->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photos');
+        }
+
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $news->id]);
         }
@@ -92,6 +96,21 @@ class NewsController extends Controller
         } elseif ($news->photo) {
             $news->photo->delete();
         }
+
+        if (count($news->photos) > 0) {
+            foreach ($news->photos as $media) {
+                if (!in_array($media->file_name, $request->input('photos', []))) {
+                    $media->delete();
+                }
+            }
+        }
+        $media = $news->photos->pluck('file_name')->toArray();
+        foreach ($request->input('photos', []) as $file) {
+            if (count($media) === 0 || !in_array($file, $media)) {
+                $news->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photos');
+            }
+        }
+
 
         Alert::success('تم بنجاح', 'تم تعديل بيانات الخبر بنجاح ');
         return redirect()->route('admin.news.index');

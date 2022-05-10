@@ -139,7 +139,7 @@ class CawaderController extends Controller
         $cawader->skills()->sync($request->input('skills', []));
 
         Alert::success('تم بنجاح', 'تم إضافة الكادر بنجاح ');
-                        
+
         return redirect()->route('admin.cawaders.index');
     }
 
@@ -162,7 +162,7 @@ class CawaderController extends Controller
 
     public function update(UpdateCawaderRequest $request, Cawader $cawader)
     {
-      
+
         if($request->skills)
             $has=1;
         else
@@ -224,14 +224,23 @@ class CawaderController extends Controller
 
         $cawader->delete();
 
+        $user=User::findOrfail($cawader->user_id)->delete();
+
         Alert::success('تم بنجاح', 'تم  حذف الكادر بنجاح ');
         return 1;
     }
 
     public function massDestroy(MassDestroyCawaderRequest $request)
     {
+        $cawaders=Cawader::whereIn('id', request('ids'))->get();
         Cawader::whereIn('id', request('ids'))->delete();
+
+        foreach($cawaders as $cawader)
+          User::findOrfail($cawader->user_id)->delete();
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
 }
+
+

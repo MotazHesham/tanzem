@@ -14,22 +14,22 @@ Route::get('/home', function () {
 Route::post('code/send','CodeController@send')->name('code.send');
 Route::post('code/verify','CodeController@verify')->name('code.verify');
 
-Auth::routes(['verify' => true]); 
+Auth::routes(['verify' => true]);
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () { 
-    Route::post('events/partials/supervisor', 'EventsController@partials_supervisor')->name('events.partials.supervisor'); 
-    Route::post('events/partials/zoominmap', 'EventsController@partials_zoominmap')->name('events.partials.zoominmap'); 
-    Route::post('events/partials/attendance_cader', 'EventsController@partials_attendance_cader')->name('events.partials.attendance_cader'); 
-    Route::post('events/partials/cader_break', 'EventsController@partials_cader_break')->name('events.partials.cader_break'); 
-    Route::get('events/partials/cader_break_status/{id}/{status}', 'EventsController@partials_cader_break_status')->name('events.partials.cader_break_status'); 
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
+    Route::post('events/partials/supervisor', 'EventsController@partials_supervisor')->name('events.partials.supervisor');
+    Route::post('events/partials/zoominmap', 'EventsController@partials_zoominmap')->name('events.partials.zoominmap');
+    Route::post('events/partials/attendance_cader', 'EventsController@partials_attendance_cader')->name('events.partials.attendance_cader');
+    Route::post('events/partials/cader_break', 'EventsController@partials_cader_break')->name('events.partials.cader_break');
+    Route::get('events/partials/cader_break_status/{id}/{status}', 'EventsController@partials_cader_break_status')->name('events.partials.cader_break_status');
     Route::get('events/status/{id}/{status}', 'EventsController@changeStatus')->name('events.status');
     Route::get('event/{id}/cawders', 'EventsController@choose_cawder')->name('events.choose_cawder');
     Route::post('event/cawders/add', 'EventsController@save_cawder')->name('events.save_cawder');
-}); 
+});
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth','staff']], function () {
 
-    
+
     Route::get('/', 'HomeController@index')->name('home');
     // Permissions
     Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
@@ -45,6 +45,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('users/ckmedia', 'UsersController@storeCKEditorImages')->name('users.storeCKEditorImages');
     Route::post('users/update_approved', 'UsersController@update_approved')->name('users.update_approved');
     Route::resource('users', 'UsersController');
+    Route::Post('cawaders/massApprove', 'UsersController@massApprove')->name('users.massApprove');
 
     // Audit Logs
     Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
@@ -76,6 +77,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::delete('cawaders/destroy', 'CawaderController@massDestroy')->name('cawaders.massDestroy');
     Route::resource('cawaders', 'CawaderController');
 
+
     // Cities
     Route::delete('cities/destroy', 'CitiesController@massDestroy')->name('cities.massDestroy');
     Route::resource('cities', 'CitiesController');
@@ -83,7 +85,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Events
     Route::delete('events/destroy', 'EventsController@massDestroy')->name('events.massDestroy');
     Route::post('events/media', 'EventsController@storeMedia')->name('events.storeMedia');
-    Route::post('events/ckmedia', 'EventsController@storeCKEditorImages')->name('events.storeCKEditorImages'); 
+    Route::post('events/ckmedia', 'EventsController@storeCKEditorImages')->name('events.storeCKEditorImages');
     Route::resource('events', 'EventsController');
 
     // Brands
@@ -99,11 +101,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Visitors
     Route::delete('visitors/destroy', 'VisitorsController@massDestroy')->name('visitors.massDestroy');
     Route::resource('visitors', 'VisitorsController');
-    
+
     // Visitors Families
     Route::delete('visitors-families/destroy', 'VisitorsFamiliesController@massDestroy')->name('visitors-families.massDestroy');
     Route::resource('visitors-families', 'VisitorsFamiliesController', ['except' => ['show']]);
-    
+
     // Settings
     Route::resource('settings', 'SettingsController', ['except' => ['create', 'store', 'show', 'destroy']]);
 
@@ -112,11 +114,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('said-about-tanzems/media', 'SaidAboutTanzemController@storeMedia')->name('said-about-tanzems.storeMedia');
     Route::post('said-about-tanzems/ckmedia', 'SaidAboutTanzemController@storeCKEditorImages')->name('said-about-tanzems.storeCKEditorImages');
     Route::resource('said-about-tanzems', 'SaidAboutTanzemController');
-    
+
     // Contactus
     Route::delete('contactus/destroy', 'ContactusController@massDestroy')->name('contactus.massDestroy');
     Route::resource('contactus', 'ContactusController');
-    
+
     // News
     Route::get('news/status/{id}/{status}', 'NewsController@changeStatus')->name('news.status');
     Route::delete('news/destroy', 'NewsController@massDestroy')->name('news.massDestroy');
@@ -131,7 +133,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Important Links
     Route::delete('important-links/destroy', 'ImportantLinksController@massDestroy')->name('important-links.massDestroy');
     Route::resource('important-links', 'ImportantLinksController');
-    
+
     // Break Types
     Route::delete('break-types/destroy', 'BreakTypesController@massDestroy')->name('break-types.massDestroy');
     Route::resource('break-types', 'BreakTypesController');

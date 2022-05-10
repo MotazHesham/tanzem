@@ -57,14 +57,14 @@
 @section('scripts')
     @parent
     <script>
-        
+
         function update_approved(el){
             if(el.checked){
                 var status = 1;
             }
             else{
                 var status = 0;
-            } 
+            }
             $.post('{{ route('admin.users.update_approved') }}', {_token:'{{ csrf_token() }}', id:el.value, status:status}, function(data){
                 if(data == 1){
                     showFrontendAlert('success',"{{ trans('global.flash.user.approve') }}");
@@ -86,13 +86,13 @@
                 var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
                 return entry.id
                 });
-            
+
                 if (ids.length === 0) {
                 alert('{{ trans('global.datatables.zero_selected') }}')
-            
+
                 return
                 }
-            
+
                 if (confirm('{{ trans('global.areYouSure') }}')) {
                 $.ajax({
                 headers: {'x-csrf-token': _token},
@@ -145,6 +145,7 @@
                         data: 'approved',
                         name: 'approved',
                         searchable: false
+
                     },
                     {
                         data: 'actions',
@@ -161,8 +162,11 @@
             $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e) {
                 $($.fn.dataTable.tables(true)).DataTable()
                     .columns.adjust();
+
             });
 
         });
     </script>
 @endsection
+
+

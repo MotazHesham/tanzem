@@ -91,7 +91,7 @@
                            <a class="download-ios-android" href="https://apps.apple.com/eg/app/tanthim/id1614904266">
                                <img src="{{ asset('frontend/images/logo_appstore.svg') }}">
                            </a>
-                           <a class="download-ios-android" href="#">
+                           <a class="download-ios-android" href="https://play.google.com/store/apps/details?id=com.tanthim.tanthim">
                                <img src="{{ asset('frontend/images/logo_playstore.svg') }}">
                            </a>
                            

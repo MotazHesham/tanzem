@@ -1,4 +1,4 @@
-@extends('layouts.frontend') 
+@extends('layouts.frontend')
 
 @section('content')
 
@@ -6,7 +6,7 @@
     <div class="page-content bg-white">
         <!-- inner page banner -->
         <div class="dlab-bnr-inr dlab-bnr-inr-sm overlay-black-middle" style="background-image: url('{{ asset('frontend/images/banner/bnr1.jpg') }}')">
-            <div class="container"> 
+            <div class="container">
             </div>
         </div>
         <!-- inner page banner END -->
@@ -24,7 +24,7 @@
                             <p class="m-b0">
                                 <?php echo nl2br($news->long_description ?? ''); ?>
                             </p>
-                        </div>    
+                        </div>
 
                         <!-- blog END -->
                     </div>
@@ -63,36 +63,22 @@
     </div>
             </div>
         </div>
-        <!--<div class="container-fluid">-->
-            
-            
-        <!--<div class="event-image-wrap">-->
-        <!--                    <div class="container">-->
-        <!--                    <h3 class="font-26">الصور</h3>-->
-        <!--                    </div>-->
-        <!--                     <div id="event-slider" class="events-slider owl-carousel owl-theme owl-container">-->
-        <!--                        <div class="item">-->
-        <!--                            <img class="events-pic" src="">-->
-        <!--                        </div>  -->
-                                   
-        <!--                    </div> -->
-        <!--        </div>-->
-                
-        <!--        <div class="video-wrap">-->
-        <!--                    <div class="container">-->
-        <!--                    <h3 class="font-26">مقاطع الفيديو</h3>-->
-        <!--                    </div>-->
-        <!--                     <div id="video-slider" class="vid-slider owl-carousel owl-theme owl-container">-->
-        <!--                        <div class="item">-->
-        <!--                            <video width="100%" height="240" controls>-->
-        <!--                                      <source src="" type="video/mp4">-->
-        <!--                                    Your browser does not support the video tag.-->
-        <!--                            </video>-->
-        <!--                        </div>-->
-                             
-        <!--                    </div>  -->
-        <!--        </div>-->
-        <!--</div>-->
+        <div class="container-fluid">
+
+
+        <div class="event-image-wrap">
+                           <div class="container">
+                          <h3 class="font-26">الصور</h3>
+                           </div>
+                             <div id="event-slider" class="events-slider owl-carousel owl-theme owl-container">
+                                @foreach($news->photos as $key => $media)
+                                <div class="item">
+                                    <img class="events-pic" src="{{ $media->getUrl() }}">
+                                </div>
+                               @endforeach
+
+                          </div>
+                </div>
         </div>
     <!-- Content END-->
-@endsection 
+@endsection
