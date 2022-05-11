@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html @if(app()->getLocale() == 'ar') dir="rtl" @endif> 
+<html @if(app()->getLocale() == 'ar') dir="rtl" @endif>
 
 <head>
     <meta charset="UTF-8">
@@ -25,7 +25,7 @@
     @if(app()->getLocale() == 'ar')
       <style>
         .c-sidebar-nav .c-sidebar-nav-dropdown-items{
-          padding-right: 8%; 
+          padding-right: 8%;
         }
        .c-header-nav-link li.c-header-nav-item.admin-home-link-li a {
                 font-weight: bold;
@@ -42,7 +42,7 @@
     @else
       <style>
         .c-sidebar-nav .c-sidebar-nav-dropdown-items{
-          padding-left: 8%; 
+          padding-left: 8%;
         }
       </style>
     @endif
@@ -56,7 +56,12 @@
             <button class="c-header-toggler c-class-toggler d-lg-none mfe-auto" type="button" data-target="#sidebar" data-class="c-sidebar-show">
                 <i class="fas fa-fw fa-bars"></i>
             </button>
-
+<div  aria-live="polite" aria-atomic="true" style=" min-height: 100px;" >
+                        <!-- Position it -->
+                        <div class="partials-scrollable" style=" position:left: 15px; max-height: 240px;" id="incoming-notifications">
+                            {{-- incoming notifications --}}
+                        </div>
+                    </div>
             <a class="c-header-brand d-lg-none" href="#">{{ trans('panel.site_title') }}</a>
 
             <button class="c-header-toggler mfs-3 d-md-down-none" type="button" responsive="true">
@@ -118,18 +123,18 @@
                                 <a class="c-header-nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                                     @if(auth()->user()->photo)
                                         <img src="{{asset(auth()->user()->photo->getUrl('thumb'))}}" alt="" width="40" height="40" style="border-radius: 50px;margin:10px">
-                                    @else 
+                                    @else
                                         <img src="{{asset('user.png')}}" alt="" width="40" height="40" style="border-radius: 50px;margin:10px">
                                     @endif
-                                    <span class="text-center"> 
+                                    <span class="text-center">
                                         {{auth()->user()->name }}
-                                        <br> 
-                                        <small style="background: #216392;color:#fff; border-radius: 30px; padding: 1px 11px;">{{auth()->user()->roles->first()->title}}</small> 
+                                        <br>
+                                        <small style="background: #216392;color:#fff; border-radius: 30px; padding: 1px 11px;">{{auth()->user()->roles->first()->title}}</small>
                                     </span>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-right"> 
-                                    <a class="dropdown-item" href="{{route('profile.password.edit')}}">{{trans('global.change_password')}}</a> 
-                                    <a class="dropdown-item" style="cursor: pointer" onclick="event.preventDefault(); document.getElementById('logoutform').submit();"> {{ trans('global.logout') }}</a> 
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="{{route('profile.password.edit')}}">{{trans('global.change_password')}}</a>
+                                    <a class="dropdown-item" style="cursor: pointer" onclick="event.preventDefault(); document.getElementById('logoutform').submit();"> {{ trans('global.logout') }}</a>
                                 </div>
                             </li>
                         @endcan
@@ -162,6 +167,7 @@
                     @endif
                     @yield('content')
 
+
                 </div>
 
 
@@ -173,7 +179,7 @@
     </div>
 
     @include('sweetalert::alert')
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -195,7 +201,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js"></script>
-    
+
   <script src="https://maps.google.com/maps/api/js?key=AIzaSyD9D9VYMWp1sTVSDnGToKdKN4RnEtfyuAY&libraries=places&v=weekly"></script>
     <script src="{{ asset('js/main.js') }}"></script>
     <!-- SweetAlert2 -->
@@ -207,23 +213,60 @@
 
         // Enable pusher logging - don't include this in production
         Pusher.logToConsole = true;
-    
+
         var pusher = new Pusher('945e2b6b71fc0b7b0d48', {
             cluster: 'eu'
-        }); 
+        });
+    </script>
+     <script>
+        var channel = pusher.subscribe('notification-channel');
+        channel.bind('App\\Events\\NotificationEvent',function(obj){
+            console.log(obj);
+                var header = '<a href="/admin/events/'+obj['alert_link']+'" class="text-white"> إذن جديد من '+obj["data"]["user"]+' </a>';
+                var header_color = '#A569BD';
+                var body =  '<div class="row">';
+                    body +=   '<div class="col-md-4">';
+                    body +=   '</div>';
+                    body += '</div>';
+                    body +=   '<div class="col-md-4">';
+                    body +=     '<span class="badge badge-info">الإذن المطلوب</span>';
+                    body +=     '<br>';
+                    body +=     obj['data']['break'];
+                    body +=   '</div>';
+                    body +=   '<div class="col-md-4">';
+                    body +=     '<span class="badge badge-warning">وقت الإذن</span>';
+                    body +=     '<br>';
+                    body +=     '<span class="badge badge-dark">'+obj["data"]["time"]+'</span>';
+                    body +=   '</div>';
+                    body += '</div>';
+                var data = '<div id="toast-'+obj["id"]+'" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="100000" style="direction: ltr;">';
+                    data +=  '<div class="toast-header" style="background: '+header_color+' ; color: white;">';
+                    data +=     '<strong class="mr-auto">'+header+'</strong>';
+                    data +=     '<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">';
+                    data +=       '<span aria-hidden="true" style="color:white">&times;</span>';
+                    data +=     '</button>';
+                    data +=  '</div>';
+                    data +=  '<div class="toast-body">';
+                    data +=    body;
+                    data +=  '</div>';
+                    data += '</div>';
+                $('#incoming-notifications').append(data);
+                $('#toast-'+obj['id']).toast('show');
+
+        });
     </script>
     <script>
         function showFrontendAlert(type, title, message){
-            swal({ 
+            swal({
                 title: title,
                 text: message,
-                type: type, 
+                type: type,
                 showConfirmButton: 'Okay',
                 timer: 3000
             });
         }
 
-        function deleteConfirmation(route, div = null, partials = false) { 
+        function deleteConfirmation(route, div = null, partials = false) {
             swal({
                 title: "{{trans('global.flash.delete_')}}",
                 text: "{{trans('global.flash.sure_')}}",
@@ -234,19 +277,19 @@
                 reverseButtons: !0
             }).then(function (e) {
 
-                if (e.value === true) { 
+                if (e.value === true) {
 
                     $.ajax({
                         type: 'DELETE',
-                        url: route, 
-                        data: { _token: '{{ csrf_token() }}', partials: partials}, 
-                        success: function (results) { 
-                            if(div != null){ 
+                        url: route,
+                        data: { _token: '{{ csrf_token() }}', partials: partials},
+                        success: function (results) {
+                            if(div != null){
                             showFrontendAlert('success', '{{trans('global.flash.deleted')}}', '');
                             $(div).html(null);
                             $(div).html(results);
                             }else{
-                            location.reload(); 
+                            location.reload();
                             }
                         }
                     });

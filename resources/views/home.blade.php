@@ -24,7 +24,7 @@
                     @endif
 
                     <div class="row">
-                        <div class="{{ $settings1['column_class'] }}"> 
+                        <div class="{{ $settings1['column_class'] }}">
                             <div class="card text-white bg-info" style="position: relative">
                                 <div style="position: absolute; left:0 ">
                                     <i style="font-size: 91px;color:#082a482e" class="fa-fw fas fa-camera-retro c-sidebar-nav-icons"></i>
@@ -36,7 +36,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="{{ $settings2['column_class'] }}"> 
+                        <div class="{{ $settings2['column_class'] }}">
                             <div class="card text-white bg-success" style="position: relative">
                                 <div style="position: absolute; left:0 ">
                                     <i style="font-size: 91px;color:#082a482e" class="fa-fw fas fa-user c-sidebar-nav-icons"></i>
