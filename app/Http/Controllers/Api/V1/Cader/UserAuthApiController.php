@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Cawader;
 use Validator;
 use Auth;
+use App\Traits\send_mail_trait;
+use App\Traits\send_sms_trait;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 
 
@@ -16,6 +18,8 @@ class UserAuthApiController extends Controller
 {
     use api_return;
     use MediaUploadingTrait;
+    use send_mail_trait;
+    use send_sms_trait;
 
     public function register(Request $request){
 
@@ -52,8 +56,8 @@ class UserAuthApiController extends Controller
                 'string',
                 'required',
                 'size:10',
-                'regex:/(10)[0-9]{8}|(11)[0-9]{8}|(12)[0-9]{8}|(13)[0-9]{8}|(14)[0-9]{8}|(15)[0-9]{8}|(20)[0-9]{8}|(21)[0-9]{8}|(22)[0-9]{8}|(23)[0-9]{8}|(24)[0-9]{8}|(25)[0-9]{8}/',                
-                
+                'regex:/(10)[0-9]{8}|(11)[0-9]{8}|(12)[0-9]{8}|(13)[0-9]{8}|(14)[0-9]{8}|(15)[0-9]{8}|(20)[0-9]{8}|(21)[0-9]{8}|(22)[0-9]{8}|(23)[0-9]{8}|(24)[0-9]{8}|(25)[0-9]{8}/',
+
             ],
             'name' => [
                 'string',
@@ -128,6 +132,14 @@ class UserAuthApiController extends Controller
         $cawader->specializations()->sync($request->input('specializations', []));
 
         $cawader->skills()->sync($request->input('skills', []));
+
+        //sending sms and email after cader register
+
+        $response = $this->sendSms($request->phone ,"طلبكم قيد المراجعة و التدقيق سيتم اشعاركم لاحقا
+        https://tanthim.com/");
+
+        $email=$this->sendEmail("طلبكم قيد المراجعة و التدقيق سيتم اشعاركم لاحقا  https://tanthim.com/",$request->email,"منصة تنظيم");
+
 
         return $this->returnSuccessMessage(trans('global.flash.api.registered'));
 

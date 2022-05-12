@@ -104,7 +104,7 @@
     line-height: 40px;
 }
 .listing-filter-sidebar .form-group .input-group{
-	
+
 }
 .listing-filter-sidebar .form-group{
 	margin-bottom: 20px;
@@ -123,29 +123,32 @@
 <div class="listing-filter m-b40">
     <div class="d-flex">
         <div class="ml-auto">
-            <form action="" id="search_cader" > 
+            <form action="" id="search_cader" >
                 <ul class="filter m-b0">
                     <div class="row">
-                    <li class="col-md-6">
+                    <li class="col-md-4">
+                        <input type="text" name="name" placeholder="بحث بالإسم" id="name"  @isset($name) value="{{ $name }}"  @endisset>
+                    </li>
+                    <li class="col-md-4">
                         <select name="specialization_id" id="specialization_id">
                             <option value="">
                                التخصص
                             </option>
                             @foreach(\App\Models\CawaderSpecialization::get() as $specialization)
-                                <option value="{{ $specialization->id }}" @isset($specialization_id) @if($specialization_id == $specialization->id) selected @endif @endisset>{{ $specialization->name_ar }}</option> 
+                                <option value="{{ $specialization->id }}" @isset($specialization_id) @if($specialization_id == $specialization->id) selected @endif @endisset>{{ $specialization->name_ar }}</option>
                             @endforeach
-                               
-                          
+
+
                         </select>
                     </li>
-                    <li class="col-md-6">
+                    <li class="col-md-4">
                         <select name="skill_id" id="skill_id">
                             <option value="">
                             المهارات
                             </option>
-                            
+
                             @foreach(\App\Models\Skill::get() as $skill)
-                            <option value="{{ $skill->id }}" @isset($skill_id) @if($skill_id == $skill->id) selected @endif @endisset>{{ $skill->name_ar }}</option> 
+                            <option value="{{ $skill->id }}" @isset($skill_id) @if($skill_id == $skill->id) selected @endif @endisset>{{ $skill->name_ar }}</option>
                         @endforeach
                         </select>
                     </li>
@@ -188,7 +191,7 @@
         <tr>
             <td><input {{ old('cawaders.' . $cawader->id, $cawader->hours) ? 'checked' : null }}
                     data-id="{{ $cawader->id }}" data-working_hours="{{ $cawader->working_hours }}" type="checkbox" class="cawader-enable"></td>
-                    
+
            <td> <a href="{{ route('frontend.cader',$cawader->id)}}" target="_blank">{{ $cawader->user->name }}</a></td>
 
             <td><input value="{{ old('cawaders.' . $cawader->id . '.hours', $cawader->hours) ?? null }}"
@@ -266,6 +269,9 @@
             $('#search_cader').submit();
         });
         $('#skill_id').on('change',function(){
+            $('#search_cader').submit();
+        });
+        $('#name').on('input',function(){
             $('#search_cader').submit();
         });
     </script>

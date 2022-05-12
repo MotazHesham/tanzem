@@ -14,6 +14,7 @@ use App\Http\Controllers\Traits\MediaUploadingTrait;
 use Illuminate\Support\Facades\Http;
 use App\Models\PasswordReset;
 use App\Traits\send_mail_trait;
+use App\Traits\send_sms_trait;
 use Carbon\Carbon;
 
 
@@ -21,6 +22,7 @@ class UserAuthApiController extends Controller
 {
     use api_return;
     use send_mail_trait;
+    use send_sms_trait;
     use MediaUploadingTrait;
 
     public function send_sms_code(Request $request){
@@ -30,7 +32,7 @@ class UserAuthApiController extends Controller
             'email' => 'required|unique:users',
         ];
 
-            
+
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
@@ -38,11 +40,10 @@ class UserAuthApiController extends Controller
         }
 
 
-        $phone = $request->phone ? substr($request->phone, 1) : 0;
 
         $random_code = random_int(1000, 9999);
-        
-               $email=$this->sendEmail("رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code,$request->email,"منصة تنظيم");
+
+        $email=$this->sendEmail("رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code,$request->email,"منصة تنظيم");
 
         $passwordReset = PasswordReset::where('email',$request->phone)->first();
 
@@ -54,16 +55,9 @@ class UserAuthApiController extends Controller
                     'token' => $random_code
                 ]
             );
-            
-            $response =  Http::withHeaders([
-                'Content-Type' =>   'application/json',
-            ])->post('https://www.msegat.com/gw/sendsms.php', [
-                "userName" => "tanthimco2022",
-                "numbers" =>  "966".$phone,
-                "userSender" => "Tanthim-AD",
-                "apiKey" => "08019771490cd9960d726674344dfe1e",
-                "msg" => "رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code
-            ]);
+
+            $response = $this->sendSms($request->phone ,"رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code);
+
             if($response['code'] == '1'||$email==1){
                 return $this->returnData(['code' => $random_code]);
             }else{
@@ -72,15 +66,8 @@ class UserAuthApiController extends Controller
         }elseif (Carbon::parse($passwordReset->updated_at)->addMinutes(2)->isPast()) {
 
 
-            $response =  Http::withHeaders([
-                'Content-Type' =>   'application/json',
-            ])->post('https://www.msegat.com/gw/sendsms.php', [
-                "userName" => "tanthimco2022",
-                "numbers" =>  "966".$phone,
-                "userSender" => "Tanthim-AD",
-                "apiKey" => "08019771490cd9960d726674344dfe1e",
-                "msg" => "رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code
-            ]);
+              $response = $this->sendSms($request->phone ,"رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code);
+
             if($response['code'] == '1'||$email==1){
                 return $this->returnData(['code' => $random_code]);
             }else{
@@ -215,4 +202,4 @@ class UserAuthApiController extends Controller
             return $this->returnError('500',trans('global.flash.api.invalid_user_or_password'));
         }
     }
-}           
+}

@@ -63,6 +63,9 @@ trait push_notification
             ])->post('https://fcm.googleapis.com/fcm/send', [
                 "to" => $user->fcm_token,
                 "collapse_key" => "type_a",
+                "data" => [
+                    "type" => $type,
+                ],
                 "notification" => [
                     "title"=> $title,
                     "body" => $body

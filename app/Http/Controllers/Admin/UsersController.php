@@ -14,16 +14,47 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use Spatie\MediaLibrary\Models\Media;
+use Auth;
+use App\Traits\send_mail_trait;
+use App\Traits\send_sms_trait;
 use Alert;
 
 class UsersController extends Controller
 {
     use MediaUploadingTrait;
+    use send_mail_trait;
+    use send_sms_trait;
 
     public function update_approved(Request $request){
         $user = User::find($request->id);
         $user->approved = $request->status;
         $user->save();
+
+         //sending sms and email after accept cader join request
+
+        if ($request->status==1){
+
+             $response = $this->sendSms($user->phone ,"مرحبا بكم في منصة تنظيم تم اصدار العضوية الرقمية يسعدنا انضمامك
+             انت جزء من الحدث
+             https://www.tanthim.page.link.com/hjg");
+
+             $email=$this->sendEmail("مرحبا بكم في منصة تنظيم تم اصدار العضوية الرقمية يسعدنا انضمامك
+             انت جزء من الحدث
+            https://www.tanthim.page.link.com/hjg",$user->email,"منصة تنظيم");
+
+        }
+        else{
+
+            $response = $this->sendSms($user->phone ,"يؤسفنا ابلاغك بعدم اكتمال بياناتك للعضوية الرقمية تأكد من صحة البيانات المدخلة
+            و إعادة الطلب
+             https://tanthim.com/");
+
+             $email=$this->sendEmail("يؤسفنا ابلاغك بعدم اكتمال بياناتك للعضوية الرقمية تأكد من صحة البيانات المدخلة
+             و إعادة الطلب
+             https://tanthim.com/",$user->email,"منصة تنظيم");
+
+
+        }
         return 1;
     }
 

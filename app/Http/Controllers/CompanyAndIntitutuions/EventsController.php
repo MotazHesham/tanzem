@@ -355,6 +355,7 @@ class EventsController extends Controller
          global $to;
          $specialization_id = null;
          $skill_id = null;
+         $name = null;
   //check if any cader found in event within that date
         $event=Event::findOrfail($event_id);
 
@@ -383,13 +384,23 @@ class EventsController extends Controller
             });
         }
 
+        if($request->has('name') && $request->name != null){
+            global $name;
+            $name = $request->name;
+            $cawaders_full_time = $cawaders_full_time->whereHas('user',function ($query) {
+
+                $query->where('name','like',"%".$GLOBALS['name']."%");
+            });
+        }
+
           $cawaders_full_time=$cawaders_full_time->get();
        /* $cawaders_part_time = Cawader::with('user','events')->where('companies_and_institution_id',null)->whereHas('events',function ($query) {
             $query->whereBetween('start_date',[$GLOBALS['from'],$GLOBALS['to']])->orwhereBetween('end_date',[$GLOBALS['from'],$GLOBALS['to']]);
 
         })->get(); */
         $event_id=$event->id;
-     return view('admin.events.partials.caders_new',compact('cawaders_full_time','event_id'));
+        return view('admin.events.partials.caders_new',compact('cawaders_full_time','event_id','specialization_id','skill_id','name'));
+
 
 
 }
