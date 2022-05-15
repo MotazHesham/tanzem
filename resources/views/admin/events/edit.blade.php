@@ -9,8 +9,8 @@
         <div class="card-body">
             <form method="POST" action="{{ route('admin.events.update', [$event->id]) }}" enctype="multipart/form-data">
                 @method('PUT')
-                @csrf 
-                
+                @csrf
+
                 <div class="row">
 
                     <div class="form-group col-md-2">
@@ -67,7 +67,7 @@
                     </div>
                     @include('admin.events.forms.edit')
                 </div>
- 
+
                 <div class="form-group">
                     <button class="btn btn-danger" type="submit">
                         {{ trans('global.save') }}

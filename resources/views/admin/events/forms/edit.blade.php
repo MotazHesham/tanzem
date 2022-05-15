@@ -165,7 +165,7 @@
             @endif
             <span class="help-block">{{ trans('cruds.event.fields.photo_helper') }}</span>
         </div>
-        
+
         <div class="col-md-6">
             <label for="description">{{ trans('cruds.event.fields.description') }}</label>
             <textarea class="form-control {{ $errors->has('description') ? 'is-invalid' : '' }}" name="description"

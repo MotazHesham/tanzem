@@ -58,7 +58,7 @@ class UserAuthApiController extends Controller
 
             $response = $this->sendSms($request->phone ,"رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code);
 
-            if($response['code'] == '1'||$email==1){
+            if($response||$email==1){
                 return $this->returnData(['code' => $random_code]);
             }else{
                 return $this->returnError('401', 'Error Code '.$response['code']);
@@ -68,7 +68,7 @@ class UserAuthApiController extends Controller
 
               $response = $this->sendSms($request->phone ,"رمز التفعيل الخاص بك في منصة تنظيم هو:". $random_code);
 
-            if($response['code'] == '1'||$email==1){
+            if($response||$email==1){
                 return $this->returnData(['code' => $random_code]);
             }else{
                 return $this->returnError('401', 'Error Code '.$response['code']);

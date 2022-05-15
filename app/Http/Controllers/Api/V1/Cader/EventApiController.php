@@ -337,6 +337,7 @@ class EventApiController extends Controller
 
                 if($alert){
                     $this->send_notification('خارج نطاق الفعالية' , 'برجاء الرجوع لمنطفة الفعالية' , '' , '' , 'warning' , $cawader->user_id, false);
+                    $this->send_web_notification('  تنبيه الكادر '.$cawader->user->name.' خارج نطاق الفعالية ' , 'برجاء  اعلامه بالرجوع لمنطفة الفعالية' , '' , '' , 'warning' , $cawader->user_id, false);
                 }
             }
         }

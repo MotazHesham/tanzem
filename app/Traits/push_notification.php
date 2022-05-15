@@ -39,22 +39,6 @@ trait push_notification
                     "body" => $body
                 ]
             ]);
-        }elseif($type == 'cader_request'){
-            Http::withHeaders([
-                'Authorization' => $key,
-                'Content-Type' =>   'application/json',
-            ])->post('https://fcm.googleapis.com/fcm/send', [
-                "to" => $user->fcm_token,
-                "collapse_key" => "type_a",
-                "data" => [
-                    "type" => $type,
-                    "status" => $data,
-                ],
-                "notification" => [
-                    "title"=> $title,
-                    "body" => $body
-                ]
-            ]);
         }
         else{
             Http::withHeaders([
