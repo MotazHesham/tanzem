@@ -266,8 +266,41 @@ class EventsController extends Controller
 
         $event->load('city', 'company', 'specializations', 'cawaders', 'reviews', 'client', 'government', 'available_gates');
 
+        $from=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->start_date)->format('d-m-Y'));
+        $to=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->end_date)->format('d-m-Y'));
 
-        return view('admin.events.edit', compact('cities', 'companies', 'available_gates', 'event','specializations','clients','governments'));
+        $cawaders =Cawader::with('user')->where('companies_and_institution_id',null)->whereDoesntHave('events',function ($query) {
+            $query->whereDate('start_date', '<=', $GLOBALS['from'])
+            ->whereDate('end_date', '>=', $GLOBALS['to'])
+            ->orwhere('start_date',$GLOBALS['from'])->orwhere('end_date',$GLOBALS['to']);
+
+
+        })->OrwhereHas('events',function ($query) {
+            $query->where('id', $GLOBALS['id'])->where('cawader_event.status',1);
+        });
+        if($request->has('specialization_id') && $request->specialization_id != null){
+            global $specialization_id;
+            $specialization_id = $request->specialization_id;
+            $cawaders = $cawaders->whereHas('specializations',function ($query) {
+                $query->where('id', 'like', $GLOBALS['specialization_id']);
+            });
+        }
+        if($request->has('skill_id') && $request->skill_id != null){
+            global $skill_id;
+            $skill_id = $request->skill_id;
+            $cawaders = $cawaders->whereHas('skills',function ($query) {
+                $query->where('id', 'like', $GLOBALS['skill_id']);
+            });
+        }
+       $cawaders =$cawaders->get()->map(function($cawader) use ($event) {
+            $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
+            $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
+            $cawader->extra_hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.extra_hours') ?? null;
+            return $cawader;
+        });
+
+
+        return view('admin.events.edit', compact('cities', 'companies', 'available_gates', 'event','specializations','cawaders','clients','governments'));
     }
 
     public function update(UpdateEventRequest $request, Event $event)
@@ -276,7 +309,7 @@ class EventsController extends Controller
         $event->update($request->all());
         $event->available_gates()->sync($request->input('available_gates', []));
         $event->specializations()->sync($request->input('specializations', []));
-       // $event->cawaders()->sync($data['cawaders']);
+        $event->cawaders()->sync($data['cawaders']);
         if ($request->input('photo', false)) {
             if (!$event->photo || $request->input('photo') !== $event->photo->file_name) {
                 if ($event->photo) {
@@ -420,15 +453,7 @@ class EventsController extends Controller
             });
         }
 
-        $cawaders_full_time =$cawaders_full_time->get()->map(function($cawader) use ($event) {
-            $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
-            $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
-            $cawader->extra_hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.extra_hours') ?? null;
-            return $cawader;
-        });
-
-
-    //  $cawaders_full_time=$cawaders_full_time->get();
+          $cawaders_full_time=$cawaders_full_time->get();
        /* $cawaders_part_time = Cawader::with('user','events')->where('companies_and_institution_id',null)->whereHas('events',function ($query) {
             $query->whereBetween('start_date',[$GLOBALS['from'],$GLOBALS['to']])->orwhereBetween('end_date',[$GLOBALS['from'],$GLOBALS['to']]);
 
@@ -464,12 +489,8 @@ class EventsController extends Controller
         }
         /////
 
-        Alert::success('تم بنجاح', 'تم إضافة الكوادر للفعالية بنجاح ');
+        Alert::success('تم بنجاح', ' تم إضافة الكوادر للفعالية بنجاح  وسيتم اشعارهم للرفض أو الموافقه');
         return redirect()->route('admin.events.index');
-
-     }
-     public function Cawader(){
-
 
      }
 }

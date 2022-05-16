@@ -320,6 +320,7 @@ class EventApiController extends Controller
                 if($cawader->out_of_zone && $distance < $event->area){
                     $last_check = $event->attendance()->wherePivot('type','stream')->wherePivot('out_of_zone',1)->where('attendance1',$now_date)->orderBy('created_at','desc')->get()->first();
                     $diff = Carbon::parse($now_time)->diffInMinutes($last_check->pivot->attendance2);
+                    $this->send_notification('الرجوع إلي نطاق الفعالية' , 'تم الرجوع لنطاق الفعالية' , '' , '' , 'map_border' , $cawader->user_id, false);
                 }
 
                 $event->attendance()->attach([
@@ -336,8 +337,7 @@ class EventApiController extends Controller
                 ]);
 
                 if($alert){
-                    $this->send_notification('خارج نطاق الفعالية' , 'برجاء الرجوع لمنطفة الفعالية' , '' , '' , 'warning' , $cawader->user_id, false);
-                    $this->send_web_notification('  تنبيه الكادر '.$cawader->user->name.' خارج نطاق الفعالية ' , 'برجاء  اعلامه بالرجوع لمنطفة الفعالية' , '' , '' , 'warning' , $cawader->user_id, false);
+                    $this->send_notification('خارج نطاق الفعالية' , 'برجاء الرجوع لمنطفة الفعالية' , '' , '' , 'map_border' , $cawader->user_id, false);
                 }
             }
         }
@@ -361,6 +361,33 @@ class EventApiController extends Controller
         event(new ChangeLocation($data));
 
         return $this->returnSuccessMessage(trans('global.flash.api.attend'));
+    }
+
+    public function changeStatus(Request $request){
+        $rules = [
+            'event_id' => 'required|integer',
+            'status' => 'required|integer',  //0=>refused --- 1=>accept -- 2=>pending
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return $this->returnError('401', $validator->errors());
+        }
+        $event = Event::find($request->event_id);
+        if(!$event){
+            return $this->returnError('404',trans('global.flash.api.not_found'));
+        }
+        $cawader = Cawader::where('user_id',Auth::id())->first();
+
+        $cawader = $event->cawaders()->where('event_id',$request->event_id)->first();
+
+        $cawader->pivot->status = 1;
+
+        $cawader->pivot->save();
+
+        return $this->returnSuccessMessage(trans('global.flash.api.success'));
+
     }
 
     // calculate distance between twopoints_on_earth
