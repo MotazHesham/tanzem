@@ -277,6 +277,8 @@ class EventsController extends Controller
 
         })->OrwhereHas('events',function ($query) {
             $query->where('id', $GLOBALS['id'])->where('cawader_event.status',1);
+        })->OrwhereHas('events',function ($query) {
+            $query->where('cawader_event.status',0);
         });
         if($request->has('specialization_id') && $request->specialization_id != null){
             global $specialization_id;
@@ -347,7 +349,7 @@ class EventsController extends Controller
                 $event->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('videos');
             }
         }
-          /*
+
              foreach( $event->cawaders as $cawader_event){
 
             $title = 'تم اضافتك في فعاليه جديده ';
@@ -358,14 +360,13 @@ class EventsController extends Controller
                 'name' => $cawader_event->user->name,
                 'event_id' =>$event->id,
             ];
-            event(new CaderRequest($data));
+          //  event(new CaderRequest($data));
 
-        $this->send_notification($title,$body , '' ,'', 'cader_request' , $cawader_event->user_id,false,$data);
+        $this->send_notification($title,$body ,$title ,$$event->id, 'cader_request' , $cawader_event->user_id,true,$data) ;
 
 
 
     }
-    */
 
         Alert::success('تم بنجاح', 'تم تعديل بيانات الفعالية بنجاح ');
         return redirect()->route('admin.events.index');
@@ -482,9 +483,10 @@ class EventsController extends Controller
                     'name' => $cawader_event->user->name,
                     'event_id' =>$event->id,
                 ];
-                event(new CaderRequest($data));
+               // event(new CaderRequest($data));
 
-            $this->send_notification($title,$body , '' ,'', 'cader_request' , $cawader_event->user_id,true,$data) ;
+               $this->send_notification($title,$body ,$title ,$event->id, 'cader_request' , $cawader_event->user_id,true,$data) ;
+
 
         }
         /////

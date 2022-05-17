@@ -18,7 +18,7 @@ class EventsResource extends JsonResource
     {
         $image = $this->photo ? asset($this->photo->getUrl()) : null;
         $image = str_replace('public/public','public',$image);
-        $name = 'name_' . app()->getLocale(); 
+        $name = 'name_' . app()->getLocale();
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -30,8 +30,8 @@ class EventsResource extends JsonResource
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'start_time' => $this->start_time,
-            'end_time' => $this->end_time,  
-            'photo' => $image,  
+            'end_time' => $this->end_time,
+            'photo' => $image,
             'photos'          => MediaResource::collection($this->getMedia('photos')),
             'videos'=> VideoResource::collection($this->getMedia('videos')),
             'ratings_avg'=>$this->reviews()->avg('rate'),

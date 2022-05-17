@@ -23,6 +23,7 @@ use Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Resources\V1\Cader\BreakTypesResource;
+use App\Http\Resources\V1\User\NotificationsResource;
 
 class UsersApiController extends Controller
 {
@@ -154,23 +155,34 @@ class UsersApiController extends Controller
     }
 
     public function terms(Request $request){
-       
-       
+
+
         if($request->type==1){
-               $cawder = 'terms_cawader_' . app()->getLocale(); 
+               $cawder = 'terms_cawader_' . app()->getLocale();
                $terms=Setting::first()->$cawder;
         }
         elseif($request->type==2){
-               $company = 'terms_company_' . app()->getLocale(); 
+               $company = 'terms_company_' . app()->getLocale();
                $terms=Setting::first()->$company;
         }
         else{
-            $visitor = 'terms_visitor_' . app()->getLocale(); 
+            $visitor = 'terms_visitor_' . app()->getLocale();
             $terms=Setting::first()->$visitor;
-           
+
 
         }
          return   $this->returnData($terms);
-            
+
         }
-    }
+
+        public function MyNotifications(Request $request){
+
+
+            $user = Auth::user();
+            $alerts = $user->userUserAlerts()->where('type',$request->type)->paginate(30);
+            $new = NotificationsResource::collection($alerts);
+            return $this->returnPaginationData($new,$alerts,"success");
+              }
+
+        }
+

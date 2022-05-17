@@ -42,6 +42,10 @@ Route::group(['prefix' => 'v1/cader', 'as' => 'api.', 'namespace' => 'Api\V1\Cad
 
         Route::get('event/{event_id}','EventApiController@event') ;
         Route::Post('event_status','EventApiController@changeStatus') ;
+
+        //get_Cader_notification
+        Route::get('all_notification','UsersApiController@MyNotifications') ;
+
     });
 });
 

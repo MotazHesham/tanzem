@@ -25,6 +25,14 @@ class EventsApiController extends Controller
         return $this->returnPaginationData($new,$events,"success");
     }
 
+    public function event($event_id){
+
+        $event = Event::where('id',$event_id)->with('available_gates','eventBrands')->first();
+        $new = new EventsResource($event);
+        return $this->returnData($new);
+    }
+
+
     public function myevents(){
 
         $now_date = date('Y-m-d',strtotime('now'));

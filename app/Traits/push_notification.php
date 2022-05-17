@@ -10,6 +10,7 @@ trait push_notification
 
     public function send_notification( $title , $body , $alert_text , $alert_link , $type , $user_id, $add_to_alerts = true, $data = null)
     {
+
         $user = User::findOrFail($user_id);
         $key = 'key=AAAAgglWHgE:APA91bEUzDLzney0ogMIGkyLniomIso6G03MVGsogsYBW19E9VAr9NvFU9RUTlRALp8UgF5Yj7zrhhKuAc2RDGFzPhEGeEUV1lrvv8VDCIUUWStm9XE753Z1-JIgFNBQ0hjmfvniZwqS';
 
@@ -32,7 +33,7 @@ trait push_notification
                 "collapse_key" => "type_a",
                 "data" => [
                     "type" => $type,
-                    "status" => $data,
+                  //  "status" => $data,
                 ],
                 "notification" => [
                     "title"=> $title,
@@ -49,6 +50,7 @@ trait push_notification
                 "collapse_key" => "type_a",
                 "data" => [
                     "type" => $type,
+                    "status" => $data,
                 ],
                 "notification" => [
                     "title"=> $title,

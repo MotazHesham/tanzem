@@ -54,7 +54,7 @@ class EventApiController extends Controller
 
         $events = Event::with('cawaders')->where('start_date','<=',$now_date)->where('end_date','>=',$now_date)
                         ->whereHas('cawaders',function ($query){
-                            $query->where('id',$GLOBALS['cawader_id']);
+                            $query->where('id',$GLOBALS['cawader_id'])->where('cawader_event.status',1);;
                         })->orderBy('end_date','asc')->paginate(10);
 
         $new = EventsResource::collection($events);
@@ -88,6 +88,8 @@ class EventApiController extends Controller
         $cawader_id = $cawader->id;
 
         $event = Event::find($event_id);
+        if(!event)
+        return $this->returnError('404',('global.flash.api.no_event_for_now'));
         $event_cawaders = $event->cawaders()->wherePivot('cawader_id',$cawader_id)->first();
 
         if(!$event_cawaders){
@@ -380,9 +382,9 @@ class EventApiController extends Controller
         }
         $cawader = Cawader::where('user_id',Auth::id())->first();
 
-        $cawader = $event->cawaders()->where('event_id',$request->event_id)->first();
+        $cawader = $event->cawaders()->where('event_id',$request->event_id)->where('cawader_id', $cawader->id)->first();
 
-        $cawader->pivot->status = 1;
+        $cawader->pivot->status = $request->status;
 
         $cawader->pivot->save();
 

@@ -28,6 +28,9 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
         // myEvents
         Route::get('myevents','EventsApiController@myevents');
 
+        //event by id
+        Route::get('event/{event_id}','EventsApiController@event');
+
         //user profile
         Route::group(['prefix' =>'profile'],function(){
             Route::get('/','UsersApiController@profile');
@@ -52,20 +55,20 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
 
         // notifications
         Route::get('notifications','NotificationsApiController@index');
-        
+
       //ratting
-    
+
         Route::group(['prefix' =>'rating'],function(){
-       
+
             Route::post('rate','EventsApiController@rate') ;
             Route::get('/get/{event_id}','EventsApiController@getRatings') ;
-           
+
         });
-    
+
 
     });
 
-  
+
 });
 
 
