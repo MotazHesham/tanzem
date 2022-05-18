@@ -33,7 +33,7 @@ trait push_notification
                 "collapse_key" => "type_a",
                 "data" => [
                     "type" => $type,
-                  //  "status" => $data,
+                    "status" => $data,
                 ],
                 "notification" => [
                     "title"=> $title,

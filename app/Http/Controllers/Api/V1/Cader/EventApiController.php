@@ -86,9 +86,8 @@ class EventApiController extends Controller
 
         $cawader = Cawader::where('user_id',Auth::id())->first();
         $cawader_id = $cawader->id;
-
         $event = Event::find($event_id);
-        if(!event)
+        if(!$event)
         return $this->returnError('404',('global.flash.api.no_event_for_now'));
         $event_cawaders = $event->cawaders()->wherePivot('cawader_id',$cawader_id)->first();
 

@@ -19,6 +19,7 @@ use App\Models\Specialization;
 use App\Models\Visitor;
 use App\Events\CaderRequest;
 use Gate;
+use DB;
 use Illuminate\Http\Request;
 use Spatie\MediaLibrary\Models\Media;
 use Symfony\Component\HttpFoundation\Response;
@@ -276,7 +277,7 @@ class EventsController extends Controller
 
 
         })->OrwhereHas('events',function ($query) {
-            $query->where('id', $GLOBALS['id'])->where('cawader_event.status',1);
+            $query->where('id', $GLOBALS['id']);
         })->OrwhereHas('events',function ($query) {
             $query->where('cawader_event.status',0);
         });
@@ -298,8 +299,10 @@ class EventsController extends Controller
             $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
             $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
             $cawader->extra_hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.extra_hours') ?? null;
+            $cawader->status = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.status') ?? -1;
             return $cawader;
         });
+
 
 
         return view('admin.events.edit', compact('cities', 'companies', 'available_gates', 'event','specializations','cawaders','clients','governments'));
@@ -311,6 +314,23 @@ class EventsController extends Controller
         $event->update($request->all());
         $event->available_gates()->sync($request->input('available_gates', []));
         $event->specializations()->sync($request->input('specializations', []));
+        foreach ($data['cawaders'] as $key => $value) {
+            $result=DB::table('cawader_event')->where('cawader_id',$key)->where('event_id',$event->id)->first();
+            if(!$result){
+                 $cader=Cawader::findOrfail($key);
+                $title = 'تم اضافتك في فعاليه جديده ';
+                $body = 'عزيزي'.' '.$cader->user->name.' '.'تطلبك شركة فعاليات للإنضمام معها في احدى فعالياتها   ' ;
+
+                $data = [
+                    'user_id' =>$cader->user_id,
+                    'name' => $cader->user->name,
+                    'event_id' =>$event->id,
+                ];
+              //  event(new CaderRequest($data));
+
+            $this->send_notification($title,$body ,$title ,$event->id, 'cader_request' , $cader->user_id,true,$data) ;
+            }
+         }
         $event->cawaders()->sync($data['cawaders']);
         if ($request->input('photo', false)) {
             if (!$event->photo || $request->input('photo') !== $event->photo->file_name) {
@@ -350,23 +370,6 @@ class EventsController extends Controller
             }
         }
 
-             foreach( $event->cawaders as $cawader_event){
-
-            $title = 'تم اضافتك في فعاليه جديده ';
-            $body = 'عزيزي'.' '.$cawader_event->user->name.' '.'تطلبك شركة فعاليات للإنضمام معها في احدى فعالياتها   ' ;
-
-            $data = [
-                'user_id' =>$cawader_event->user_id,
-                'name' => $cawader_event->user->name,
-                'event_id' =>$event->id,
-            ];
-          //  event(new CaderRequest($data));
-
-        $this->send_notification($title,$body ,$title ,$$event->id, 'cader_request' , $cawader_event->user_id,true,$data) ;
-
-
-
-    }
 
         Alert::success('تم بنجاح', 'تم تعديل بيانات الفعالية بنجاح ');
         return redirect()->route('admin.events.index');

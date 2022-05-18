@@ -14,6 +14,9 @@
         <td>
             الساعة الأضافية = الساعة العادية
         </td>
+        <td>
+               حالة الطلب
+        </td>
     </tr>
     <tr>
         @if ($errors->has('cawaders'))
@@ -26,7 +29,7 @@
         <tr>
             <td><input {{ old('cawaders.' . $cawader->id, $cawader->hours) ? 'checked' : null }}
                     data-id="{{ $cawader->id }}" data-working_hours="{{ $cawader->working_hours }}" type="checkbox" class="cawader-enable"></td>
-                    
+
            <td> <a href="{{ route('frontend.cader',$cawader->id)}}" target="_blank">{{ $cawader->user->name }}</a></td>
 
             <td><input value="{{ old('cawaders.' . $cawader->id . '.hours', $cawader->hours) ?? null }}"
@@ -66,6 +69,17 @@
                     <div class="text-danger">
                         هذا الحقل مطلوب
                     </div>
+                @endif
+            </td>
+            <td>
+                @if($cawader->status==2)
+                <label for="cawaders" class="badge badge-primary">قيد الأنتظار</label>
+                @elseif($cawader->status==1)
+                <label for="cawaders" class="badge badge-info">تمت الموافقه</label>
+                @elseif($cawader->status==0)
+                <label for="cawaders" class="badge badge-warning">تم الرفض</label>
+                @else
+                  <label></labe>
                 @endif
             </td>
         </tr>
