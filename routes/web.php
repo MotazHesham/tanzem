@@ -94,10 +94,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('brands/ckmedia', 'BrandsController@storeCKEditorImages')->name('brands.storeCKEditorImages');
     Route::resource('brands', 'BrandsController');
 
-    // Gates
+   // Gates
     Route::delete('gates/destroy', 'GatesController@massDestroy')->name('gates.massDestroy');
+    Route::post('gates/media', 'GatesController@storeMedia')->name('gates.storeMedia');
+    Route::post('gates/ckmedia', 'GatesController@storeCKEditorImages')->name('gates.storeCKEditorImages');
     Route::resource('gates', 'GatesController');
-
     // Visitors
     Route::delete('visitors/destroy', 'VisitorsController@massDestroy')->name('visitors.massDestroy');
     Route::resource('visitors', 'VisitorsController');

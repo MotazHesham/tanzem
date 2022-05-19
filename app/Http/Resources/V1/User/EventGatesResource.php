@@ -15,7 +15,12 @@ class EventGatesResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'gate' => $this->gate
+            'id' => $this->id,
+            'gate' => $this->gate,
+            'description' => $this->description ?? '' ,
+            'zone_name' => $this->zone_name ?? '' ,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
         ];
     }
 }

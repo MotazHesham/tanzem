@@ -31,6 +31,58 @@
                             {{ $gate->gate }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.gate.fields.event') }}
+                        </th>
+                        <td>
+                            {{ $gate->event->title ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.gate.fields.photo') }}
+                        </th>
+                        <td>
+                            @if($gate->photo)
+                                <a href="{{ $gate->photo->getUrl() }}" target="_blank" style="display: inline-block">
+                                    <img src="{{ $gate->photo->getUrl('thumb') }}">
+                                </a>
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.gate.fields.description') }}
+                        </th>
+                        <td>
+                            {{ $gate->description }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.gate.fields.zone_name') }}
+                        </th>
+                        <td>
+                            {{ $gate->zone_name }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.gate.fields.latitude') }}
+                        </th>
+                        <td>
+                            {{ $gate->latitude }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.gate.fields.longitude') }}
+                        </th>
+                        <td>
+                            {{ $gate->longitude }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

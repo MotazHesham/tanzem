@@ -146,7 +146,7 @@ class Event extends Model implements HasMedia
 
     public function available_gates()
     {
-        return $this->belongsToMany(Gate::class);
+        return $this->hasMany(Gate::class, 'event_id', 'id');
     }
 
     public function specializations()

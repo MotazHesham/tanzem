@@ -12,7 +12,7 @@ class StoreEventRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('event_create') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client' || Auth::user()->user_type == 'governmental_entity'; 
+        return Gate::allows('event_create') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client' || Auth::user()->user_type == 'governmental_entity';
     }
 
     public function rules()
@@ -33,7 +33,7 @@ class StoreEventRequest extends FormRequest
             ],
             'start_time' => [
                 'required',
-                'date_format:' . config('panel.time_format'), 
+                'date_format:' . config('panel.time_format'),
             ],
             'end_time' => [
                 'required',
@@ -68,13 +68,6 @@ class StoreEventRequest extends FormRequest
                 'required',
                 'integer',
             ],
-            'available_gates.*' => [
-                'integer',
-            ],
-            'available_gates' => [
-                'required',
-                'array',
-            ],
             'specializations.*' => [
                 'integer',
             ],
@@ -82,7 +75,7 @@ class StoreEventRequest extends FormRequest
                 'required',
                 'array',
             ],
-           
+
             'photos' => [
                 'array',
             ],

@@ -12,7 +12,7 @@ class UpdateEventRequest extends FormRequest
 {
     public function authorize()
     {
-        return Gate::allows('event_edit') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client' || Auth::user()->user_type == 'governmental_entity'; 
+        return Gate::allows('event_edit') || Auth::user()->user_type == 'companiesAndInstitution'|| Auth::user()->user_type == 'client' || Auth::user()->user_type == 'governmental_entity';
     }
 
     public function rules()
@@ -33,7 +33,7 @@ class UpdateEventRequest extends FormRequest
             ],
             'start_time' => [
                 'required',
-                'date_format:' . config('panel.time_format'), 
+                'date_format:' . config('panel.time_format'),
             ],
             'end_time' => [
                 'required',
@@ -68,13 +68,6 @@ class UpdateEventRequest extends FormRequest
                 'required',
                 'integer',
             ],
-            'available_gates.*' => [
-                'integer',
-            ],
-            'available_gates' => [
-                'required',
-                'array',
-            ],
             'specializations.*' => [
                 'integer',
             ],
@@ -82,17 +75,17 @@ class UpdateEventRequest extends FormRequest
                 'required',
                 'array',
             ],
-            'cawaders.*.hours' => [ 
+            'cawaders.*.hours' => [
                 'required',
             ],
-            'cawaders.*.amount' => [ 
+            'cawaders.*.amount' => [
                 'required',
             ],
             'cawaders' => [
                 'array',
                 'required',
             ],
-            'cawaders.*.extra_hours' => [ 
+            'cawaders.*.extra_hours' => [
                 'required',
             ],
             'photos' => [
@@ -102,5 +95,5 @@ class UpdateEventRequest extends FormRequest
                 'array',
             ],
         ];
-    } 
+    }
 }

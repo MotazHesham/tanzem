@@ -40,9 +40,6 @@
                             {{ trans('cruds.event.fields.company') }}
                         </th>
                         <th>
-                            {{ trans('cruds.event.fields.available_gates') }}
-                        </th>
-                        <th>
                             {{ trans('cruds.event.fields.specializations') }}
                         </th>
                         <th>
@@ -75,13 +72,13 @@
                 var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
                 return entry.id
                 });
-            
+
                 if (ids.length === 0) {
                 alert('{{ trans('global.datatables.zero_selected') }}')
-            
+
                 return
                 }
-            
+
                 if (confirm('{{ trans('global.areYouSure') }}')) {
                 $.ajax({
                 headers: {'x-csrf-token': _token},
@@ -133,10 +130,6 @@
                     {
                         data: 'company_user_name',
                         name: 'company.user.name'
-                    },
-                    {
-                        data: 'available_gates',
-                        name: 'available_gates.gate'
                     },
                     { data: 'specializations', name: 'specializations.name_ar' },
                     { data: 'status', name: 'status' },

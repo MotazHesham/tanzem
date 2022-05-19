@@ -103,7 +103,7 @@ class EventsController extends Controller
         abort_if(Gate::denies('event_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = Event::with(['city', 'company.user', 'available_gates','specializations'])->select(sprintf('%s.*', (new Event())->table));
+            $query = Event::with(['city', 'company.user','specializations'])->select(sprintf('%s.*', (new Event())->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -147,24 +147,6 @@ class EventsController extends Controller
             $table->addColumn('company_user_name', function ($row) {
                 return $row->company ? $row->company->user->name : '';
             });
-
-            $table->editColumn('available_gates', function ($row) {
-                $labels = [];
-                foreach ($row->available_gates as $available_gate) {
-                    $labels[] = sprintf('<span class="badge badge-info label-many">%s</span>', $available_gate->gate);
-                }
-
-                return implode(' ', $labels);
-            });
-
-            $table->editColumn('specializations', function ($row) {
-                $labels = [];
-                foreach ($row->specializations as $specialization) {
-                    $labels[] = sprintf('<span class="badge badge-info label-many">%s</span>', $specialization->name_ar);
-                }
-
-                return implode(' ', $labels);
-            });
             $table->editColumn('status', function ($row) {
                 if($row->status == 'active'){
                     $event_status = 'success';
@@ -179,7 +161,15 @@ class EventsController extends Controller
                 }
                 return $row->status ? sprintf('<span class="badge badge-%s">%s</span>',$event_status,trans('global.events_status.'.$row->status)) : '';
             });
-            $table->rawColumns(['actions', 'placeholder', 'company', 'date', 'time', 'status', 'available_gates','specializations']);
+             $table->editColumn('specializations', function ($row) {
+                $labels = [];
+                foreach ($row->specializations as $specialization) {
+                    $labels[] = sprintf('<span class="badge badge-info label-many">%s</span>', $specialization->name_ar);
+                }
+
+                return implode(' ', $labels);
+            });
+            $table->rawColumns(['actions', 'placeholder', 'company', 'date', 'time', 'status','specializations']);
 
             return $table->make(true);
         }
@@ -197,7 +187,6 @@ class EventsController extends Controller
 
         $companies = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $available_gates = EventGate::pluck('gate', 'id');
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
@@ -207,14 +196,13 @@ class EventsController extends Controller
 
         $governments = GovernmentalEntity::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.events.create', compact('cities', 'companies', 'available_gates','specializations','cawaders','clients','governments'));
+        return view('admin.events.create', compact('cities', 'companies','specializations','cawaders','clients','governments'));
     }
 
     public function store(StoreEventRequest $request)
     {
         $data = $request->validated();
         $event = Event::create($request->all());
-        $event->available_gates()->sync($request->input('available_gates', []));
         $event->specializations()->sync($request->input('specializations', []));
         if ($request->input('photo', false)) {
             $event->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
@@ -256,7 +244,6 @@ class EventsController extends Controller
 
         $companies = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $available_gates = EventGate::pluck('gate', 'id');
 
 
         $specializations = Specialization::pluck('name_ar', 'id');
@@ -305,14 +292,13 @@ class EventsController extends Controller
 
 
 
-        return view('admin.events.edit', compact('cities', 'companies', 'available_gates', 'event','specializations','cawaders','clients','governments'));
+        return view('admin.events.edit', compact('cities', 'companies','event','specializations','cawaders','clients','governments'));
     }
 
     public function update(UpdateEventRequest $request, Event $event)
     {
         $data = $request->validated();
         $event->update($request->all());
-        $event->available_gates()->sync($request->input('available_gates', []));
         $event->specializations()->sync($request->input('specializations', []));
         foreach ($data['cawaders'] as $key => $value) {
             $result=DB::table('cawader_event')->where('cawader_id',$key)->where('event_id',$event->id)->first();

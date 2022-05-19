@@ -29,6 +29,12 @@
                             {{ trans('cruds.gate.fields.gate') }}
                         </th>
                         <th>
+                            {{ trans('cruds.gate.fields.event') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.gate.fields.zone_name') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -45,26 +51,31 @@
                             <td>
                                 {{ $gate->gate ?? '' }}
                             </td>
-                            <td> 
+                            <td>
+                                {{ $gate->event->title ?? '' }}
+                            </td>
+                            <td>
+                                {{ $gate->zone_name ?? '' }}
+                            </td>
+                            <td>
                                 @can('gate_show')
-                                    <a href="{{ route('admin.gates.show', $gate->id) }}" class="btn btn-outline-info btn-pill action-buttons-view" >
-                                        <i  class="fas fa-eye actions-custom-i"></i>
+                                    <a  href="{{ route('admin.gates.show', $gate->id) }}"class="btn btn-outline-info btn-pill action-buttons-view" title="عرض"><i class="fas fa-eye actions-custom-i"></i></a>
+
                                     </a>
                                 @endcan
 
                                 @can('gate_edit')
-                                    <a  href="{{ route('admin.gates.edit', $gate->id) }}" class="btn btn-outline-success btn-pill action-buttons-edit">
-                                        <i  class="fa fa-edit actions-custom-i"></i> 
+                                    <a  href="{{ route('admin.gates.edit', $gate->id) }}" class="btn btn-outline-success btn-pill action-buttons-edit" title="تعديل"><i class="fa fa-edit actions-custom-i"></i>
+
                                     </a>
+
                                 @endcan
 
                                 @can('gate_delete')
-                                    <?php $route = route('admin.gates.destroy', $gate->id); ?>
-                                    <a  href="#" onclick="deleteConfirmation('{{$route}}')" class="btn btn-outline-danger btn-pill action-buttons-delete">
-                                        <i  class="fa fa-trash actions-custom-i"></i>
-                                    </a> 
-                                @endcan 
-
+                                <a href="#" onclick="deleteConfirmation('{{ route('admin.gates.destroy', $gate->id) }}')" class="btn btn-outline-danger btn-pill action-buttons-delete">
+                                    <i class="fa fa-trash actions-custom-i"></i>
+                                </a>
+                                @endcan
                             </td>
 
                         </tr>
@@ -123,7 +134,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 })
 
 </script>

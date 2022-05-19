@@ -108,7 +108,7 @@
     @endif
     <span class="help-block" style="font-size: 10px">{{ trans('cruds.event.fields.area_helper') }}</span>
 </div>
-<div class="form-group col-md-6">
+<div class="form-group col-md-12">
     <label class="required" for="specializations">{{ trans('cruds.event.fields.specializations') }}</label>
     <div style="padding-bottom: 4px">
         <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
@@ -129,28 +129,6 @@
         </div>
     @endif
     <span class="help-block">{{ trans('cruds.event.fields.specializations_helper') }}</span>
-</div>
-<div class="form-group col-md-6">
-    <label class="required" for="available_gates">{{ trans('cruds.event.fields.available_gates') }}</label>
-    <div style="padding-bottom: 4px">
-        <span class="btn btn-info btn-xs select-all" style="border-radius: 0">{{ trans('global.select_all') }}</span>
-        <span class="btn btn-info btn-xs deselect-all"
-            style="border-radius: 0">{{ trans('global.deselect_all') }}</span>
-    </div>
-    <select class="form-control select2 {{ $errors->has('available_gates') ? 'is-invalid' : '' }}"
-        name="available_gates[]" id="available_gates" multiple required>
-        @foreach ($available_gates as $id => $available_gate)
-            <option value="{{ $id }}"
-                {{ in_array($id, old('available_gates', [])) || $event->available_gates->contains($id) ? 'selected' : '' }}>
-                {{ $available_gate }}</option>
-        @endforeach
-    </select>
-    @if ($errors->has('available_gates'))
-        <div class="invalid-feedback">
-            {{ $errors->first('available_gates') }}
-        </div>
-    @endif
-    <span class="help-block">{{ trans('cruds.event.fields.available_gates_helper') }}</span>
 </div>
 <div class="form-group col-md-6">
     <div class="row">
