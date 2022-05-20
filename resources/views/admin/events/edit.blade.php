@@ -67,18 +67,8 @@
                     </div>
                     @include('admin.events.forms.edit')
                 </div>
-
-                <div class="form-group">
-                    <button class="btn btn-danger" type="submit">
-                        {{ trans('global.save') }}
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
-
-
-
 @endsection
 
 @section('scripts')
@@ -252,5 +242,11 @@ Dropzone.options.videosDropzone = {
          return _results
      }
 }
+</script>
+<script>
+    $('#search').on('click',function(){
+        $('#search_cader').submit();
+    });
+
 </script>
 @endsection

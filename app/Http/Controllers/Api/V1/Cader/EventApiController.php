@@ -387,6 +387,10 @@ class EventApiController extends Controller
 
         $cawader->pivot->save();
 
+        $alert = \Auth::user()->userUserAlerts()->where('alert_link',$request->event_id)->update([
+            'read'=>1,
+        ]);
+
         return $this->returnSuccessMessage(trans('global.flash.api.success'));
 
     }

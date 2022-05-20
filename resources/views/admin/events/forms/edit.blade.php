@@ -177,6 +177,12 @@
             @endif
             <span class="help-block">{{ trans('cruds.event.fields.videos_helper') }}</span>
         </div>
+        <div class="form-group">
+            <button class="btn btn-danger" type="submit">
+                {{ trans('global.save') }}
+            </button>
+        </div>
+    </form>
         <div class="form-group col-md-12">
             <div class="partials-scrollable mt-3">
                 @include('admin.events.partials.caders')

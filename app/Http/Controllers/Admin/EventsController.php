@@ -238,13 +238,13 @@ class EventsController extends Controller
 
         $skill_id = null;
 
+        $name = null;
+
         $id=$event->id;
 
         $cities = City::pluck('name_ar', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $companies = CompaniesAndInstitution::with('user')->get()->pluck('user.name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-
 
         $specializations = Specialization::pluck('name_ar', 'id');
 
@@ -256,8 +256,13 @@ class EventsController extends Controller
 
         $from=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->start_date)->format('d-m-Y'));
         $to=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->end_date)->format('d-m-Y'));
+       
+        global $name;
+        $name = $request->cader_name; 
 
-        $cawaders =Cawader::with('user')->where('companies_and_institution_id',null)->whereDoesntHave('events',function ($query) {
+        $cawaders =Cawader::whereHas('user',function ($query) {
+            $query->where('name','like',"%".$GLOBALS['name']."%");
+        })->with('user')->where('companies_and_institution_id',null)->whereDoesntHave('events',function ($query) {
             $query->whereDate('start_date', '<=', $GLOBALS['from'])
             ->whereDate('end_date', '>=', $GLOBALS['to'])
             ->orwhere('start_date',$GLOBALS['from'])->orwhere('end_date',$GLOBALS['to']);
@@ -268,20 +273,6 @@ class EventsController extends Controller
         })->OrwhereHas('events',function ($query) {
             $query->where('cawader_event.status',0);
         });
-        if($request->has('specialization_id') && $request->specialization_id != null){
-            global $specialization_id;
-            $specialization_id = $request->specialization_id;
-            $cawaders = $cawaders->whereHas('specializations',function ($query) {
-                $query->where('id', 'like', $GLOBALS['specialization_id']);
-            });
-        }
-        if($request->has('skill_id') && $request->skill_id != null){
-            global $skill_id;
-            $skill_id = $request->skill_id;
-            $cawaders = $cawaders->whereHas('skills',function ($query) {
-                $query->where('id', 'like', $GLOBALS['skill_id']);
-            });
-        }
        $cawaders =$cawaders->get()->map(function($cawader) use ($event) {
             $cawader->hours = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.hours') ?? null;
             $cawader->amount = data_get($event->cawaders->firstWhere('id', $cawader->id), 'pivot.amount') ?? null;
@@ -302,7 +293,7 @@ class EventsController extends Controller
         $event->specializations()->sync($request->input('specializations', []));
         foreach ($data['cawaders'] as $key => $value) {
             $result=DB::table('cawader_event')->where('cawader_id',$key)->where('event_id',$event->id)->first();
-            if(!$result){
+            if(isset($result)){
                  $cader=Cawader::findOrfail($key);
                 $title = 'تم اضافتك في فعاليه جديده ';
                 $body = 'عزيزي'.' '.$cader->user->name.' '.'تطلبك شركة فعاليات للإنضمام معها في احدى فعالياتها   ' ;
@@ -312,12 +303,12 @@ class EventsController extends Controller
                     'name' => $cader->user->name,
                     'event_id' =>$event->id,
                 ];
-              //  event(new CaderRequest($data));
+            
 
             $this->send_notification($title,$body ,$title ,$event->id, 'cader_request' , $cader->user_id,true,$data) ;
             }
          }
-        $event->cawaders()->sync($data['cawaders']);
+        $event->cawaders()->sync($request->cawaders);
         if ($request->input('photo', false)) {
             if (!$event->photo || $request->input('photo') !== $event->photo->file_name) {
                 if ($event->photo) {
@@ -416,7 +407,8 @@ class EventsController extends Controller
             $query->whereDate('start_date', '<=', $GLOBALS['from'])
             ->whereDate('end_date', '>=', $GLOBALS['to'])
             ->orwhere('start_date',$GLOBALS['from'])->orwhere('end_date',$GLOBALS['to']);
-
+        })->OrwhereHas('events',function ($query) {
+            $query->where('cawader_event.status',0);
         });
 
         if($request->has('specialization_id') && $request->specialization_id != null){

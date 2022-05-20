@@ -179,7 +179,7 @@ class UsersApiController extends Controller
 
 
             $user = Auth::user();
-            $alerts = $user->userUserAlerts()->where('type',$request->type)->paginate(30);
+            $alerts = $user->userUserAlerts()->where('type',$request->type)->where('read',0)->paginate(30);
             $new = NotificationsResource::collection($alerts);
             return $this->returnPaginationData($new,$alerts,"success");
               }

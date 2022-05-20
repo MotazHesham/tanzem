@@ -1,3 +1,13 @@
+<form action="" id="search_cader" >
+    <ul class="filter m-b0">
+        <div class="row">
+            <input type="text" name="cader_name" placeholder="بحث بالإسم" id="cader_name"  @isset($name) value="{{ $name }}"  @endisset>
+    <a class="btn btn-outline-info btn-pill action-buttons-view" id="search" title="عرض"><i class="fas fa-eye actions-custom-i"></i></a>
+
+</a>     </div>
+</ul>
+
+</form>
 <table>
     <tr>
         <td>
