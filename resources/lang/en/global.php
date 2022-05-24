@@ -83,6 +83,7 @@ return [
         'colvis'        => 'Columns',
         'delete'        => 'Delete selected',
         'zero_selected' => 'No rows selected',
+        'massApprove'=>'Approve Selected',
     ],
     'billing' => [
         'menu'                        => 'Billing',
@@ -323,13 +324,13 @@ return [
         'Bachelors Degree'             => 'Bachelors Degree',
         'Masters Degree'               => 'Masters Degree',
     ],
-    'news_status' => [ 
+    'news_status' => [
         'pending'  => 'Pending',
         'active' => 'Active',
         'refused'  => 'Refused',
         'closed'   => 'Closed',
     ],
-    'events_status' => [ 
+    'events_status' => [
         'pending'  => 'Pending',
         'active' => 'Active',
         'refused'  => 'Refused',
@@ -407,16 +408,16 @@ return [
             'password_updated' => 'Password has been modified successfully',
             'not_found' => 'No data was found',
             'old_password_not_correct' => 'The current password is wrong',
-            
+
             'already_in_event' => 'No sign in, already inside',
             'success_join' => 'You are logged in successfully',
             'success_leave' => 'Signed out successfully',
             'error_leave' => 'logged out before',
-            'not_join_before' => 'Not logged in before',   
+            'not_join_before' => 'Not logged in before',
             'rate' => 'rate successfully',
             'not_rate' => 'You are not authorized to use this action',
 
 
-        ], 
-    ], 
+        ],
+    ],
 ];

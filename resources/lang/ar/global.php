@@ -83,6 +83,7 @@ return [
         'colvis'        => 'الاعمدة',
         'delete'        => 'حذف المحدد',
         'zero_selected' => 'لم يتم تحديد صفوف',
+        'massApprove'=>'قبول المحدد',
     ],
     'billing' => [
         'menu'                        => 'الفوترة',
@@ -324,13 +325,13 @@ return [
         'Masters Degree'               => 'درجةالماجيستير',
         'PHD Degree'                   => 'درجة الدكتوراه'
     ],
-    'news_status' => [ 
+    'news_status' => [
         'pending'  => 'قيد الأنتظار',
         'active' => 'فعال',
         'refused'  => 'مرفوض',
         'closed'   => 'غير فعال',
     ],
-    'events_status' => [ 
+    'events_status' => [
         'pending'  => 'قيد الأنتظار',
         'active' => 'فعال',
         'refused'  => 'مرفوض',
@@ -408,7 +409,7 @@ return [
             'password_updated' => 'تم تعديل كلمة المرور بنجاح',
             'not_found' => 'لم يتم العثور علي أي بيانات',
             'old_password_not_correct' => 'كلمة المرور الحالية خطأ',
-            
+
             'already_in_event' => 'لا يكمن تسجل الدخول , بالفعل بالداخل',
             'success_join' => 'تم تسجيل الدخول بنجاح',
             'success_leave' => 'تم تسجيل الخروج بنجاح',
@@ -416,8 +417,8 @@ return [
             'not_join_before' => 'لم يتم تسجيل دخوله مسبفا',
             'rate'=>'تم التقييم بنجاح',
             'not_rate' =>'غير مصرح لك بأستخدام هذا الاجراء' ,
-            
+
 
         ]
-    ], 
+    ],
 ];

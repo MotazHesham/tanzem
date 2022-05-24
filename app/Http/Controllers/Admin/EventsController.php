@@ -256,9 +256,9 @@ class EventsController extends Controller
 
         $from=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->start_date)->format('d-m-Y'));
         $to=Carbon::parse(Carbon::createFromFormat('d/m/Y', $event->end_date)->format('d-m-Y'));
-       
+
         global $name;
-        $name = $request->cader_name; 
+        $name = $request->cader_name;
 
         $cawaders =Cawader::whereHas('user',function ($query) {
             $query->where('name','like',"%".$GLOBALS['name']."%");
@@ -293,7 +293,7 @@ class EventsController extends Controller
         $event->specializations()->sync($request->input('specializations', []));
         foreach ($data['cawaders'] as $key => $value) {
             $result=DB::table('cawader_event')->where('cawader_id',$key)->where('event_id',$event->id)->first();
-            if(isset($result)){
+            if(empty($result)){
                  $cader=Cawader::findOrfail($key);
                 $title = 'تم اضافتك في فعاليه جديده ';
                 $body = 'عزيزي'.' '.$cader->user->name.' '.'تطلبك شركة فعاليات للإنضمام معها في احدى فعالياتها   ' ;
@@ -303,7 +303,7 @@ class EventsController extends Controller
                     'name' => $cader->user->name,
                     'event_id' =>$event->id,
                 ];
-            
+
 
             $this->send_notification($title,$body ,$title ,$event->id, 'cader_request' , $cader->user_id,true,$data) ;
             }

@@ -143,6 +143,13 @@ class UsersApiController extends Controller
             return $this->returnError('401', $validator->errors());
         }
 
+        $old_user=User::where('fcm_token',$request->fcm_token)->first();
+
+        if($old_user)
+
+        $old_user->update([
+            'fcm_token' =>null,
+        ]);
         $user = Auth::user();
 
         if(!$user)

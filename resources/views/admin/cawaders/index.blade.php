@@ -105,7 +105,35 @@
                 }
                 dtButtons.push(deleteButton)
             @endcan
+            ///
+                let approveButtonTrans = '{{ trans('global.datatables.massApprove') }}';
+                let approveButton = {
+                text: approveButtonTrans,
+                url: "{{ route('admin.cawaders.massApprove') }}",
+                className: 'btn-warning',
+                action: function (e, dt, node, config) {
+                var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
+                return entry.id
+                });
 
+                if (ids.length === 0) {
+                alert('{{ trans('global.datatables.zero_selected') }}')
+
+                return
+                }
+
+                if (confirm('{{ trans('global.areYouSure') }}')) {
+                $.ajax({
+                headers: {'x-csrf-token': _token},
+                method: 'POST',
+                url: config.url,
+                data: { ids: ids, _method: 'Post' }})
+                .done(function () { location.reload() })
+                }
+                }
+                }
+                dtButtons.push(approveButton)
+            ////
             let dtOverrideGlobals = {
                 buttons: dtButtons,
                 processing: true,

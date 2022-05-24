@@ -45,7 +45,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('users/ckmedia', 'UsersController@storeCKEditorImages')->name('users.storeCKEditorImages');
     Route::post('users/update_approved', 'UsersController@update_approved')->name('users.update_approved');
     Route::resource('users', 'UsersController');
-    Route::Post('cawaders/massApprove', 'UsersController@massApprove')->name('users.massApprove');
+
 
     // Audit Logs
     Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
@@ -76,6 +76,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Cawader
     Route::delete('cawaders/destroy', 'CawaderController@massDestroy')->name('cawaders.massDestroy');
     Route::resource('cawaders', 'CawaderController');
+    Route::Post('cawaders/massApprove', 'CawaderController@massApprove')->name('cawaders.massApprove');
 
 
     // Cities

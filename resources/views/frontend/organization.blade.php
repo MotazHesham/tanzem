@@ -1,6 +1,6 @@
 @extends('layouts.frontend')
 
-@section('styles') 
+@section('styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('frontend/css/star-rating-svg.css') }}" />
 @endsection
 
@@ -24,13 +24,13 @@
                                 $company_image = $company->user->photo->getUrl('preview2');
                             }else{
                                 $company_image = '';
-                            }   
+                            }
                         @endphp
                         <img src="{{ $company_image }}" alt="" />
                     </div>
                     <div class="listing-info">
                         <div class="listing-info-left">
-                            <h3 class="title">{{ $company->user->name ?? ''}}</h3> 
+                            <h3 class="title">{{ $company->user->name ?? ''}}</h3>
                         </div>
                     </div>
                 </div>
@@ -258,7 +258,7 @@
                                         </h3>
                                     </div>
                                     <div class="content-body">
-                                        <p> 
+                                        <p>
                                             <?php echo nl2br($company->about_company ?? ''); ?>
                                         </p>
                                     </div>
@@ -300,7 +300,7 @@
                                         </div>
                                     </div>
                                     <div class="content-footer content-btn text-center">
-                                        <a data-toggle="tab" href="#listing_events">عرض الكل</a> 
+                                        <a data-toggle="tab" href="#listing_events">عرض الكل</a>
                                     </div>
                                 </div>
 
@@ -314,7 +314,7 @@
                                         <div
                                             class=" widget widget_gallery gallery-grid-4 lightgallery ">
                                             <ul>
-                                                @foreach($company->galery as $key => $media) 
+                                                @foreach($company->galery as $key => $media)
                                                     <li>
                                                         <span data-exthumbimage="{{ $media->getUrl('preview2') }}"
                                                             data-src="{{ $media->getUrl('preview2') }}"
@@ -343,7 +343,7 @@
                                     <div class="content-body">
                                         <div class="widget widget_video video-grid-4">
                                             <ul>
-                                                @foreach($company->videos as $key => $media) 
+                                                @foreach($company->videos as $key => $media)
                                                     <li>
                                                         <div class="dlab-post-thum video-bx">
                                                             <img src="{{ asset('frontend/images/gallery/pic1.jpg') }}" alt="" />
@@ -373,6 +373,7 @@
                                                 <i class="la la-map-signs m-r5"></i>بيانات التواصل
                                             </h3>
                                         </div>
+                                        @auth
                                         <div class="content-body">
                                             <ul class="icon-box-list">
                                                 <li>
@@ -429,9 +430,20 @@
                                                     <a href="{{ $company->twitter ?? '' }}" class="site-button radius-no sharp"><i
                                                             class="fa fa-twitter"></i></a>
                                                 </li>
-                                            </ul> 
+                                            </ul>
                                         </div>
                                     </div>
+                                    @else
+                                    <div class="content-body">
+                                <p>
+                				عذراً.. لا يمكنك رؤية هذه البيانات لأنك لم تقم بتسجيل الدخول...
+                			 <i class="fa-solid fa-face-frown-open" style="position:relative;"></i>
+                			    <br>
+                			 <a href="https://tanthim.com/login" class="signin-data">قم بتسجيل الدخول الآن</a>
+                				</p>
+                            </div>
+                        </div>
+                                    @endauth
 
                                     <div class="content-box">
                                         <div class="content-header">
@@ -443,10 +455,10 @@
                                             <ul class="icon-box-list list-col-2">
                                                 @foreach($company->specializations as $specialization)
                                                     <li>
-                                                        <a href="javascript:void(0);" class="icon-box-info"> 
+                                                        <a href="javascript:void(0);" class="icon-box-info">
                                                             <span>{{ $specialization->name_ar ?? '' }}</span>
                                                         </a>
-                                                    </li> 
+                                                    </li>
                                                 @endforeach
                                             </ul>
                                         </div>
@@ -507,15 +519,15 @@
                                     <div class="content-body">
                                         <div class="  widget widget_gallery gallery-grid-4  lightgallery ">
                                             <ul>
-                                                @foreach($company->galery as $key => $media) 
-                                                    <li> 
+                                                @foreach($company->galery as $key => $media)
+                                                    <li>
                                                         <span data-exthumbimage="{{ $media->getUrl('preview2') }}"
                                                             data-src="{{ $media->getUrl('preview2') }}"
                                                             class="check-km" title="Light Gallery Grid 1">
                                                             <img src="{{ $media->getUrl('preview2') }}" />
                                                         </span>
                                                     </li>
-                                                @endforeach 
+                                                @endforeach
                                             </ul>
                                         </div>
                                     </div>
@@ -533,7 +545,7 @@
                                     <div class="content-body">
                                         <div class="widget widget_video video-grid-4">
                                             <ul>
-                                                @foreach($company->videos as $key => $media) 
+                                                @foreach($company->videos as $key => $media)
                                                     <li>
                                                         <div class="dlab-post-thum video-bx">
                                                             <img src="{{ asset('frontend/images/gallery/pic1.jpg') }}" alt="" />
@@ -544,7 +556,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                @endforeach 
+                                                @endforeach
                                             </ul>
                                         </div>
                                     </div>
@@ -561,7 +573,7 @@
                                     </div>
                                     <div class="content-body">
                                         <div class="row">
-                                            
+
                                             @foreach($company->companyEvents()->orderBy('created_at','desc')->get() as $event)
                                                 <div class="col-lg-4">
                                                     <div class="listing-bx event-listing m-b30">
@@ -586,7 +598,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            @endforeach 
+                                            @endforeach
                                         </div>
                                     </div>
                                 </div>
@@ -611,7 +623,7 @@
                                                                 $cader_image = $cader->user->photo->getUrl('preview2');
                                                             }else{
                                                                 $cader_image = '';
-                                                            }   
+                                                            }
                                                         @endphp
                                                         <div class="team-one__image">
                                                             <img src="{{ $cader_image }}" alt="" />
@@ -632,7 +644,7 @@
                                                         </div>
                                                         <!-- /.team-one__content -->
                                                     </div>
-                                                </div> 
+                                                </div>
                                             @endforeach
                                         </div>
                                     </div>
@@ -650,9 +662,9 @@
 @endsection
 
 @section('scripts')
-    
+
     <script src="{{ asset('frontend/plugins/lightgallery/js/lightgallery-all.min.js') }}"></script>
-    <!-- Lightgallery --> 
+    <!-- Lightgallery -->
     <script src="{{ asset('frontend/js/jquery.star-rating-svg.js') }}"></script>
     <!-- STAR RATING SVG -->
     <script src="https://maps.google.com/maps/api/js?key=AIzaSyBjirg3UoMD5oUiFuZt3P9sErZD-2Rxc68&sensor=false"></script>

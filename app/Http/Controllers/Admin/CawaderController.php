@@ -241,6 +241,18 @@ class CawaderController extends Controller
         return response(null, Response::HTTP_NO_CONTENT);
     }
 
-}
+    public function massApprove(Request $request){
+
+        $cawaders=Cawader::whereIn('id', request('ids'))->get();
+
+        foreach($cawaders as $cawader)
+          User::findOrfail($cawader->user_id)->update([
+              'approved'=>1]);
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    }
+
 
 
