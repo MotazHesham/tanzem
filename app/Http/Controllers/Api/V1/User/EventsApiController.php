@@ -114,7 +114,6 @@ class EventsApiController extends Controller
      $visitor = Visitor::where('user_id',Auth::id())->first();
 
 
-
           if(!$visitor){
 
             return $this->returnError('500',trans('global.flash.api.not_rate'));
@@ -126,6 +125,7 @@ class EventsApiController extends Controller
                  'rate'=>$request->rate,
                  'review'=>$request->comment,
           ]);
+          if($review)
              return $this->returnSuccessMessage(trans('global.flash.api.rate'));
       }
       public function getRatings ($event_id) {

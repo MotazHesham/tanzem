@@ -160,9 +160,7 @@ class UserAuthApiController extends Controller
 
         if (Auth::attempt(['phone' => $request->phone, 'password' => $request->password])) {
             if(Auth::user()->user_type == 'cader'){
-                if(!Auth::user()->approved){
-                    return $this->returnError('500',trans('global.yourAccountNeedsAdminApproval'));
-                }
+
                 $token = Auth::user()->createToken('user_token')->plainTextToken;
                 $cawader = Cawader::where('user_id',Auth::id())->first();
                 if($cawader->companies_and_institution_id != null){

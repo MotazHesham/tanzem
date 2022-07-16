@@ -63,7 +63,12 @@ Route::group(['prefix' => 'v1/user', 'as' => 'api.', 'namespace' => 'Api\V1\User
             Route::post('rate','EventsApiController@rate') ;
             Route::get('/get/{event_id}','EventsApiController@getRatings') ;
 
+
+
+
         });
+
+        Route::post('/report','UsersApiController@report') ;
 
 
     });

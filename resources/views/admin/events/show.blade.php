@@ -16,7 +16,7 @@
 @endsection
 
 @section('scripts')
-    @parent  
+    @parenti
 
     @include('map_scripts.events.show')
 

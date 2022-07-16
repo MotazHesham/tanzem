@@ -8,6 +8,7 @@ use App\Models\Visitor;
 use App\Models\Contactu;
 use App\Models\VisitorsFamily;
 use Illuminate\Http\Request;
+use App\Models\Report;
 use Auth;
 use App\Http\Resources\V1\User\UserResource;
 use App\Traits\api_return;
@@ -146,6 +147,29 @@ class UsersApiController extends Controller
 
 
         return $this->returnSuccessMessage('Token Updated Successfully');
+    }
+
+    public function report(Request $request){
+
+        $rules = [
+            'review_id' => 'required',
+            'description' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return $this->returnError('401', $validator->errors());
+        }
+
+        Report::create([
+            'user_id'=>Auth::id(),
+            'review_id'=>$request->review_id,
+            'description'=>$request->description,
+        ]);
+
+        return $this->returnSuccessMessage('Report saved Successfully');
+
     }
 
 }
