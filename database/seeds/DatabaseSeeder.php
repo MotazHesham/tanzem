@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             RoleUserTableSeeder::class,
             CitiesSeeder::class,
-            GateSeeder::class,
+            // GateSeeder::class,
             SpecializationSeeder::class,
             SettingSeeder::class,
             GovernmentalEntitiesSeeder::class,

@@ -1,125 +1,169 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+Route::redirect('/', '/login');
+Route::get('/home', function () {
+    if (session('status')) {
+        return redirect()->route('admin.home')->with('status', session('status'));
+    }
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+    return redirect()->route('admin.home');
+});
+
+//Route::get('userVerification/{token}', 'UserVerificationController@approve')->name('userVerification');
+
+Route::post('code/send','CodeController@send')->name('code.send');
+Route::post('code/verify','CodeController@verify')->name('code.verify');
+
+Auth::routes(['verify' => true]);
+
+Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth']], function () {
+    Route::post('events/partials/supervisor', 'EventsController@partials_supervisor')->name('events.partials.supervisor');
+    Route::post('events/partials/zoominmap', 'EventsController@partials_zoominmap')->name('events.partials.zoominmap');
+    Route::post('events/partials/attendance_cader', 'EventsController@partials_attendance_cader')->name('events.partials.attendance_cader');
+    Route::post('events/partials/cader_break', 'EventsController@partials_cader_break')->name('events.partials.cader_break');
+    Route::get('events/partials/cader_break_status/{id}/{status}', 'EventsController@partials_cader_break_status')->name('events.partials.cader_break_status');
+    Route::get('events/status/{id}/{status}', 'EventsController@changeStatus')->name('events.status');
+    Route::get('event/{id}/cawders', 'EventsController@choose_cawder')->name('events.choose_cawder');
+    Route::post('event/cawders/add', 'EventsController@save_cawder')->name('events.save_cawder');
+});
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth','staff']], function () {
 
-    Route::get('/', 'HomeController@index')->name('home');
 
+    Route::get('/', 'HomeController@index')->name('home');
     // Permissions
+    Route::delete('permissions/destroy', 'PermissionsController@massDestroy')->name('permissions.massDestroy');
     Route::resource('permissions', 'PermissionsController');
 
     // Roles
+    Route::delete('roles/destroy', 'RolesController@massDestroy')->name('roles.massDestroy');
     Route::resource('roles', 'RolesController');
 
-    Route::resource('routeServices', 'RouteServiceController');
-
     // Users
-    Route::post('users/update_approved', 'UsersController@update_approved')->name('users.update_approved');
+    Route::delete('users/destroy', 'UsersController@massDestroy')->name('users.massDestroy');
     Route::post('users/media', 'UsersController@storeMedia')->name('users.storeMedia');
     Route::post('users/ckmedia', 'UsersController@storeCKEditorImages')->name('users.storeCKEditorImages');
+    Route::post('users/update_approved', 'UsersController@update_approved')->name('users.update_approved');
     Route::resource('users', 'UsersController');
 
-    // Cities
-    Route::resource('cities', 'CitiesController');
-
-    // Specialization
-    Route::resource('specializations', 'SpecializationController');
-
-    // Skills
-    Route::resource('skills', 'SkillsController');
 
     // Audit Logs
     Route::resource('audit-logs', 'AuditLogsController', ['except' => ['create', 'store', 'edit', 'update', 'destroy']]);
 
+    // User Alerts
+    Route::delete('user-alerts/destroy', 'UserAlertsController@massDestroy')->name('user-alerts.massDestroy');
+    Route::get('user-alerts/read', 'UserAlertsController@read');
+    Route::resource('user-alerts', 'UserAlertsController', ['except' => ['edit', 'update']]);
+
+    // Governmental Entities
+    Route::delete('governmental-entities/destroy', 'GovernmentalEntitiesController@massDestroy')->name('governmental-entities.massDestroy');
+    Route::resource('governmental-entities', 'GovernmentalEntitiesController');
+
+    // Clients
+    Route::delete('clients/destroy', 'ClientsController@massDestroy')->name('clients.massDestroy');
+    Route::resource('clients', 'ClientsController');
+
+    // Specialization
+    Route::delete('specializations/destroy', 'SpecializationController@massDestroy')->name('specializations.massDestroy');
+    Route::resource('specializations', 'SpecializationController');
+
+    // Companies And Institutions
+    Route::delete('companies-and-institutions/destroy', 'CompaniesAndInstitutionsController@massDestroy')->name('companies-and-institutions.massDestroy');
+    Route::post('companies-and-institutions/media', 'CompaniesAndInstitutionsController@storeMedia')->name('companies-and-institutions.storeMedia');
+    Route::post('companies-and-institutions/ckmedia', 'CompaniesAndInstitutionsController@storeCKEditorImages')->name('companies-and-institutions.storeCKEditorImages');
+    Route::resource('companies-and-institutions', 'CompaniesAndInstitutionsController');
+
+    // Cawader
+    Route::delete('cawaders/destroy', 'CawaderController@massDestroy')->name('cawaders.massDestroy');
+    Route::resource('cawaders', 'CawaderController');
+    Route::Post('cawaders/massApprove', 'CawaderController@massApprove')->name('cawaders.massApprove');
+
+
+    // Cities
+    Route::delete('cities/destroy', 'CitiesController@massDestroy')->name('cities.massDestroy');
+    Route::resource('cities', 'CitiesController');
+
     // Events
-    Route::post('events/partials/cader_break', 'EventsController@partials_cader_break')->name('events.partials.cader_break');
-    Route::get('events/partials/cader_break_status/{id}/{status}', 'EventsController@partials_cader_break_status')->name('events.partials.cader_break_status');
-    Route::post('events/partials/zoominmap', 'EventsController@partials_zoominmap')->name('events.partials.zoominmap');
-    Route::post('events/partials/add_cader', 'EventsController@partials_add_cader')->name('events.partials.add_cader');
-    Route::post('events/partials/edit_cader', 'EventsController@partials_edit_cader')->name('events.partials.edit_cader');
-    Route::post('events/partials/attendance_cader', 'EventsController@partials_attendance_cader')->name('events.partials.attendance_cader');
-    Route::post('events/cader_status', 'EventsController@cader_status')->name('events.cader_status');
-    Route::get('events/send_pricing/{id}', 'EventsController@send_pricing')->name('events.send_pricing');
-    Route::post('events/delete_cader', 'EventsController@delete_cader')->name('events.delete_cader');
-    Route::post('events/update_cader', 'EventsController@update_cader')->name('events.update_cader');
-    Route::post('events/add_cader', 'EventsController@add_cader')->name('events.add_cader');
-    Route::post('events/add_item', 'EventsController@add_item')->name('events.add_item');
-    Route::post('events/update_item', 'EventsController@update_item')->name('events.update_item');
-    Route::post('events/refresh_caders_list', 'EventsController@refresh_caders_list')->name('events.refresh_caders_list');
+    Route::delete('events/destroy', 'EventsController@massDestroy')->name('events.massDestroy');
     Route::post('events/media', 'EventsController@storeMedia')->name('events.storeMedia');
     Route::post('events/ckmedia', 'EventsController@storeCKEditorImages')->name('events.storeCKEditorImages');
-    Route::resource('events', 'EventsController', ['except' => ['show']]);
-    Route::get('events/{event}/{relation_tab?}','EventsController@show')->name('events.show');
+    Route::resource('events', 'EventsController');
 
-    // Event Organizer
-    Route::post('event-organizers/update_approved', 'EventOrganizerController@update_approved')->name('event-organizers.update_approved');
-    Route::post('event-organizers/media', 'EventOrganizerController@storeMedia')->name('event-organizers.storeMedia');
-    Route::post('event-organizers/ckmedia', 'EventOrganizerController@storeCKEditorImages')->name('event-organizers.storeCKEditorImages');
-    Route::resource('event-organizers', 'EventOrganizerController');
+    // Brands
+    Route::delete('brands/destroy', 'BrandsController@massDestroy')->name('brands.massDestroy');
+    Route::post('brands/media', 'BrandsController@storeMedia')->name('brands.storeMedia');
+    Route::post('brands/ckmedia', 'BrandsController@storeCKEditorImages')->name('brands.storeCKEditorImages');
+    Route::resource('brands', 'BrandsController');
 
-    // Cader
-    Route::post('caders/new_previous_experience', 'CaderController@new_previous_experience')->name('caders.new_previous_experience');
-    Route::post('caders/new_acadmeic_degree', 'CaderController@new_acadmeic_degree')->name('caders.new_academic_degree');
-    Route::post('caders/partials/previous_experience', 'CaderController@previous_experience')->name('caders.partials.previous_experience');
-    Route::post('caders/update_approved', 'CaderController@update_approved')->name('caders.update_approved');
-    Route::post('caders/media', 'CaderController@storeMedia')->name('caders.storeMedia');
-    Route::post('caders/ckmedia', 'CaderController@storeCKEditorImages')->name('caders.storeCKEditorImages');
-    Route::resource('caders', 'CaderController');
+   // Gates
+    Route::delete('gates/destroy', 'GatesController@massDestroy')->name('gates.massDestroy');
+    Route::post('gates/media', 'GatesController@storeMedia')->name('gates.storeMedia');
+    Route::post('gates/ckmedia', 'GatesController@storeCKEditorImages')->name('gates.storeCKEditorImages');
+    Route::resource('gates', 'GatesController');
+    // Visitors
+    Route::delete('visitors/destroy', 'VisitorsController@massDestroy')->name('visitors.massDestroy');
+    Route::resource('visitors', 'VisitorsController');
 
-    // Categories
-    Route::resource('categories', 'CategoriesController');
+    // Visitors Families
+    Route::delete('visitors-families/destroy', 'VisitorsFamiliesController@massDestroy')->name('visitors-families.massDestroy');
+    Route::resource('visitors-families', 'VisitorsFamiliesController', ['except' => ['show']]);
 
-    // Provider Man
-    Route::post('provider-men/update_approved', 'ProviderManController@update_approved')->name('provider-men.update_approved');
-    Route::resource('provider-men', 'ProviderManController');
+    // Settings
+    Route::resource('settings', 'SettingsController', ['except' => ['create', 'store', 'show', 'destroy']]);
 
-    // Items
-    Route::post('items/media', 'ItemsController@storeMedia')->name('items.storeMedia');
-    Route::post('items/ckmedia', 'ItemsController@storeCKEditorImages')->name('items.storeCKEditorImages');
-    Route::resource('items', 'ItemsController');
+    // Said About Tanzem
+    Route::delete('said-about-tanzems/destroy', 'SaidAboutTanzemController@massDestroy')->name('said-about-tanzems.massDestroy');
+    Route::post('said-about-tanzems/media', 'SaidAboutTanzemController@storeMedia')->name('said-about-tanzems.storeMedia');
+    Route::post('said-about-tanzems/ckmedia', 'SaidAboutTanzemController@storeCKEditorImages')->name('said-about-tanzems.storeCKEditorImages');
+    Route::resource('said-about-tanzems', 'SaidAboutTanzemController');
 
+    // Contactus
+    Route::delete('contactus/destroy', 'ContactusController@massDestroy')->name('contactus.massDestroy');
+    Route::resource('contactus', 'ContactusController');
 
+    // News
+    Route::get('news/status/{id}/{status}', 'NewsController@changeStatus')->name('news.status');
+    Route::delete('news/destroy', 'NewsController@massDestroy')->name('news.massDestroy');
+    Route::post('news/media', 'NewsController@storeMedia')->name('news.storeMedia');
+    Route::post('news/ckmedia', 'NewsController@storeCKEditorImages')->name('news.storeCKEditorImages');
+    Route::resource('news', 'NewsController');
 
-    // General Settings
-    Route::post('general-settings/media', 'GeneralSettingsController@storeMedia')->name('general-settings.storeMedia');
-    Route::post('general-settings/ckmedia', 'GeneralSettingsController@storeCKEditorImages')->name('general-settings.storeCKEditorImages');
-    Route::resource('general-settings', 'GeneralSettingsController', ['except' => ['create', 'store', 'show', 'destroy']]);
+    // Subscription
+    Route::delete('subscriptions/destroy', 'SubscriptionController@massDestroy')->name('subscriptions.massDestroy');
+    Route::resource('subscriptions', 'SubscriptionController');
 
-    // Sliders
-    Route::post('sliders/media', 'SlidersController@storeMedia')->name('sliders.storeMedia');
-    Route::post('sliders/ckmedia', 'SlidersController@storeCKEditorImages')->name('sliders.storeCKEditorImages');
-    Route::resource('sliders', 'SlidersController');
-
-    //Contact Us
-    Route::delete('contactus/destroy/{contactus}','ContactUsController@destroy')->name('contactus.destroy');
-    Route::get('contactus','ContactUsController@index')->name('contactus.index');
-
-    // User Alerts
-    Route::resource('user-alerts', 'UserAlertsController', ['except' => ['edit', 'update']]);
-    Route::post('user-alerts/read', 'UserAlertsController@read')->name('alert.read');
+    // Important Links
+    Route::delete('important-links/destroy', 'ImportantLinksController@massDestroy')->name('important-links.massDestroy');
+    Route::resource('important-links', 'ImportantLinksController');
 
     // Break Types
     Route::delete('break-types/destroy', 'BreakTypesController@massDestroy')->name('break-types.massDestroy');
     Route::resource('break-types', 'BreakTypesController');
 
-    Route::get('system-calendar', 'SystemCalendarController@index')->name('systemCalendar');
+    // Cawader Specialization
+    Route::delete('cawader-specializations/destroy', 'CawaderSpecializationController@massDestroy')->name('cawader-specializations.massDestroy');
+    Route::resource('cawader-specializations', 'CawaderSpecializationController');
+   // Slider
+   Route::delete('sliders/destroy', 'SliderController@massDestroy')->name('sliders.massDestroy');
+   Route::post('sliders/media', 'SliderController@storeMedia')->name('sliders.storeMedia');
+   Route::post('sliders/ckmedia', 'SliderController@storeCKEditorImages')->name('sliders.storeCKEditorImages');
+   Route::resource('sliders', 'SliderController');
 
-    Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
-        Route::get('/', 'ProfileController@edit')->name('edit');
-        Route::post('/', 'ProfileController@updateProfile')->name('update');
-        Route::post('password', 'ProfileController@updatePassword')->name('password.update');
-    });
+   // Skills
+   Route::delete('skills/destroy', 'SkillsController@massDestroy')->name('skills.massDestroy');
+   Route::resource('skills', 'SkillsController');
 
+   // Rate
+   Route::delete('rates/destroy', 'RateController@massDestroy')->name('rates.massDestroy');
+   Route::resource('rates', 'RateController');
+
+});
+Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
+    // Change password
+    if (file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php'))) {
+        Route::get('password', 'ChangePasswordController@edit')->name('password.edit');
+        Route::post('password', 'ChangePasswordController@update')->name('password.update');
+        Route::post('profile', 'ChangePasswordController@updateProfile')->name('password.updateProfile');
+        Route::post('profile/destroy', 'ChangePasswordController@destroy')->name('password.destroyProfile');
+    }
 });

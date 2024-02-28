@@ -13,8 +13,7 @@ class CreateReportsTable extends Migration
             $table->longText('description');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id', 'user_fk_6657388')->references('id')->on('users');
-            $table->unsignedBigInteger('review_id')->nullable();
-            $table->foreign('review_id', 'review_fk_6657467')->references('id')->on('event_review');
+            $table->unsignedBigInteger('review_id')->nullable(); 
             $table->timestamps();
         });
     }
